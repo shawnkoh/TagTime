@@ -10,7 +10,7 @@ import SwiftUI
 struct Logbook: View {
     var answers: [Answer]
 
-    @State private var showingSheet = false
+    @State private var showingSheet: Answer? = nil
 
     private var answersToday: [Answer] {
         answers
@@ -76,13 +76,13 @@ struct Logbook: View {
 
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2, pinnedViews: []) {
-                Section(header: header) {}
+            LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2) {
+                header
 
                 if answersToday.count > 0 {
                     Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
                         ForEach(answersToday) { answer in
-                            Button(action: { showingSheet = true }) {
+                            Button(action: { showingSheet = answer }) {
                                 HStack {
                                     Spacer()
                                     VStack {
@@ -95,7 +95,7 @@ struct Logbook: View {
                             }
                             .background(Color.hsb(211, 26, 86))
                             .cornerRadius(10)
-                            .sheet(isPresented: $showingSheet) {
+                            .sheet(item: $showingSheet) { answer in
                                 VStack {
                                     Text(answer.tags.map({ $0.name }).joined(separator: " "))
                                     Text(dateFormatter.string(from: answer.ping.date))
