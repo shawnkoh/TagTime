@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MissedPingList: View {
     var pings: [Ping]
+    @State private var answeringAll = false
 
     private var pingsToday: [Ping] {
         pings
@@ -41,79 +42,72 @@ struct MissedPingList: View {
         return formatter
     }()
 
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading) {
-                    Text("Pings")
-                        .font(.title)
-                        .bold()
-                        .foregroundColor(.white)
-                    Text("Missed pings")
-                        .font(.title2)
-                        .foregroundColor(.hsb(0, 0, 39))
-                }
-
-                if pingsToday.count > 0 {
-                    VStack(alignment: .leading) {
-                        VStack(alignment: .leading) {
-                            Text("Today")
-                                .font(.subheadline)
-                                .bold()
-                                .foregroundColor(.white)
-                            Text(headerDateFormatter.string(from: pingsToday.first!.date))
-                                .font(.title2)
-                                .foregroundColor(Color.hsb(0, 0, 39))
-                        }
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            ForEach(pingsToday) { ping in
-                                HStack {
-                                    Spacer()
-                                    Button(pingDateFormatter.string(from: ping.date)) {
-                                        print("\(ping.date) tapped")
-                                    }
-                                    .background(Color.hsb(211, 26, 86))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(10)
-                                    Spacer()
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if pingsYesterday.count > 0 {
-                    VStack(alignment: .leading) {
-                        Text("Yesterday")
-                            .font(.subheadline)
-                            .bold()
-                            .foregroundColor(.white)
-                        Text(headerDateFormatter.string(from: pingsYesterday.first!.date))
-                            .font(.title2)
-                            .foregroundColor(Color.hsb(0, 0, 39))
-                    }
-
-                    ForEach(pingsYesterday) { ping in
-                        Button(pingDateFormatter.string(from: ping.date)) {
-                            print("\(ping.date) tapped")
-                        }
-                        .background(Color.hsb(211, 26, 86))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
-                }
-
-                Button("ANSWER ALL") {
-                    print("ANSWER ALL")
-                    print(pingsYesterday.count)
-                }
-                .foregroundColor(.white)
-                .background(Color.hsb(223, 69, 90))
-            }
-            Spacer()
+    private func header(date: Date) -> some View {
+        VStack(alignment: .leading) {
+            Text(Calendar.current.isDateInToday(date) ? "Today" : "Yesterday")
+                .bold()
+                .foregroundColor(.primary)
+            Text(headerDateFormatter.string(from: date))
+                .foregroundColor(.secondary)
         }
-        .background(Color.black)
+    }
+
+    private func section<Header: View>(header: Header, pings: [Ping]) -> some View {
+        Section(header: header) {
+            ForEach(pings) { ping in
+                Button(action: {}) {
+                    HStack {
+                        Spacer()
+                        Text(pingDateFormatter.string(from: ping.date))
+                            .foregroundColor(.primary)
+                            .padding()
+                        Spacer()
+                    }
+                    .background(Color.hsb(211, 26, 86))
+                    .cornerRadius(10)
+                }
+            }
+        }
+    }
+
+    // TODO: What if there are no pings at all?
+    // Need some placeholder. Refer to Actions
+
+    var body: some View {
+        VStack {
+            ScrollView {
+                LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2, pinnedViews: []) {
+                    VStack(alignment: .leading) {
+                        Text("Pings")
+                            .bold()
+                            .font(.title)
+                        Text("Missed pings")
+                            .foregroundColor(.secondary)
+                            .font(.subheadline)
+                    }
+
+                    if pingsToday.count > 0 {
+                        section(header: header(date: pingsToday.first!.date), pings: pingsToday)
+                    }
+
+                    if pingsYesterday.count > 0 {
+                        section(header: header(date: pingsYesterday.first!.date), pings: pingsYesterday)
+                    }
+                }
+            }
+
+            Button(action: { answeringAll = true }) {
+                HStack {
+                    Spacer()
+                    Text("ANSWER ALL")
+                        .foregroundColor(.primary)
+                        .padding()
+                    Spacer()
+                }
+                .background(Color.hsb(223, 69, 90))
+                .cornerRadius(8)
+            }
+        }
     }
 }
 
