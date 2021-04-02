@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MissedPingList: View {
     var pings: [Ping]
+    @State private var answeringOne: Ping? = nil
     @State private var answeringAll = false
 
     private var pingsToday: [Ping] {
@@ -55,7 +56,7 @@ struct MissedPingList: View {
     private func section<Header: View>(header: Header, pings: [Ping]) -> some View {
         Section(header: header) {
             ForEach(pings) { ping in
-                Button(action: {}) {
+                Button(action: { answeringOne = ping }) {
                     HStack {
                         Spacer()
                         Text(pingDateFormatter.string(from: ping.date))
@@ -65,6 +66,9 @@ struct MissedPingList: View {
                     }
                     .background(Color.hsb(211, 26, 86))
                     .cornerRadius(10)
+                }
+                .sheet(item: $answeringOne) { ping in
+                    Text(pingDateFormatter.string(from: ping.date))
                 }
             }
         }
@@ -106,6 +110,9 @@ struct MissedPingList: View {
                 }
                 .background(Color.hsb(223, 69, 90))
                 .cornerRadius(8)
+            }
+            .sheet(isPresented: $answeringAll) {
+                Text("WHAT U DOING")
             }
         }
     }
