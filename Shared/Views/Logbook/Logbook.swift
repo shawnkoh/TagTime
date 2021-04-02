@@ -82,17 +82,25 @@ struct Logbook: View {
                 if answersToday.count > 0 {
                     Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
                         ForEach(answersToday) { answer in
-                            HStack {
-                                Spacer()
+                            Button(action: { showingSheet = true }) {
+                                HStack {
+                                    Spacer()
+                                    VStack {
+                                        Text(answer.tags.map({ $0.name }).joined(separator: " "))
+                                        Text(dateFormatter.string(from: answer.ping.date))
+                                    }
+                                    .foregroundColor(.white)
+                                    Spacer()
+                                }
+                            }
+                            .background(Color.hsb(211, 26, 86))
+                            .cornerRadius(10)
+                            .sheet(isPresented: $showingSheet) {
                                 VStack {
                                     Text(answer.tags.map({ $0.name }).joined(separator: " "))
                                     Text(dateFormatter.string(from: answer.ping.date))
                                 }
-                                .foregroundColor(.white)
-                                Spacer()
                             }
-                            .background(Color.hsb(211, 26, 86))
-                            .cornerRadius(10)
                         }
                     }
                 }
