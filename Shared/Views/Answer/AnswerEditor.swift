@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct AnswerEditor: View {
-    @Binding var answer: Answer
+    @EnvironmentObject var modelData: ModelData
+
+    var answer: Answer
 
     // TODO: Not sure if this is necessary. Probably is
-    @State private var answerString: String = ""
+    @State private var response: String = ""
 
-    init(answer: Binding<Answer>) {
-        // Reference: https://stackoverflow.com/questions/56973959/swiftui-how-to-implement-a-custom-init-with-binding-variables
-        self._answer = answer
-        self.answerString = answer.wrappedValue.tags.map { $0.name }.joined(separator: " ")
+    init(answer: Answer) {
+        self.answer = answer
+        self.response = answer.tags.map { $0.name }.joined(separator: " ")
     }
 
     var dateFormatter: DateFormatter = {
@@ -36,11 +37,21 @@ struct AnswerEditor: View {
 
             Spacer()
 
-            TextField("PING1 PING2", text: $answerString, onEditingChanged: { _ in }, onCommit: {})
-                .autocapitalization(.allCharacters)
-                .background(Color.hsb(207, 26, 14))
-                .cornerRadius(8)
-                .foregroundColor(.white)
+            TextField("PING1 PING2", text: $response, onCommit: {
+                print("answer.id", answer.id)
+                print(modelData.answers.map { $0.id })
+                guard var answer = modelData.answers.first(where: { $0.id == answer.id }) else {
+                    print("returned")
+                    return
+                }
+                answer.tags = response.split(separator: " ").map { Tag(name: String($0)) }
+                print("answer.tags", answer.tags)
+            })
+            .autocapitalization(.allCharacters)
+            .multilineTextAlignment(.center)
+            .background(Color.hsb(207, 26, 14))
+            .cornerRadius(8)
+            .foregroundColor(.white)
 
             Spacer()
         }
@@ -49,6 +60,6 @@ struct AnswerEditor: View {
 
 struct AnswerEditor_Previews: PreviewProvider {
     static var previews: some View {
-        AnswerEditor(answer: .constant(Stub.answers.first!))
+        AnswerEditor(answer: Stub.answers.first!)
     }
 }
