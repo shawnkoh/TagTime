@@ -1,5 +1,5 @@
 //
-//  PingAnswerer.swift
+//  MissedPingAnswerer.swift
 //  TagTime (iOS)
 //
 //  Created by Shawn Koh on 4/4/21.
@@ -7,8 +7,28 @@
 
 import SwiftUI
 
-struct PingAnswerer: View {
-    @Binding var config: PingAnswererConfig
+// Reference: https://developer.apple.com/videos/play/wwdc2020/10040/
+struct MissedPingAnswererConfig {
+    var isPresented = false
+    var answer = ""
+    // Prevent saving when the user manually dismisses
+    var needsSave = false
+
+    mutating func present() {
+        isPresented = true
+        // TODO: Not sure if need to reset answer and needsSave
+        answer = ""
+        needsSave = false
+    }
+
+    mutating func dismiss(save: Bool = false) {
+        isPresented = false
+        needsSave = save
+    }
+}
+
+struct MissedPingAnswerer: View {
+    @Binding var config: MissedPingAnswererConfig
     let ping: Ping
 
     var dateFormatter: DateFormatter = {
@@ -45,10 +65,10 @@ struct PingAnswerer: View {
     }
 }
 
-struct PingAnswerer_Previews: PreviewProvider {
-    @State static var config = PingAnswererConfig()
+struct MissedPingAnswerer_Previews: PreviewProvider {
+    @State static var config = MissedPingAnswererConfig()
 
     static var previews: some View {
-        PingAnswerer(config: $config, ping: Stub.pings.first!)
+        MissedPingAnswerer(config: $config, ping: Stub.pings.first!)
     }
 }

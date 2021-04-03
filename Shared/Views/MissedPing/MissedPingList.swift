@@ -62,7 +62,7 @@ struct MissedPingList: View {
     private func section<Header: View>(header: Header, pings: [Ping]) -> some View {
         Section(header: header) {
             ForEach(pings) { ping in
-                PingCard(ping: ping)
+                MissedPingCard(ping: ping)
             }
         }
     }
