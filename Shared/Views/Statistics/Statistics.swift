@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct Statistics: View {
+    @EnvironmentObject var modelData: ModelData
+
     var body: some View {
         VStack(alignment: .leading) {
             PageTitle(title: "Statistics", subtitle: "Quantified Self")
@@ -18,5 +20,6 @@ struct Statistics: View {
 struct Statistics_Previews: PreviewProvider {
     static var previews: some View {
         Statistics()
+            .environmentObject(ModelData())
     }
 }

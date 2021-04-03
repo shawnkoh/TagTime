@@ -8,22 +8,22 @@
 import SwiftUI
 
 struct MissedPingList: View {
-    var pings: [Ping]
+    @EnvironmentObject var modelData: ModelData
     @State private var answeringOne: Ping? = nil
     @State private var answeringAll = false
 
     private var pingsToday: [Ping] {
-        pings
+        modelData.pings
             .filter { Calendar.current.isDateInToday($0.date) }
     }
 
     private var pingsYesterday: [Ping] {
-        pings
+        modelData.pings
             .filter { Calendar.current.isDateInYesterday($0.date) }
     }
 
     private var pingsOlder: [Ping] {
-        pings
+        modelData.pings
             .filter {
                 !Calendar.current.isDateInYesterday($0.date) && !Calendar.current.isDateInToday($0.date)
             }
@@ -113,7 +113,8 @@ struct MissedPingList: View {
 
 struct MissedPingList_Previews: PreviewProvider {
     static var previews: some View {
-        MissedPingList(pings: Stub.pings)
+        MissedPingList()
+            .environmentObject(ModelData())
             .preferredColorScheme(.dark)
     }
 }

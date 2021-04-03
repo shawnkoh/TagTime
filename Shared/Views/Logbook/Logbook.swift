@@ -8,22 +8,22 @@
 import SwiftUI
 
 struct Logbook: View {
-    var answers: [Answer]
+    @EnvironmentObject var modelData: ModelData
 
     @State private var showingSheet: Answer? = nil
 
     private var answersToday: [Answer] {
-        answers
+        modelData.answers
             .filter { Calendar.current.isDateInToday($0.ping.date) }
     }
 
     private var answersYesterday: [Answer] {
-        answers
+        modelData.answers
             .filter { Calendar.current.isDateInYesterday($0.ping.date) }
     }
 
     private var answersOther: [Answer] {
-        answers
+        modelData.answers
             .filter { !Calendar.current.isDateInToday($0.ping.date) }
             .filter { !Calendar.current.isDateInYesterday($0.ping.date) }
     }
@@ -119,6 +119,7 @@ struct Logbook: View {
 
 struct Logbook_Previews: PreviewProvider {
     static var previews: some View {
-        Logbook(answers: Stub.answers)
+        Logbook()
+            .environmentObject(ModelData())
     }
 }

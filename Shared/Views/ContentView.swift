@@ -15,6 +15,8 @@ struct ContentView: View {
         case preferences
     }
 
+    @EnvironmentObject var modelData: ModelData
+
     // Cache the images so they don't get rendered again.
     // Not sure just how useful it is though.
     // TODO: Test its performance
@@ -37,9 +39,9 @@ struct ContentView: View {
     var body: some View {
         VStack {
             TabView(selection: $currentPage) {
-                MissedPingList(pings: Stub.pings)
+                MissedPingList()
                     .tag(Page.missedPingList)
-                Logbook(answers: Stub.answers)
+                Logbook()
                     .tag(Page.logbook)
                 Statistics()
                     .tag(Page.statistics)
@@ -69,6 +71,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .environmentObject(Settings())
+            .environmentObject(ModelData())
             .preferredColorScheme(.dark)
     }
 }

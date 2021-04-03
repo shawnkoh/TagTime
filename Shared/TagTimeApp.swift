@@ -10,10 +10,12 @@ import SwiftUI
 @main
 struct TagTimeApp: App {
     @StateObject var settings = Settings()
+    @StateObject var modelData = ModelData()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(modelData)
                 .environmentObject(settings)
         }
     }
