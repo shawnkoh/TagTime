@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Ping: Identifiable {
+struct Ping: Identifiable, Hashable {
     let id: UUID
     let date: Date
 

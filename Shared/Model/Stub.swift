@@ -17,7 +17,11 @@ enum Stub {
             .map { Ping(date: Date(timeIntervalSinceNow: $0 * 60 * 60)) }
 
     static let answers: [Answer] =
-        pings.map { ping in
+        pings.compactMap { ping in
+            guard Bool.random() else {
+                return nil
+            }
+
             let chosen = (0...Int.random(in: 1...3))
                 .compactMap { _ in Self.tags.randomElement() }
             let tags = Array(Set(chosen))

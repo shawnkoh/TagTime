@@ -9,21 +9,28 @@ import SwiftUI
 
 struct MissedPingList: View {
     @EnvironmentObject var modelData: ModelData
-    @State private var answeringOne: Ping? = nil
+    @State private var answeringOne: Answer? = nil
     @State private var answeringAll = false
 
+    private var missedPings: [Ping] {
+        let answeredPings = Set(modelData.answers.map { $0.ping })
+        let allPings = modelData.pings
+        return allPings
+            .filter { !answeredPings.contains($0) }
+    }
+
     private var pingsToday: [Ping] {
-        modelData.pings
+        missedPings
             .filter { Calendar.current.isDateInToday($0.date) }
     }
 
     private var pingsYesterday: [Ping] {
-        modelData.pings
+        missedPings
             .filter { Calendar.current.isDateInYesterday($0.date) }
     }
 
     private var pingsOlder: [Ping] {
-        modelData.pings
+        missedPings
             .filter {
                 !Calendar.current.isDateInYesterday($0.date) && !Calendar.current.isDateInToday($0.date)
             }
@@ -56,7 +63,7 @@ struct MissedPingList: View {
     private func section<Header: View>(header: Header, pings: [Ping]) -> some View {
         Section(header: header) {
             ForEach(pings) { ping in
-                Button(action: { answeringOne = ping }) {
+                Button(action: { answeringOne = Answer(ping: ping, tags: []) }) {
                     HStack {
                         Spacer()
                         Text(pingDateFormatter.string(from: ping.date))
@@ -67,9 +74,9 @@ struct MissedPingList: View {
                     .background(Color.hsb(211, 26, 86))
                     .cornerRadius(10)
                 }
-                .sheet(item: $answeringOne) { ping in
-                    Text(pingDateFormatter.string(from: ping.date))
-                }
+//                .sheet(item: $answeringOne) { answer in
+//                    AnswerEditor(answer: $answeringOne)
+//                }
             }
         }
     }
