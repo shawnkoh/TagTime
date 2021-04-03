@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MissedPingList: View {
     @EnvironmentObject var modelData: ModelData
-    @State private var answeringOne: Ping? = nil
     @State private var answeringAll = false
 
     private var missedPings: [Ping] {
@@ -63,20 +62,7 @@ struct MissedPingList: View {
     private func section<Header: View>(header: Header, pings: [Ping]) -> some View {
         Section(header: header) {
             ForEach(pings) { ping in
-                Button(action: { answeringOne = ping }) {
-                    HStack {
-                        Spacer()
-                        Text(pingDateFormatter.string(from: ping.date))
-                            .foregroundColor(.primary)
-                            .padding()
-                        Spacer()
-                    }
-                    .background(Color.hsb(211, 26, 86))
-                    .cornerRadius(10)
-                }
-                .sheet(item: $answeringOne) { ping in
-                    AnswerCreator(ping: ping)
-                }
+                PingCard(ping: ping)
             }
         }
     }

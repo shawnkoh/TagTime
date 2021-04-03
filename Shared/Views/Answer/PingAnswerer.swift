@@ -1,5 +1,5 @@
 //
-//  AnswerCreator.swift
+//  PingAnswerer.swift
 //  TagTime (iOS)
 //
 //  Created by Shawn Koh on 4/4/21.
@@ -7,11 +7,9 @@
 
 import SwiftUI
 
-struct AnswerCreator: View {
-    @EnvironmentObject var modelData: ModelData
-    var ping: Ping
-
-    @State private var answer: String = ""
+struct PingAnswerer: View {
+    @Binding var config: PingAnswererConfig
+    let ping: Ping
 
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -30,10 +28,11 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            TextField("PING1 PING2", text: $answer, onCommit: {
-                let tags = answer.split(separator: " ").map { Tag(name: String($0)) }
-                let answer = Answer(ping: ping, tags: tags)
-                modelData.answers.append(answer)
+            TextField("PING1 PING2", text: $config.answer, onCommit: {
+                guard config.answer.count > 0 else {
+                    return
+                }
+                config.dismiss(save: true)
             })
             .autocapitalization(.allCharacters)
             .multilineTextAlignment(.center)
@@ -46,8 +45,10 @@ struct AnswerCreator: View {
     }
 }
 
-struct AnswerCreator_Previews: PreviewProvider {
+struct PingAnswerer_Previews: PreviewProvider {
+    @State static var config = PingAnswererConfig()
+
     static var previews: some View {
-        AnswerCreator(ping: Stub.pings.first!)
+        PingAnswerer(config: $config, ping: Stub.pings.first!)
     }
 }
