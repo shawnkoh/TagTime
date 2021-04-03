@@ -10,13 +10,7 @@ import SwiftUI
 struct Statistics: View {
     var body: some View {
         VStack(alignment: .leading) {
-            VStack(alignment: .leading) {
-                Text("Statistics")
-                    .font(.title)
-                Text("Quantified Self")
-                    .font(.subheadline)
-            }
-
+            PageTitle(title: "Statistics", subtitle: "Quantified Self")
         }
     }
 }

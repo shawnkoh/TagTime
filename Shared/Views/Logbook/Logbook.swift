@@ -35,16 +35,6 @@ struct Logbook: View {
         return formatter
     }()
 
-    private var header: some View {
-        VStack(alignment: .leading) {
-            Text("Logbook")
-                .font(.title)
-                .bold()
-            Text("Answered answers")
-                .font(.subheadline)
-        }
-    }
-
     private func sectionHeader(title: String, subtitle: String) -> some View {
         VStack(alignment: .leading) {
             Text(title)
@@ -77,7 +67,7 @@ struct Logbook: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2) {
-                header
+                PageTitle(title: "Logbook", subtitle: "Answered pings")
 
                 if answersToday.count > 0 {
                     Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {

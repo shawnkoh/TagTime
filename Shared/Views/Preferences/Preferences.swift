@@ -8,22 +8,39 @@
 import SwiftUI
 
 struct Preferences: View {
-    @State private var samplingInterval: Int = 45
+    @EnvironmentObject var settings: Settings
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 20) {
+            PageTitle(title: "Preferences", subtitle: "Suit yourself")
+
             VStack(alignment: .leading) {
-                Text("Preferences")
-                    .font(.title)
-                Text("Suit yourself")
-                    .font(.subheadline)
+                Text("Ping Interval (minutes)")
+                    .bold()
+
+                TextField(
+                    "Ping Interval",
+                    value: $settings.pingInterval,
+                    formatter: NumberFormatter(),
+                    onEditingChanged: { _ in },
+                    onCommit: {}
+                )
             }
 
-            HStack {
-                Text("Sampling Interval")
+            VStack(alignment: .leading) {
+                Text("Ping Seed")
                     .bold()
-                TextField("ABC", value: $samplingInterval, formatter: NumberFormatter())
+
+                TextField(
+                    "Ping Seed",
+                    value: $settings.seed,
+                    formatter: NumberFormatter(),
+                    onEditingChanged: { _ in },
+                    onCommit: {}
+                )
             }
+
+            Spacer()
         }
     }
 }
@@ -31,5 +48,6 @@ struct Preferences: View {
 struct Preferences_Previews: PreviewProvider {
     static var previews: some View {
         Preferences()
+            .environmentObject(Settings())
     }
 }

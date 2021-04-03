@@ -81,14 +81,7 @@ struct MissedPingList: View {
         VStack {
             ScrollView {
                 LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2, pinnedViews: []) {
-                    VStack(alignment: .leading) {
-                        Text("Pings")
-                            .bold()
-                            .font(.title)
-                        Text("Missed pings")
-                            .foregroundColor(.secondary)
-                            .font(.subheadline)
-                    }
+                    PageTitle(title: "Pings", subtitle: "Missed pings")
 
                     if pingsToday.count > 0 {
                         section(header: header(date: pingsToday.first!.date), pings: pingsToday)
