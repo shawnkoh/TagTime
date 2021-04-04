@@ -69,6 +69,14 @@ struct Logbook: View {
             LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2) {
                 PageTitle(title: "Logbook", subtitle: "Answered pings")
 
+                // TODO: This doesn't make sense.
+                // It should for loop through an ordered series of dates, and then decide
+                // what to do from there.
+                // Which means we need to have a function that returns an ordered series of answers.
+                // This can be done two ways, either by sorting in memory, or by relying on the database.
+                // Implement the database, then find out which way to do it.
+                // But first, watch the SwiftUI video!
+
                 if answersToday.count > 0 {
                     Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
                         ForEach(answersToday) { answer in

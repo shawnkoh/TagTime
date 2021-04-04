@@ -9,20 +9,24 @@ import SwiftUI
 
 struct AnswerEditorConfig {
     var isPresented = false
-    var date: Date
+    let pingDate: Date
     var response: String
+    var needToSave = false
 
     init(answer: Answer) {
-        self.date = answer.ping.date
+        self.pingDate = answer.ping.date
         self.response = answer.tags.map { $0.name }.joined(separator: " ")
     }
 
     mutating func present() {
         isPresented = true
+        needToSave = false
+        // TODO: Not sure if I need to reset response here.
     }
 
-    mutating func dismiss() {
+    mutating func dismiss(save: Bool = false) {
         isPresented = false
+        needToSave = save
     }
 }
 
@@ -42,11 +46,20 @@ struct AnswerEditor: View {
                 Text("What are you doing")
                 Text("RIGHT NOW?")
             }
-            Text(dateFormatter.string(from: config.date))
+            Text(dateFormatter.string(from: config.pingDate))
 
             Spacer()
 
-            TextField("PING1 PING2", text: $config.response)
+            TextField(
+                "PING1 PING2",
+                text: $config.response,
+                onCommit: {
+                    guard config.response.count > 0 else {
+                        return
+                    }
+                    config.dismiss()
+                }
+            )
             .autocapitalization(.allCharacters)
             .multilineTextAlignment(.center)
             .background(Color.hsb(207, 26, 14))

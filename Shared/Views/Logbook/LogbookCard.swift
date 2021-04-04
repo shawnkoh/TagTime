@@ -38,7 +38,12 @@ struct LogbookCard: View {
         }
         .background(Color.hsb(211, 26, 86))
         .cornerRadius(10)
-        .sheet(isPresented: $config.isPresented, onDismiss: { }) {
+        .sheet(isPresented: $config.isPresented, onDismiss: {
+            guard config.needToSave else {
+                return
+            }
+            // TODO: Save it!
+        }) {
             AnswerEditor(config: $config)
         }
 
