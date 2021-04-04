@@ -30,6 +30,7 @@
 		86ADBB812617330B003CBA6B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB802617330B003CBA6B /* Preferences.swift */; };
 		86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */; };
 		86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
+		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		86ADBB802617330B003CBA6B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingAnswerer.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
+		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,14 +193,6 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
-		8684C04B26186C06006717FC /* Answer */ = {
-			isa = PBXGroup;
-			children = (
-				8684C04C26186C37006717FC /* AnswerEditor.swift */,
-			);
-			path = Answer;
-			sourceTree = "<group>";
-		};
 		868E97CE26174A4C000A41FF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -224,7 +218,6 @@
 			isa = PBXGroup;
 			children = (
 				861256C826139CAA00C2B81B /* ContentView.swift */,
-				8684C04B26186C06006717FC /* Answer */,
 				8672E71A26182207004081FC /* Common */,
 				86ADBB6A261732D2003CBA6B /* MissedPing */,
 				86ADBB6B261732DE003CBA6B /* Logbook */,
@@ -247,7 +240,9 @@
 		86ADBB6B261732DE003CBA6B /* Logbook */ = {
 			isa = PBXGroup;
 			children = (
+				8684C04C26186C37006717FC /* AnswerEditor.swift */,
 				86ADBB7426173303003CBA6B /* Logbook.swift */,
+				86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */,
 			);
 			path = Logbook;
 			sourceTree = "<group>";
@@ -436,6 +431,7 @@
 				8684C04D26186C37006717FC /* AnswerEditor.swift in Sources */,
 				8672E70526181B01004081FC /* Settings.swift in Sources */,
 				86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */,
+				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,
 				868E97C926173AAD000A41FF /* Answer.swift in Sources */,
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,

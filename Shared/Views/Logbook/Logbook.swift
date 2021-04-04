@@ -72,25 +72,7 @@ struct Logbook: View {
                 if answersToday.count > 0 {
                     Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
                         ForEach(answersToday) { answer in
-                            Button(action: { showingSheet = answer }) {
-                                HStack {
-                                    Spacer()
-                                    VStack {
-                                        Text(answer.tags.map({ $0.name }).joined(separator: " "))
-                                        Text(dateFormatter.string(from: answer.ping.date))
-                                    }
-                                    .foregroundColor(.white)
-                                    Spacer()
-                                }
-                            }
-                            .background(Color.hsb(211, 26, 86))
-                            .cornerRadius(10)
-                            .sheet(item: $showingSheet) { answer in
-                                VStack {
-                                    Text(answer.tags.map({ $0.name }).joined(separator: " "))
-                                    Text(dateFormatter.string(from: answer.ping.date))
-                                }
-                            }
+                            LogbookCard(answer: answer)
                         }
                     }
                 }
@@ -98,17 +80,7 @@ struct Logbook: View {
                 if answersYesterday.count > 0 {
                     Section(header: sectionHeader(title: "Yesterday", subtitle: "Sat, 27 March")) {
                         ForEach(answersYesterday) { answer in
-                            HStack {
-                                Spacer()
-                                VStack {
-                                    Text(answer.tags.map({ $0.name }).joined(separator: " "))
-                                    Text(dateFormatter.string(from: answer.ping.date))
-                                }
-                                .foregroundColor(.white)
-                                Spacer()
-                            }
-                            .background(Color.hsb(211, 26, 86))
-                            .cornerRadius(10)
+                            LogbookCard(answer: answer)
                         }
                     }
                 }

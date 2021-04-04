@@ -7,18 +7,27 @@
 
 import SwiftUI
 
-struct AnswerEditor: View {
-    @EnvironmentObject var modelData: ModelData
-
-    var answer: Answer
-
-    // TODO: Not sure if this is necessary. Probably is
-    @State private var response: String = ""
+struct AnswerEditorConfig {
+    var isPresented = false
+    var date: Date
+    var response: String
 
     init(answer: Answer) {
-        self.answer = answer
+        self.date = answer.ping.date
         self.response = answer.tags.map { $0.name }.joined(separator: " ")
     }
+
+    mutating func present() {
+        isPresented = true
+    }
+
+    mutating func dismiss() {
+        isPresented = false
+    }
+}
+
+struct AnswerEditor: View {
+    @Binding var config: AnswerEditorConfig
 
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -33,20 +42,11 @@ struct AnswerEditor: View {
                 Text("What are you doing")
                 Text("RIGHT NOW?")
             }
-            Text(dateFormatter.string(from: answer.ping.date))
+            Text(dateFormatter.string(from: config.date))
 
             Spacer()
 
-            TextField("PING1 PING2", text: $response, onCommit: {
-                print("answer.id", answer.id)
-                print(modelData.answers.map { $0.id })
-                guard var answer = modelData.answers.first(where: { $0.id == answer.id }) else {
-                    print("returned")
-                    return
-                }
-                answer.tags = response.split(separator: " ").map { Tag(name: String($0)) }
-                print("answer.tags", answer.tags)
-            })
+            TextField("PING1 PING2", text: $config.response)
             .autocapitalization(.allCharacters)
             .multilineTextAlignment(.center)
             .background(Color.hsb(207, 26, 14))
@@ -60,6 +60,6 @@ struct AnswerEditor: View {
 
 struct AnswerEditor_Previews: PreviewProvider {
     static var previews: some View {
-        AnswerEditor(answer: Stub.answers.first!)
+        AnswerEditor(config: .constant(AnswerEditorConfig(answer: Stub.answers.first!)))
     }
 }
