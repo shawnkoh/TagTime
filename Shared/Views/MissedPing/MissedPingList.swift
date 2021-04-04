@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct MissedPingList: View {
-    @EnvironmentObject var modelData: ModelData
+    @EnvironmentObject var store: Store
     @State private var answeringAll = false
 
     private var missedPings: [Ping] {
-        let answeredPings = Set(modelData.answers.map { $0.ping })
-        let allPings = modelData.pings
+        let answeredPings = Set(store.answers.map { $0.ping })
+        let allPings = store.pings
         return allPings
             .filter { !answeredPings.contains($0) }
     }
@@ -107,7 +107,7 @@ struct MissedPingList: View {
 struct MissedPingList_Previews: PreviewProvider {
     static var previews: some View {
         MissedPingList()
-            .environmentObject(ModelData())
+            .environmentObject(Store())
             .preferredColorScheme(.dark)
     }
 }

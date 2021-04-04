@@ -60,7 +60,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .environmentObject(Settings())
-            .environmentObject(ModelData())
+            .environmentObject(Store())
             .preferredColorScheme(.dark)
     }
 }

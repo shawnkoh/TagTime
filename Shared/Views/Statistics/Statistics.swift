@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Statistics: View {
-    @EnvironmentObject var modelData: ModelData
+    @EnvironmentObject var store: Store
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -20,6 +20,6 @@ struct Statistics: View {
 struct Statistics_Previews: PreviewProvider {
     static var previews: some View {
         Statistics()
-            .environmentObject(ModelData())
+            .environmentObject(Store())
     }
 }
