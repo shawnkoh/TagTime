@@ -15,26 +15,19 @@ struct ContentView: View {
         case preferences
     }
 
-    @EnvironmentObject var modelData: ModelData
-
-    // Cache the images so they don't get rendered again.
-    // Not sure just how useful it is though.
-    // TODO: Test its performance
-    // This was added initially when TabView was lagging badly. The lag was solved
-    // by using TabView(selection:) rather than just TabView.
-    static let missedPingListImage = Image("missed-ping-list")
-    static let missedPingListActiveImage = Image("missed-ping-list-active")
-
-    static let logbookImage = Image("logbook")
-    static let logbookActiveImage = Image("logbook-active")
-
-    static let statisticsImage = Image("statistics")
-    static let statisticsActiveImage = Image("statistics-active")
-
-    static let preferencesImage = Image("preferences")
-    static let preferencesActiveImage = Image("preferences-active")
-
     @State private var currentPage: Page = .missedPingList
+
+    // Reference:: https://stackoverflow.com/a/62622935/8639572
+    @ViewBuilder
+    func page(name: String, destination: Page) -> some View {
+        switch currentPage == destination {
+        case true:
+            Image("\(name)-active")
+        case false:
+            Image(name)
+                .onTapGesture { currentPage = destination }
+        }
+    }
 
     var body: some View {
         VStack {
@@ -52,15 +45,11 @@ struct ContentView: View {
 
             HStack {
                 Spacer()
-                (currentPage == .missedPingList ? Self.missedPingListActiveImage : Self.missedPingListImage)
-                    .onTapGesture { currentPage = .missedPingList }
-                (currentPage == .logbook ? Self.logbookActiveImage : Self.logbookImage)
-                    .onTapGesture { currentPage = .logbook }
-                (currentPage == .statistics ? Self.statisticsActiveImage : Self.statisticsImage)
-                    .onTapGesture { currentPage = .statistics }
+                page(name: "missed-ping-list", destination: .missedPingList)
+                page(name: "logbook", destination: .logbook)
+                page(name: "statistics", destination: .statistics)
                 Spacer()
-                (currentPage == .preferences ? Self.preferencesActiveImage : Self.preferencesImage)
-                    .onTapGesture { currentPage = .preferences }
+                page(name: "preferences", destination: .preferences)
             }
         }
         .statusBar(hidden: true)
