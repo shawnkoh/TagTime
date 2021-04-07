@@ -8,6 +8,7 @@
 import Foundation
 
 enum Stub {
+    static let user: User = .init(id: "preview")
     static let tags: [Tag] =
         ["WORKING", "SLEEPING", "TOILETING", "EATING", "GAMING", "READING", "EXERCISING", "COOKING"]
 

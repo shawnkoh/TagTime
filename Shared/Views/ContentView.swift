@@ -6,53 +6,36 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct ContentView: View {
-    enum Page: Hashable {
-        case missedPingList
-        case logbook
-        case statistics
-        case preferences
-    }
-
-    @State private var currentPage: Page = .missedPingList
-
-    // Reference:: https://stackoverflow.com/a/62622935/8639572
-    @ViewBuilder
-    func page(name: String, destination: Page) -> some View {
-        switch currentPage == destination {
-        case true:
-            Image("\(name)-active")
-        case false:
-            Image(name)
-                .onTapGesture { currentPage = destination }
-        }
-    }
+    @State var user: User?
 
     var body: some View {
-        VStack {
-            TabView(selection: $currentPage) {
-                MissedPingList()
-                    .tag(Page.missedPingList)
-                Logbook()
-                    .tag(Page.logbook)
-                Statistics()
-                    .tag(Page.statistics)
-                Preferences()
-                    .tag(Page.preferences)
-            }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-
-            HStack {
-                Spacer()
-                page(name: "missed-ping-list", destination: .missedPingList)
-                page(name: "logbook", destination: .logbook)
-                page(name: "statistics", destination: .statistics)
-                Spacer()
-                page(name: "preferences", destination: .preferences)
-            }
+        if let user = user {
+            AuthenticatedView()
+                .environmentObject(Store(user: user))
+        } else {
+            UnauthenticatedView()
+                .onAppear() {
+                    if let user = Auth.auth().currentUser {
+                        self.user = .init(user: user)
+                    } else {
+                        signInAnonymously()
+                    }
+                }
         }
-        .statusBar(hidden: true)
+    }
+
+    private func signInAnonymously() {
+        Auth.auth().signInAnonymously() { (result, error) in
+            guard let result = result else {
+                // TODO: Find a way to display this
+                print("unable to sign in anonymously", error?.localizedDescription as Any)
+                return
+            }
+            self.user = .init(user: result.user)
+        }
     }
 }
 
@@ -60,7 +43,13 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .environmentObject(Settings())
-            .environmentObject(Store())
+            .environmentObject(Store(user: Stub.user))
             .preferredColorScheme(.dark)
+    }
+}
+
+extension User {
+    init(user: Firebase.User) {
+        self.id = user.uid
     }
 }

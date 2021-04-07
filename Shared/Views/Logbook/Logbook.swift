@@ -100,6 +100,6 @@ struct Logbook: View {
 struct Logbook_Previews: PreviewProvider {
     static var previews: some View {
         Logbook()
-            .environmentObject(Store())
+            .environmentObject(Store(user: Stub.user))
     }
 }

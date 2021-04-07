@@ -53,6 +53,6 @@ struct MissedPingCard_Previews: PreviewProvider {
 
     static var previews: some View {
         MissedPingCard(ping: Stub.pings.first!)
-            .environmentObject(Store())
+            .environmentObject(Store(user: Stub.user))
     }
 }
