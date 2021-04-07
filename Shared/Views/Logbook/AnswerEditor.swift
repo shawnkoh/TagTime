@@ -14,7 +14,7 @@ struct AnswerEditorConfig {
     var needToSave = false
 
     init(answer: Answer) {
-        self.pingDate = answer.ping.date
+        self.pingDate = answer.ping
         self.response = answer.tags.map { $0.name }.joined(separator: " ")
     }
 

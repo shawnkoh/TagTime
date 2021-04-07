@@ -44,7 +44,7 @@ struct MissedPingAnswerer: View {
                 Text("What are you doing")
                 Text("RIGHT NOW?")
             }
-            Text(dateFormatter.string(from: ping.date))
+            Text(dateFormatter.string(from: ping))
 
             Spacer()
 

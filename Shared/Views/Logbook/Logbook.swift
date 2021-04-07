@@ -14,18 +14,18 @@ struct Logbook: View {
 
     private var answersToday: [Answer] {
         store.answers
-            .filter { Calendar.current.isDateInToday($0.ping.date) }
+            .filter { Calendar.current.isDateInToday($0.ping) }
     }
 
     private var answersYesterday: [Answer] {
         store.answers
-            .filter { Calendar.current.isDateInYesterday($0.ping.date) }
+            .filter { Calendar.current.isDateInYesterday($0.ping) }
     }
 
     private var answersOther: [Answer] {
         store.answers
-            .filter { !Calendar.current.isDateInToday($0.ping.date) }
-            .filter { !Calendar.current.isDateInYesterday($0.ping.date) }
+            .filter { !Calendar.current.isDateInToday($0.ping) }
+            .filter { !Calendar.current.isDateInYesterday($0.ping) }
     }
 
     private let dateFormatter: DateFormatter = {
@@ -53,7 +53,7 @@ struct Logbook: View {
                     Spacer()
                     VStack {
                         Text(answer.tags.map({ $0.name }).joined(separator: " "))
-                        Text(dateFormatter.string(from: answer.ping.date))
+                        Text(dateFormatter.string(from: answer.ping))
                     }
                     .foregroundColor(.white)
                     Spacer()

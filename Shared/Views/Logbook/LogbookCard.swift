@@ -30,7 +30,7 @@ struct LogbookCard: View {
                 Spacer()
                 VStack {
                     Text(answer.tags.map({ $0.name }).joined(separator: " "))
-                    Text(dateFormatter.string(from: answer.ping.date))
+                    Text(dateFormatter.string(from: answer.ping))
                 }
                 .foregroundColor(.white)
                 Spacer()

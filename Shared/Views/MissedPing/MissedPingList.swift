@@ -20,18 +20,18 @@ struct MissedPingList: View {
 
     private var pingsToday: [Ping] {
         missedPings
-            .filter { Calendar.current.isDateInToday($0.date) }
+            .filter { Calendar.current.isDateInToday($0) }
     }
 
     private var pingsYesterday: [Ping] {
         missedPings
-            .filter { Calendar.current.isDateInYesterday($0.date) }
+            .filter { Calendar.current.isDateInYesterday($0) }
     }
 
     private var pingsOlder: [Ping] {
         missedPings
             .filter {
-                !Calendar.current.isDateInYesterday($0.date) && !Calendar.current.isDateInToday($0.date)
+                !Calendar.current.isDateInYesterday($0) && !Calendar.current.isDateInToday($0)
             }
     }
 
@@ -61,7 +61,7 @@ struct MissedPingList: View {
 
     private func section<Header: View>(header: Header, pings: [Ping]) -> some View {
         Section(header: header) {
-            ForEach(pings) { ping in
+            ForEach(pings, id: \.self) { ping in
                 MissedPingCard(ping: ping)
             }
         }
@@ -77,11 +77,11 @@ struct MissedPingList: View {
                     PageTitle(title: "Pings", subtitle: "Missed pings")
 
                     if pingsToday.count > 0 {
-                        section(header: header(date: pingsToday.first!.date), pings: pingsToday)
+                        section(header: header(date: pingsToday.first!), pings: pingsToday)
                     }
 
                     if pingsYesterday.count > 0 {
-                        section(header: header(date: pingsYesterday.first!.date), pings: pingsYesterday)
+                        section(header: header(date: pingsYesterday.first!), pings: pingsYesterday)
                     }
                 }
             }
