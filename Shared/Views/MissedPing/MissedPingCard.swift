@@ -40,7 +40,7 @@ struct MissedPingCard: View {
                     guard config.needsSave else {
                         return
                     }
-                    let tags = config.answer.split(separator: " ").map { Tag(name: String($0)) }
+                    let tags = config.answer.split(separator: " ").map { Tag($0) }
                     let answer = Answer(ping: ping, tags: tags)
                     store.answers.append(answer)
                 }

@@ -15,7 +15,7 @@ struct AnswerEditorConfig {
 
     init(answer: Answer) {
         self.pingDate = answer.ping
-        self.response = answer.tags.map { $0.name }.joined(separator: " ")
+        self.response = answer.tags.joined(separator: " ")
     }
 
     mutating func present() {

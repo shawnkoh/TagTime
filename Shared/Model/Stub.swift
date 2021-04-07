@@ -10,7 +10,6 @@ import Foundation
 enum Stub {
     static let tags: [Tag] =
         ["WORKING", "SLEEPING", "TOILETING", "EATING", "GAMING", "READING", "EXERCISING", "COOKING"]
-            .map { Tag(name: $0) }
 
     static let pings: [Ping] =
         [-1, -2, -3 , -5, -9, -12, -14, -15, -18, -19, -20, -24, -26, -30, -48, -50]
