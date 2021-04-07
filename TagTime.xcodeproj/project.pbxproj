@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,6 +24,9 @@
 		868E97C3261738C5000A41FF /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C2261738C5000A41FF /* Stub.swift */; };
 		868E97C926173AAD000A41FF /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C826173AAD000A41FF /* Answer.swift */; };
 		868E97D026174A56000A41FF /* Color+Figma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97CF26174A56000A41FF /* Color+Figma.swift */; };
+		86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59126261DB71600A25D1F /* FirebaseAuth */; };
+		86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59128261DB71600A25D1F /* FirebaseFirestore */; };
+		86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 86A5912A261DB71600A25D1F /* FirebaseFirestoreSwift-Beta */; };
 		86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB6E261732FD003CBA6B /* MissedPingList.swift */; };
 		86ADBB7526173303003CBA6B /* Logbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7426173303003CBA6B /* Logbook.swift */; };
 		86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7A26173307003CBA6B /* Statistics.swift */; };
@@ -88,6 +91,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */,
+				86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */,
+				86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +285,11 @@
 			dependencies = (
 			);
 			name = "TagTime (iOS)";
+			packageProductDependencies = (
+				86A59126261DB71600A25D1F /* FirebaseAuth */,
+				86A59128261DB71600A25D1F /* FirebaseFirestore */,
+				86A5912A261DB71600A25D1F /* FirebaseFirestoreSwift-Beta */,
+			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
 			productType = "com.apple.product-type.application";
@@ -370,6 +381,9 @@
 				Base,
 			);
 			mainGroup = 861256C126139CAA00C2B81B;
+			packageReferences = (
+				86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 861256CF26139CAB00C2B81B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -824,6 +838,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		86A59126261DB71600A25D1F /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		86A59128261DB71600A25D1F /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		86A5912A261DB71600A25D1F /* FirebaseFirestoreSwift-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreSwift-Beta";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 861256C226139CAA00C2B81B /* Project object */;
 }
