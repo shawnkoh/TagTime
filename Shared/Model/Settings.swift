@@ -7,18 +7,16 @@
 
 import Foundation
 
-class Settings: ObservableObject {
+final class Settings: ObservableObject {
+    // Average gap between pings, in minutes
     @Published var pingInterval: Int
-
-    @Published var beeminderAuthToken: String?
     // Initial state of the random number generator
-    @Published var seed = 11193462
-    // Ur-ping ie the birth of Timepie/TagTime! (unixtime)
-    let urping = 1184097393
+    @Published var seed: Int
+    @Published var beeminderAuthToken: String?
 
-
-    init(pingInterval: Int = 45, beeminderAuthToken: String? = nil) {
+    init(pingInterval: Int = 45, seed: Int = 11193462, beeminderAuthToken: String? = nil) {
         self.pingInterval = pingInterval
+        self.seed = seed
         self.beeminderAuthToken = beeminderAuthToken
     }
 }

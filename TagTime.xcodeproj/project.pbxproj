@@ -49,6 +49,7 @@
 		86ADBB812617330B003CBA6B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB802617330B003CBA6B /* Preferences.swift */; };
 		86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */; };
 		86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
+		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
 /* End PBXBuildFile section */
 
@@ -103,6 +104,7 @@
 		86ADBB802617330B003CBA6B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingAnswerer.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
+		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,9 +234,10 @@
 			isa = PBXGroup;
 			children = (
 				868E97C826173AAD000A41FF /* Answer.swift */,
-				8684C04126183698006717FC /* Store.swift */,
 				868E97B2261736A7000A41FF /* Ping.swift */,
+				86C5A701261E2104001451E9 /* PingService.swift */,
 				8672E70426181B01004081FC /* Settings.swift */,
+				8684C04126183698006717FC /* Store.swift */,
 				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
 				86A5914F261DBCBD00A25D1F /* User.swift */,
@@ -469,6 +472,7 @@
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
+				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
 				8684C04D26186C37006717FC /* AnswerEditor.swift in Sources */,

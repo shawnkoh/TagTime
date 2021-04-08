@@ -8,17 +8,24 @@
 import Foundation
 import Firebase
 import FirebaseFirestoreSwift
+import Combine
 
 final class Store: ObservableObject {
     @Published var pings: [Ping] = Stub.pings
     @Published var tags: [Tag] = Stub.tags
     @Published var answers: [Answer] = []
 
+    let settings = Settings()
+    let pingService = PingService()
+
+    var subscribers = Set<AnyCancellable>()
+
     let user: User
 
     init(user: User) {
         self.user = user
         setup()
+        setupSubscribers()
     }
 
     private var listener: ListenerRegistration?
@@ -40,5 +47,15 @@ final class Store: ObservableObject {
                     // TODO: Log error
                 }
             }
+    }
+
+    private func setupSubscribers() {
+        settings.$seed
+            .sink { self.pingService.seed = $0 }
+            .store(in: &subscribers )
+
+        settings.$pingInterval
+            .sink { self.pingService.pingInterval = $0 * 60 }
+            .store(in: &subscribers )
     }
 }

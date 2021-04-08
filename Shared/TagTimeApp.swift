@@ -10,8 +10,6 @@ import Firebase
 
 @main
 struct TagTimeApp: App {
-    @StateObject var settings = Settings()
-
     init() {
         FirebaseApp.configure()
         let settings = FirestoreSettings()
@@ -22,7 +20,6 @@ struct TagTimeApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(settings)
         }
     }
 }
