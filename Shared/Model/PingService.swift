@@ -11,9 +11,9 @@ final class PingService: ObservableObject {
     // Reference:: https://forum.beeminder.com/t/official-reference-implementation-of-the-tagtime-universal-ping-schedule/4282
 
     // Average gap between pings, in seconds
-    var pingInterval: Int
-    // Ur-ping ie the birth of Timepie/TagTime! (unixtime)
-    let urping = 1184097393
+    var averagePingInterval: Int
+    /// The birth of Timepie/TagTime! (unixtime)
+    let tagTimeBirthTime = 1184097393
     // Initial state of the random number generator
     var seed: Int
     // =7^5: Multiplier for LCG random number generator
@@ -21,19 +21,19 @@ final class PingService: ObservableObject {
     // =2^31-1: Modulus used for the RNG
     let im = 2147483647
 
-    // Above URPING is in 2007 and it's fine to jump to any later URPING/SEED pair
-    // like this one in 2018 -- URPING = 1532992625, SEED = 75570 -- without
-    // deviating from the universal ping schedule.
+    // tagTimeBirthTime is in 2007 and it's fine to jump to any later tagTimeBirthTime/SEED pair
+    // like this one in 2018 -- tagTimeBirthTime = 1532992625, SEED = 75570
+    // without deviating from the universal ping schedule.
 
     // Global var with unixtime (in seconds) of last computed ping
     var lastPing: Int
     // Global variable that's the state of the RNG
     var state: Int
 
-    init(pingInterval: Int = 45 * 60, seed: Int = 11193462) {
-        self.pingInterval = pingInterval
+    init(averagePingInterval: Int = 45 * 60, seed: Int = 11193462) {
+        self.averagePingInterval = averagePingInterval
         self.seed = seed
-        self.lastPing = urping
+        self.lastPing = tagTimeBirthTime
         self.state = seed
     }
 
@@ -54,7 +54,7 @@ final class PingService: ObservableObject {
 
     // Every TagTime gap must be an integer number of seconds not less than 1
     private func gap() -> Int {
-        Int(max(1, round(exprand(m: pingInterval))))
+        Int(max(1, round(exprand(m: averagePingInterval))))
     }
 
     // Return unixtime of the next ping. First call init(t) and then call this in
@@ -72,7 +72,7 @@ final class PingService: ObservableObject {
         var p = 0
         var s = 0
         // reset the global state
-        (lastPing, state) = (urping, seed)
+        (lastPing, state) = (tagTimeBirthTime, seed)
         // walk forward
         while lastPing <= t {
             (p, s) = (lastPing, state)

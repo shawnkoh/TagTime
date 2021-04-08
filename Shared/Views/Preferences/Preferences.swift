@@ -20,7 +20,7 @@ struct Preferences: View {
 
                 TextField(
                     "Ping Interval",
-                    value: $settings.pingInterval,
+                    value: $settings.averagePingInterval,
                     formatter: NumberFormatter(),
                     onEditingChanged: { _ in },
                     onCommit: {}

@@ -55,8 +55,8 @@ final class Store: ObservableObject {
             .sink { self.pingService.seed = $0 }
             .store(in: &subscribers )
 
-        settings.$pingInterval
-            .sink { self.pingService.pingInterval = $0 * 60 }
+        settings.$averagePingInterval
+            .sink { self.pingService.averagePingInterval = $0 * 60 }
             .store(in: &subscribers )
     }
 }
