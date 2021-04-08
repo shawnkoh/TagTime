@@ -10,11 +10,12 @@ import Firebase
 
 struct ContentView: View {
     @State var user: User?
+    @EnvironmentObject var settings: Settings
 
     var body: some View {
         if let user = user {
             AuthenticatedView()
-                .environmentObject(Store(user: user))
+                .environmentObject(Store(settings: settings, user: user))
         } else {
             UnauthenticatedView()
                 .onAppear() {
@@ -40,10 +41,12 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
+    private static let settings = Settings()
+
     static var previews: some View {
         ContentView()
-            .environmentObject(Settings())
-            .environmentObject(Store(user: Stub.user))
+            .environmentObject(settings)
+            .environmentObject(Stub.store)
             .preferredColorScheme(.dark)
     }
 }

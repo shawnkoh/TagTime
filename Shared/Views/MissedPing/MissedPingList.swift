@@ -107,7 +107,7 @@ struct MissedPingList: View {
 struct MissedPingList_Previews: PreviewProvider {
     static var previews: some View {
         MissedPingList()
-            .environmentObject(Store(user: Stub.user))
+            .environmentObject(Stub.store)
             .preferredColorScheme(.dark)
     }
 }

@@ -20,6 +20,6 @@ struct Statistics: View {
 struct Statistics_Previews: PreviewProvider {
     static var previews: some View {
         Statistics()
-            .environmentObject(Store(user: Stub.user))
+            .environmentObject(Stub.store)
     }
 }

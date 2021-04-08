@@ -15,14 +15,15 @@ final class Store: ObservableObject {
     @Published var tags: [Tag] = Stub.tags
     @Published var answers: [Answer] = []
 
-    let settings = Settings()
     let pingService = PingService()
+
+    let settings: Settings
+    let user: User
 
     var subscribers = Set<AnyCancellable>()
 
-    let user: User
-
-    init(user: User) {
+    init(settings: Settings, user: User) {
+        self.settings = settings
         self.user = user
         setup()
         setupSubscribers()
