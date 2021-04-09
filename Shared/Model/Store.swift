@@ -59,4 +59,24 @@ final class Store: ObservableObject {
             .sink { self.pingService.averagePingInterval = $0 * 60 }
             .store(in: &subscribers )
     }
+
+    func addAnswer(_ answer: Answer) {
+        do {
+            try Firestore.firestore()
+                .collection("users")
+                .document(user.id)
+                .collection("answers")
+                .document(answer.ping.timeIntervalSince1970.description)
+                .setData(from: answer) { error in
+                    guard let error = error else {
+                        return
+                    }
+                    // TODO: Log error
+                    print("unable to save answer", error)
+                }
+        } catch {
+            // TODO: Log error
+            print("Unable to add answer")
+        }
+    }
 }
