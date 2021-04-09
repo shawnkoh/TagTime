@@ -7,10 +7,12 @@
 
 import Foundation
 
-struct User {
+struct User: Identifiable, Codable {
     let id: String
+    let startDate: Date
 
-    init(id: String) {
+    init(id: String, startDate: Date = Date()) {
         self.id = id
+        self.startDate = startDate
     }
 }
