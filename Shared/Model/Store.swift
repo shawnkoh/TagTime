@@ -28,7 +28,7 @@ final class Store: ObservableObject {
         setup()
         setupSubscribers()
 
-        pingService.unansweredPings(user: user) {
+        getUnansweredPings() {
             self.pings = $0
         }
     }
@@ -78,5 +78,38 @@ final class Store: ObservableObject {
             // TODO: Log error
             print("Unable to add answer")
         }
+    }
+
+    func getUnansweredPings(completion: @escaping (([Ping]) -> Void)) {
+        let now = Date()
+        Firestore.firestore()
+            .collection("users")
+            .document(user.id)
+            .collection("answers")
+            .order(by: "ping", descending: true)
+            .whereField("ping", isGreaterThanOrEqualTo: user.startDate)
+            // TODO: We should probably filter this even more to not incur so many reads.
+            .whereField("ping", isLessThanOrEqualTo: now)
+            .getDocuments() { (snapshot, error) in
+                guard let snapshot = snapshot else {
+                    print("returned")
+                    // TODO: Log this
+                    return
+                }
+                do {
+                    let answerablePings = self.pingService.answerablePings(startDate: self.user.startDate)
+                        .map { $0.date }
+                    var answerablePingSet = Set(answerablePings)
+                    try snapshot.documents
+                        .compactMap { try $0.data(as: Answer.self) }
+                        .map { $0.ping }
+                        .forEach { answerablePingSet.remove($0) }
+                    let result = answerablePingSet.sorted()
+                    completion(result)
+                } catch {
+                    // TODO: Log this
+                    print("error", error)
+                }
+            }
     }
 }

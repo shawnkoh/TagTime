@@ -6,9 +6,6 @@
 //
 
 import Foundation
-import FirebaseFirestore
-import FirebaseFirestoreSwift
-import Firebase
 
 struct Png: Hashable {
     let seed: Int
@@ -100,39 +97,6 @@ final class PingService: ObservableObject {
             cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
         }
         return pings
-    }
-
-    func unansweredPings(user: User, completion: @escaping (([Ping]) -> Void)) {
-        let now = Date()
-        Firestore.firestore()
-            .collection("users")
-            .document(user.id)
-            .collection("answers")
-            .order(by: "ping", descending: true)
-            .whereField("ping", isGreaterThanOrEqualTo: user.startDate)
-            // TODO: We should probably filter this even more to not incur so many reads.
-            .whereField("ping", isLessThanOrEqualTo: now)
-            .getDocuments() { (snapshot, error) in
-                guard let snapshot = snapshot else {
-                    print("returned")
-                    // TODO: Log this
-                    return
-                }
-                do {
-                    let answerablePings = self.answerablePings(startDate: user.startDate)
-                        .map { $0.date }
-                    var answerablePingSet = Set(answerablePings)
-                    try snapshot.documents
-                        .compactMap { try $0.data(as: Answer.self) }
-                        .map { $0.ping }
-                        .forEach { answerablePingSet.remove($0) }
-                    let result = answerablePingSet.sorted()
-                    completion(result)
-                } catch {
-                    // TODO: Log this
-                    print("error", error)
-                }
-            }
     }
 }
 
