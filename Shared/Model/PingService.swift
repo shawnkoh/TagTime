@@ -87,33 +87,59 @@ final class Pinger {
         return result
     }
 
-    func unansweredPings(user: User) -> [Ping] {
-        var result = [Ping]()
-        // alternatively, we keep the Answer data structure on firestore
-        // then, we store the date that the user first begins using TagTime onto firebase.
-        // using that date, we can compare the Answers collection with the data.
-        // this is problematic. if you rely only on the latest answer, then what if the user closes the app after answering a Ping?
-//        Firestore.firestore()
-//            .collection("users")
-//            .document(user.id)
-//            .collection("answers")
-//            .order(by: "ping", descending: true)
-//            .whereField("ping", isGreaterThanOrEqualTo: user.startDate)
-//            .getDocuments() { (result, error) in
-//                do {
-//                    guard let answer = try result?.documents.first?.data(as: Answer.self) else {
-//                        return
-//                    }
-//                    let latestPing = answer.ping
-//                } catch {
-//                }
-//            }
-        // find the last ping from Firestore
-        // walk forward until the randomly generated ping is greater than Firestore's ping
-        // add that ping to an array
-        // walk forward until the next ping is less than the current time, and add every ping into the result
-        let randomer = makeRandomer()
-        return result
+    func answerablePings(startDate: Date) -> [Ping] {
+        let now = Date()
+        let randomer = self.makeRandomer()
+
+        // Find firstPing
+        while TimeInterval(randomer.lastPing) < startDate.timeIntervalSince1970 {
+            _ = randomer.nextPing()
+        }
+        let firstPing = randomer.lastPing
+
+        var pings = [firstPing]
+
+        while TimeInterval(randomer.lastPing) <= now.timeIntervalSince1970 {
+            // we don't know whether this is greater than now. we can only find out
+            // when the while loop breaks
+            pings.append(randomer.nextPing())
+        }
+        // when the while loop breaks, it means lastPing is > now
+        // so, we remove the last ping from the array
+        pings.removeLast()
+        return pings.map { Date(timeIntervalSince1970: Double($0)) }
+    }
+
+    func unansweredPings(user: User, completion: @escaping (([Ping]) -> Void)) {
+        let now = Date()
+        Firestore.firestore()
+            .collection("users")
+            .document(user.id)
+            .collection("answers")
+            .order(by: "ping", descending: true)
+            .whereField("ping", isGreaterThanOrEqualTo: user.startDate)
+            // TODO: We should probably filter this even more to not incur so many reads.
+            .whereField("ping", isLessThanOrEqualTo: now)
+            .getDocuments() { (snapshot, error) in
+                guard let snapshot = snapshot else {
+                    print("returned")
+                    // TODO: Log this
+                    return
+                }
+                do {
+                    let answerablePings = self.answerablePings(startDate: user.startDate)
+                    var answerablePingSet = Set(answerablePings)
+                    try snapshot.documents
+                        .compactMap { try $0.data(as: Answer.self) }
+                        .map { $0.ping }
+                        .forEach { answerablePingSet.remove($0) }
+                    let result = answerablePingSet.sorted()
+                    completion(result)
+                } catch {
+                    // TODO: Log this
+                    print("error", error)
+                }
+            }
     }
 }
 

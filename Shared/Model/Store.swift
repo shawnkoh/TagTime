@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 import Combine
 
 final class Store: ObservableObject {
-    @Published var pings: [Ping] = Stub.pings
+    @Published var pings: [Ping] = []
     @Published var tags: [Tag] = Stub.tags
     @Published var answers: [Answer] = []
 
@@ -27,6 +27,11 @@ final class Store: ObservableObject {
         self.user = user
         setup()
         setupSubscribers()
+
+        let pinger = Pinger()
+        pinger.unansweredPings(user: user) {
+            self.pings = $0
+        }
     }
 
     private var listener: ListenerRegistration?
