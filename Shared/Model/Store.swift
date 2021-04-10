@@ -9,8 +9,10 @@ import Foundation
 import Firebase
 import FirebaseFirestoreSwift
 import Combine
+import UserNotifications
 
-final class Store: ObservableObject {
+// NSObject is required for Store to be UNUserNotificationCenterDelegate
+final class Store: NSObject, ObservableObject {
     @Published var pings: [Ping] = []
     @Published var tags: [Tag] = Stub.tags
     @Published var answers: [Answer] = []
@@ -25,11 +27,75 @@ final class Store: ObservableObject {
     init(settings: Settings, user: User) {
         self.settings = settings
         self.user = user
+        super.init()
         setup()
         setupSubscribers()
 
         getUnansweredPings() {
             self.pings = $0
+        }
+
+        setupNotifications()
+    }
+
+    private func setupNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        // TODO: Remove these.
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
+
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                // TODO: Log
+                print(error)
+            }
+
+            guard granted else {
+                return
+            }
+            self.scheduleNotifications()
+        }
+    }
+
+    private func scheduleNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings() { settings in
+            guard settings.authorizationStatus == .authorized else {
+                // TODO: Inform UI
+                return
+            }
+            #if targetEnvironment(simulator)
+            let ping = Calendar.current.date(byAdding: .second, value: 10, to: Date())!
+            #else
+            let ping = self.pingService.nextPing().date
+            #endif
+
+            self.scheduleNotification(ping: ping)
+        }
+    }
+
+    private func scheduleNotification(ping: Ping) {
+        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = "It's tag time!"
+        // TODO: Not sure if I should display the date since the notification center already displays it.
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        content.body = "What are you doing RIGHT NOW (\(formatter.string(from: ping)))?"
+        content.badge = 1
+        content.sound = .default
+
+        let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: ping)
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: ping.description, content: content, trigger: trigger)
+        center.add(request) { error in
+            if let error = error {
+                // TODO: Log
+                print("error scheduling notification", error)
+            }
         }
     }
 
@@ -112,5 +178,22 @@ final class Store: ObservableObject {
                     print("error", error)
                 }
             }
+    }
+}
+
+extension Store: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        print("foreground")
+        completionHandler([])
+//        completionHandler([.badge, .banner, .list, .sound])
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("background", response.actionIdentifier)
+        completionHandler()
     }
 }
