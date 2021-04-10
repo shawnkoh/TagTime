@@ -55,6 +55,7 @@ final class Store: ObservableObject {
     }
 
     private func setupSubscribers() {
+        // TODO: This should recompute pings
         settings.$averagePingInterval
             .sink { self.pingService.averagePingInterval = $0 * 60 }
             .store(in: &subscribers )
