@@ -78,19 +78,21 @@ final class Store: NSObject, ObservableObject {
     private func scheduleNotification(ping: Ping) {
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
-        content.title = "It's tag time!"
-        // TODO: Not sure if I should display the date since the notification center already displays it.
+
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         formatter.dateStyle = .none
+
+        content.title = "It's tag time!"
+        // TODO: Not sure if I should display the date since the notification center already displays it.
         content.body = "What are you doing RIGHT NOW (\(formatter.string(from: ping)))?"
         content.badge = 1
         content.sound = .default
 
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: ping)
-
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let request = UNNotificationRequest(identifier: ping.description, content: content, trigger: trigger)
+
         center.add(request) { error in
             if let error = error {
                 // TODO: Log
