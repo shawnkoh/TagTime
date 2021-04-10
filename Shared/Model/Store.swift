@@ -28,8 +28,7 @@ final class Store: ObservableObject {
         setup()
         setupSubscribers()
 
-        let pinger = Pinger()
-        pinger.unansweredPings(user: user) {
+        pingService.unansweredPings(user: user) {
             self.pings = $0
         }
     }
@@ -56,10 +55,6 @@ final class Store: ObservableObject {
     }
 
     private func setupSubscribers() {
-        settings.$seed
-            .sink { self.pingService.seed = $0 }
-            .store(in: &subscribers )
-
         settings.$averagePingInterval
             .sink { self.pingService.averagePingInterval = $0 * 60 }
             .store(in: &subscribers )

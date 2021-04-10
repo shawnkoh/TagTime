@@ -27,19 +27,6 @@ struct Preferences: View {
                 )
             }
 
-            VStack(alignment: .leading) {
-                Text("Ping Seed")
-                    .bold()
-
-                TextField(
-                    "Ping Seed",
-                    value: $settings.seed,
-                    formatter: NumberFormatter(),
-                    onEditingChanged: { _ in },
-                    onCommit: {}
-                )
-            }
-
             Spacer()
         }
     }
