@@ -22,6 +22,8 @@ final class Store: NSObject, ObservableObject {
     let settings: Settings
     let user: User
 
+    var alertConfig = AlertConfig()
+
     var subscribers = Set<AnyCancellable>()
 
     init(settings: Settings, user: User) {

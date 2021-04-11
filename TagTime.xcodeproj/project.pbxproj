@@ -50,6 +50,7 @@
 		86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */; };
 		86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
+		86E3AB5A262354F900092CE6 /* AlertConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertConfig.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
 /* End PBXBuildFile section */
 
@@ -105,6 +106,7 @@
 		86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingAnswerer.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
+		86E3AB59262354F900092CE6 /* AlertConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertConfig.swift; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -217,6 +219,7 @@
 		8672E71A26182207004081FC /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				86E3AB59262354F900092CE6 /* AlertConfig.swift */,
 				8672E71426182204004081FC /* PageTitle.swift */,
 			);
 			path = Common;
@@ -468,6 +471,7 @@
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
+				86E3AB5A262354F900092CE6 /* AlertConfig.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,

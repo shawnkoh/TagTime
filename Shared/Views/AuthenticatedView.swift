@@ -15,6 +15,8 @@ struct AuthenticatedView: View {
         case preferences
     }
 
+    @EnvironmentObject var store: Store
+
     @State private var currentPage: Page = .missedPingList
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
@@ -53,6 +55,9 @@ struct AuthenticatedView: View {
             }
         }
         .statusBar(hidden: true)
+        .alert(isPresented: $store.alertConfig.isPresented) {
+            Alert(title: Text(store.alertConfig.message))
+        }
     }
 }
 
