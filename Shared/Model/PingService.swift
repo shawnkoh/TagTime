@@ -106,7 +106,7 @@ final class PingService: ObservableObject {
 }
 
 extension PingService {
-    // tagTimeBirthTime and tagTimeBirthSeed must be paired in order for the universal schedule to work
+    // tagTimeBirth seed and unixtime must be paired in order for the universal schedule to work
     static let tagTimeBirth = Png(seed: 11193462, unixtime: 1184097393)
     static let defaultAveragePingInterval = 45 * 60
 }
