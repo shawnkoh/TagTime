@@ -17,7 +17,7 @@ final class Store: NSObject, ObservableObject {
     @Published var tags: [Tag] = Stub.tags
     @Published var answers: [Answer] = []
 
-    let pingService = PingService()
+    let pingService: PingService
 
     let settings: Settings
     let user: User
@@ -27,6 +27,7 @@ final class Store: NSObject, ObservableObject {
     init(settings: Settings, user: User) {
         self.settings = settings
         self.user = user
+        self.pingService = .init(startDate: user.startDate)
         super.init()
         setup()
         setupSubscribers()
@@ -166,7 +167,7 @@ final class Store: NSObject, ObservableObject {
                     return
                 }
                 do {
-                    let answerablePings = self.pingService.answerablePings(startDate: self.user.startDate)
+                    let answerablePings = self.pingService.answerablePings()
                         .map { $0.date }
                     var answerablePingSet = Set(answerablePings)
                     try snapshot.documents

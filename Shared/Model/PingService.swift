@@ -46,15 +46,22 @@ struct Png: Hashable {
 }
 
 final class PingService: ObservableObject {
+    let startPing: Png
+
     // Average gap between pings, in seconds
     var averagePingInterval: Int
 
-    init(averagePingInterval: Int = defaultAveragePingInterval) {
+    init(startDate: Date, averagePingInterval: Int = defaultAveragePingInterval) {
         self.averagePingInterval = averagePingInterval
+        var cursor = Self.tagTimeBirth
+        while cursor.date < startDate {
+            cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
+        }
+        self.startPing = cursor
     }
 
     func nextPing(after date: Date) -> Png {
-        var cursor = PingService.tagTimeBirth
+        var cursor = startPing
         while cursor.date <= date {
             cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
         }
@@ -62,7 +69,7 @@ final class PingService: ObservableObject {
     }
 
     func nextPing(onOrAfter date: Date) -> Png {
-        var cursor = PingService.tagTimeBirth
+        var cursor = startPing
         while cursor.date < date {
             cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
         }
@@ -86,12 +93,10 @@ final class PingService: ObservableObject {
         return result
     }
 
-    func answerablePings(startDate: Date) -> [Png] {
+    func answerablePings() -> [Png] {
         let now = Date()
-        let firstPing = nextPing(onOrAfter: startDate)
-
-        var pings = [firstPing]
-        var cursor = firstPing
+        var pings = [Png]()
+        var cursor = startPing
         while cursor.date <= now {
             pings.append(cursor)
             cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
