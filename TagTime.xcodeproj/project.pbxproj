@@ -223,7 +223,6 @@
 		8672E71A26182207004081FC /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				86E3AB59262354F900092CE6 /* AlertService.swift */,
 				8672E71426182204004081FC /* PageTitle.swift */,
 			);
 			path = Common;
@@ -241,7 +240,9 @@
 		86ADBB64261730E5003CBA6B /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				86E3AB59262354F900092CE6 /* AlertService.swift */,
 				868E97C826173AAD000A41FF /* Answer.swift */,
+				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
 				868E97B2261736A7000A41FF /* Ping.swift */,
 				86C5A701261E2104001451E9 /* PingService.swift */,
 				8672E70426181B01004081FC /* Settings.swift */,
@@ -249,7 +250,6 @@
 				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
 				86A5914F261DBCBD00A25D1F /* User.swift */,
-				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
