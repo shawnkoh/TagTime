@@ -51,6 +51,9 @@ final class PingService: ObservableObject {
     // Average gap between pings, in seconds
     var averagePingInterval: Int
 
+    // Solely updated by updateAnswerablePings
+    @Published private(set) var answerablePings: [Png]
+
     init(startDate: Date, averagePingInterval: Int = defaultAveragePingInterval) {
         self.averagePingInterval = averagePingInterval
         var cursor = Self.tagTimeBirth
@@ -58,6 +61,21 @@ final class PingService: ObservableObject {
             cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
         }
         self.startPing = cursor
+        self.answerablePings = []
+        self.answerablePings = getAnswerablePings()
+
+        updateAnswerablePings()
+    }
+
+    // TODO: Test whether this works
+    private func updateAnswerablePings() {
+        let now = Date()
+        let timeInterval = nextPing(after: now).date.timeIntervalSince(now)
+
+        Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [self] date in
+            answerablePings = getAnswerablePings()
+            updateAnswerablePings()
+        }
     }
 
     func nextPing(after date: Date) -> Png {
@@ -76,16 +94,13 @@ final class PingService: ObservableObject {
         return cursor
     }
 
-    func nextPing() -> Png {
-        nextPing(after: Date())
-    }
-
     func nextPings(count: Int) -> [Png] {
         guard count > 0 else {
             return []
         }
 
-        let nextPing = self.nextPing()
+        let now = Date()
+        let nextPing = self.nextPing(after: now)
         var result = [nextPing]
         while result.count < count {
             result.append(result.last!.nextPing(averagePingInterval: averagePingInterval))
@@ -93,7 +108,7 @@ final class PingService: ObservableObject {
         return result
     }
 
-    func answerablePings() -> [Png] {
+    private func getAnswerablePings() -> [Png] {
         let now = Date()
         var pings = [Png]()
         var cursor = startPing

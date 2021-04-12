@@ -137,7 +137,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
             case Self.ActionIdentifier.previous:
                 ()
             case Self.ActionIdentifier.reply:
-                response.notification
+                ()
             case Self.ActionIdentifier.open:
                 ()
             default:

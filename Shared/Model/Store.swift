@@ -11,9 +11,11 @@ import FirebaseFirestoreSwift
 import Combine
 
 final class Store: ObservableObject {
-    @Published var pings: [Ping] = []
-    @Published var tags: [Tag] = Stub.tags
-    @Published var answers: [Answer] = []
+    @Published private(set) var tags: [Tag] = Stub.tags
+    // Solely updated by Firestore listener
+    @Published private(set) var answers: [Answer] = []
+    // Solely updated by publisher
+    @Published private(set) var unansweredPings: [Ping] = []
 
     let pingService: PingService
     let notificationService = NotificationService()
@@ -34,23 +36,23 @@ final class Store: ObservableObject {
         self.pingService = .init(startDate: user.startDate)
         self.userDocument = Firestore.firestore().collection("users").document(user.id)
         self.answerCollection = userDocument.collection("answers")
-        
+
         setup()
         setupSubscribers()
-
-        getUnansweredPings() {
-            self.pings = $0
-        }
     }
 
     private func setup() {
+        // TODO: We should not be observing the entire answer collection
+        // Rather, we should only observe a paginated version for displaying Logbook.
+        // But take note that if you change this, you also need to implement a snapshot listener for maintaining unansweredPings
+        // The most ideal solution would be to have a dedicated snapshot listener for every use case, but for now, this will do.
+        // It's a quick hack but at the cost of incurring many Firestore reads
         answerCollection
             .addSnapshotListener() { (snapshot, error) in
                 guard let snapshot = snapshot else {
                     // TODO: Log error
                     return
                 }
-                // TODO: find a better way to handle situations like these
                 do {
                     self.answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
                 } catch {
@@ -105,6 +107,22 @@ final class Store: ObservableObject {
         settings.$averagePingInterval
             .sink { self.pingService.averagePingInterval = $0 * 60 }
             .store(in: &subscribers )
+
+        // Update unansweredPings by comparing answerablePings with answers.
+        // answerablePings is maintained by PingService
+        // answers is maintained by observing Firestore's answers
+        // TODO: We need to find a way to minimise the number of reads for this.
+        pingService.$answerablePings
+            .zip($answers)
+            .map { (answerablePings, answers) -> [Ping] in
+                let answeredPings = Set(answers.map { $0.ping })
+
+                return answerablePings
+                    .filter { !answeredPings.contains($0.date) }
+                    .map { $0.date }
+            }
+            .sink { self.unansweredPings = $0 }
+            .store(in: &subscribers)
     }
 
     func addAnswer(_ answer: Answer) {
@@ -138,7 +156,7 @@ final class Store: ObservableObject {
                     return
                 }
                 do {
-                    let answerablePings = self.pingService.answerablePings()
+                    let answerablePings = self.pingService.answerablePings
                         .map { $0.date }
                     var answerablePingSet = Set(answerablePings)
                     try snapshot.documents
@@ -162,5 +180,11 @@ final class Store: ObservableObject {
         } catch {
             alertService.present(message: "updateAnswer(_:) \(error)")
         }
+    }
+
+    func answerAllUnansweredPings(tags: [Tag]) {
+        unansweredPings
+            .map { Answer(ping: $0, tags: tags) }
+            .forEach { addAnswer($0) }
     }
 }

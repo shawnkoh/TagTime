@@ -7,29 +7,43 @@
 
 import SwiftUI
 
+struct AnswerAllConfig {
+    private(set) var isPresented = false
+    var response = ""
+    private(set) var needToSave = false
+
+    var tags: [Tag] {
+        response.split(separator: " ").map { Tag($0) }
+    }
+
+    mutating func show() {
+        response = ""
+        isPresented = true
+    }
+
+    mutating func dismiss(save: Bool) {
+        needToSave = save
+        isPresented = false
+    }
+}
+
 struct MissedPingList: View {
     @EnvironmentObject var store: Store
     @State private var answeringAll = false
-
-    private var missedPings: [Ping] {
-        let answeredPings = Set(store.answers.map { $0.ping })
-        let allPings = store.pings
-        return allPings
-            .filter { !answeredPings.contains($0) }
-    }
+    @State private var answerAllConfig = AnswerAllConfig()
 
     private var pingsToday: [Ping] {
-        missedPings
+        store.unansweredPings
             .filter { Calendar.current.isDateInToday($0) }
     }
 
     private var pingsYesterday: [Ping] {
-        missedPings
+        store.unansweredPings
             .filter { Calendar.current.isDateInYesterday($0) }
     }
 
     private var pingsOlder: [Ping] {
-        missedPings
+        store.unansweredPings
             .filter {
                 !Calendar.current.isDateInYesterday($0) && !Calendar.current.isDateInToday($0)
             }
@@ -86,19 +100,41 @@ struct MissedPingList: View {
                 }
             }
 
-            Button(action: { answeringAll = true }) {
-                HStack {
-                    Spacer()
-                    Text("ANSWER ALL")
-                        .foregroundColor(.primary)
-                        .padding()
-                    Spacer()
+            if store.unansweredPings.count > 0 {
+                Button(action: { answeringAll = true }) {
+                    HStack {
+                        Spacer()
+                        Text("ANSWER ALL")
+                            .foregroundColor(.primary)
+                            .padding()
+                        Spacer()
+                    }
+                    .background(Color.hsb(223, 69, 90))
+                    .cornerRadius(8)
                 }
-                .background(Color.hsb(223, 69, 90))
-                .cornerRadius(8)
-            }
-            .sheet(isPresented: $answeringAll) {
-                Text("WHAT U DOING")
+                .sheet(
+                    isPresented: $answeringAll,
+                    onDismiss: {
+                        guard answerAllConfig.needToSave else {
+                            return
+                        }
+                        store.unansweredPings
+                            .map { Answer(ping: $0, tags: answerAllConfig.tags) }
+                            .forEach { store.addAnswer($0) }
+                    }
+                ) {
+                    VStack {
+                        Text("What were you doing from")
+                        Text("")
+                        TextField(
+                            "PING1 PING2",
+                            text: $answerAllConfig.response,
+                            onCommit: {
+                                answerAllConfig.dismiss(save: answerAllConfig.response.count > 0)
+                            }
+                        )
+                    }
+                }
             }
         }
     }
