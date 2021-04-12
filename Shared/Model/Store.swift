@@ -55,6 +55,7 @@ final class Store: ObservableObject {
                 }
                 do {
                     self.answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
+                    print("updated answers", self.answers)
                 } catch {
                     // TODO: Log error
                 }
@@ -113,13 +114,15 @@ final class Store: ObservableObject {
         // answers is maintained by observing Firestore's answers
         // TODO: We need to find a way to minimise the number of reads for this.
         pingService.$answerablePings
-            .zip($answers)
+            .combineLatest($answers)
             .map { (answerablePings, answers) -> [Ping] in
                 let answeredPings = Set(answers.map { $0.ping })
 
-                return answerablePings
+                let unansweredPings = answerablePings
                     .filter { !answeredPings.contains($0.date) }
                     .map { $0.date }
+
+                return unansweredPings
             }
             .sink { self.unansweredPings = $0 }
             .store(in: &subscribers)
