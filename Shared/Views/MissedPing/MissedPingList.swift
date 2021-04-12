@@ -100,7 +100,7 @@ struct MissedPingList: View {
                 }
             }
 
-            if store.unansweredPings.count > 0 {
+            if store.unansweredPings.count > 1 {
                 Button(action: { answeringAll = true }) {
                     HStack {
                         Spacer()
