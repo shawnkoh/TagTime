@@ -23,7 +23,7 @@ final class Store: ObservableObject {
     let userDocument: DocumentReference
     let answerCollection: CollectionReference
 
-    var alertConfig = AlertConfig()
+    var alertService = AlertService()
 
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
@@ -61,11 +61,11 @@ final class Store: ObservableObject {
 
         notificationService.requestAuthorization() { (granted, error) in
             if let error = error {
-                self.alertConfig.present(message: "error while requesting authorisation \(error.localizedDescription)")
+                self.alertService.present(message: "error while requesting authorisation \(error.localizedDescription)")
             }
 
             guard granted else {
-                self.alertConfig.present(message: "Unable to schedule notifications, not granted permission")
+                self.alertService.present(message: "Unable to schedule notifications, not granted permission")
                 return
             }
 
@@ -79,7 +79,7 @@ final class Store: ObservableObject {
             .limit(to: 1)
             .addSnapshotListener() { (snapshot, error) in
                 guard let snapshot = snapshot else {
-                    self.alertConfig.present(message: "Failed to update notifications. answerCollection snapshot = nil")
+                    self.alertService.present(message: "Failed to update notifications. answerCollection snapshot = nil")
                     return
                 }
                 do {
@@ -94,7 +94,7 @@ final class Store: ObservableObject {
                         self.notificationService.tryToScheduleNotifications(pings: pings, previousAnswer: nil)
                     }
                 } catch {
-                    self.alertConfig.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 }
             }
             .store(in: &listeners)

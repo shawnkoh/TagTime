@@ -1,5 +1,5 @@
 //
-//  AlertConfig.swift
+//  AlertService.swift
 //  TagTime (iOS)
 //
 //  Created by Shawn Koh on 12/4/21.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class AlertConfig: ObservableObject {
+final class AlertService: ObservableObject {
     @Published var isPresented = false
     @Published private(set) var message = ""
 

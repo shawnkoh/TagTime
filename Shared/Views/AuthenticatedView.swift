@@ -55,8 +55,8 @@ struct AuthenticatedView: View {
             }
         }
         .statusBar(hidden: true)
-        .alert(isPresented: $store.alertConfig.isPresented) {
-            Alert(title: Text(store.alertConfig.message))
+        .alert(isPresented: $store.alertService.isPresented) {
+            Alert(title: Text(store.alertService.message))
         }
     }
 }
