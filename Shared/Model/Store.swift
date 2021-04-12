@@ -9,108 +9,42 @@ import Foundation
 import Firebase
 import FirebaseFirestoreSwift
 import Combine
-import UserNotifications
 
-// NSObject is required for Store to be UNUserNotificationCenterDelegate
-final class Store: NSObject, ObservableObject {
+final class Store: ObservableObject {
     @Published var pings: [Ping] = []
     @Published var tags: [Tag] = Stub.tags
     @Published var answers: [Answer] = []
 
     let pingService: PingService
+    let notificationService = NotificationService()
 
     let settings: Settings
     let user: User
+    let userDocument: DocumentReference
+    let answerCollection: CollectionReference
 
     var alertConfig = AlertConfig()
 
-    var subscribers = Set<AnyCancellable>()
+    private var subscribers = Set<AnyCancellable>()
+    private var listeners = [ListenerRegistration]()
 
     init(settings: Settings, user: User) {
         self.settings = settings
         self.user = user
         self.pingService = .init(startDate: user.startDate)
-        super.init()
+        self.userDocument = Firestore.firestore().collection("users").document(user.id)
+        self.answerCollection = userDocument.collection("answers")
+        
         setup()
         setupSubscribers()
 
         getUnansweredPings() {
             self.pings = $0
         }
-
-        setupNotifications()
     }
-
-    private func setupNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        // TODO: Remove these.
-        center.removeAllDeliveredNotifications()
-        center.removeAllPendingNotificationRequests()
-
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error = error {
-                // TODO: Log
-                print(error)
-            }
-
-            guard granted else {
-                return
-            }
-            self.scheduleNotifications()
-        }
-    }
-
-    private func scheduleNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings() { settings in
-            guard settings.authorizationStatus == .authorized else {
-                // TODO: Inform UI
-                return
-            }
-            #if targetEnvironment(simulator)
-            let ping = Calendar.current.date(byAdding: .second, value: 10, to: Date())!
-            #else
-            let ping = self.pingService.nextPing().date
-            #endif
-
-            self.scheduleNotification(ping: ping)
-        }
-    }
-
-    private func scheduleNotification(ping: Ping) {
-        let center = UNUserNotificationCenter.current()
-        let content = UNMutableNotificationContent()
-
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        formatter.dateStyle = .none
-
-        content.title = "It's tag time!"
-        // TODO: Not sure if I should display the date since the notification center already displays it.
-        content.body = "What are you doing RIGHT NOW (\(formatter.string(from: ping)))?"
-        content.badge = 1
-        content.sound = .default
-
-        let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: ping)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: ping.description, content: content, trigger: trigger)
-
-        center.add(request) { error in
-            if let error = error {
-                // TODO: Log
-                print("error scheduling notification", error)
-            }
-        }
-    }
-
-    private var listener: ListenerRegistration?
 
     private func setup() {
-        self.listener = Firestore.firestore()
-            .collection("users")
-            .document(user.id)
-            .collection("answers")
+        answerCollection
             .addSnapshotListener() { (snapshot, error) in
                 guard let snapshot = snapshot else {
                     // TODO: Log error
@@ -123,6 +57,47 @@ final class Store: NSObject, ObservableObject {
                     // TODO: Log error
                 }
             }
+            .store(in: &listeners)
+
+        notificationService.requestAuthorization() { (granted, error) in
+            if let error = error {
+                self.alertConfig.present(message: "error while requesting authorisation \(error.localizedDescription)")
+            }
+
+            guard granted else {
+                self.alertConfig.present(message: "Unable to schedule notifications, not granted permission")
+                return
+            }
+
+            self.setupNotificationObserver()
+        }
+    }
+
+    private func setupNotificationObserver() {
+        answerCollection
+            .order(by: "ping", descending: true)
+            .limit(to: 1)
+            .addSnapshotListener() { (snapshot, error) in
+                guard let snapshot = snapshot else {
+                    self.alertConfig.present(message: "Failed to update notifications. answerCollection snapshot = nil")
+                    return
+                }
+                do {
+                    // TODO: Arbitrarily selected number. Maximum notifications = 64? not sure yet.
+                    let pings = self.pingService
+                        .nextPings(count: 30)
+                        .map { $0.date }
+
+                    if let answer = try snapshot.documents.first?.data(as: Answer.self) {
+                        self.notificationService.tryToScheduleNotifications(pings: pings, previousAnswer: answer)
+                    } else {
+                        self.notificationService.tryToScheduleNotifications(pings: pings, previousAnswer: nil)
+                    }
+                } catch {
+                    self.alertConfig.present(message: error.localizedDescription)
+                }
+            }
+            .store(in: &listeners)
     }
 
     private func setupSubscribers() {
@@ -134,10 +109,7 @@ final class Store: NSObject, ObservableObject {
 
     func addAnswer(_ answer: Answer) {
         do {
-            try Firestore.firestore()
-                .collection("users")
-                .document(user.id)
-                .collection("answers")
+            try answerCollection
                 .document(answer.ping.timeIntervalSince1970.description)
                 .setData(from: answer) { error in
                     guard let error = error else {
@@ -154,10 +126,7 @@ final class Store: NSObject, ObservableObject {
 
     func getUnansweredPings(completion: @escaping (([Ping]) -> Void)) {
         let now = Date()
-        Firestore.firestore()
-            .collection("users")
-            .document(user.id)
-            .collection("answers")
+        answerCollection
             .order(by: "ping", descending: true)
             .whereField("ping", isGreaterThanOrEqualTo: user.startDate)
             // TODO: We should probably filter this even more to not incur so many reads.
@@ -183,22 +152,5 @@ final class Store: NSObject, ObservableObject {
                     print("error", error)
                 }
             }
-    }
-}
-
-extension Store: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
-        willPresent notification: UNNotification,
-        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
-    ) {
-        print("foreground")
-        completionHandler([])
-//        completionHandler([.badge, .banner, .list, .sound])
-    }
-
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print("background", response.actionIdentifier)
-        completionHandler()
     }
 }
