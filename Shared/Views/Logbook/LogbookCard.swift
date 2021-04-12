@@ -10,6 +10,8 @@ import SwiftUI
 struct LogbookCard: View {
     var answer: Answer
 
+    @EnvironmentObject var store: Store
+
     @State var config: AnswerEditorConfig
 
     init(answer: Answer) {
@@ -38,12 +40,16 @@ struct LogbookCard: View {
         }
         .background(Color.hsb(211, 26, 86))
         .cornerRadius(10)
-        .sheet(isPresented: $config.isPresented, onDismiss: {
-            guard config.needToSave else {
-                return
+        .sheet(
+            isPresented: $config.isPresented,
+            onDismiss: {
+                guard config.needToSave else {
+                    return
+                }
+                let answer = Answer(ping: config.pingDate, tags: config.tags)
+                store.updateAnswer(answer)
             }
-            // TODO: Save it!
-        }) {
+        ) {
             AnswerEditor(config: $config)
         }
 

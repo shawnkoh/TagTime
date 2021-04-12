@@ -8,3 +8,9 @@
 import Foundation
 
 typealias Ping = Date
+
+extension Ping {
+    var documentId: String {
+        timeIntervalSince1970.description
+    }
+}

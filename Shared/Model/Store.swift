@@ -110,7 +110,7 @@ final class Store: ObservableObject {
     func addAnswer(_ answer: Answer) {
         do {
             try answerCollection
-                .document(answer.ping.timeIntervalSince1970.description)
+                .document(answer.ping.documentId)
                 .setData(from: answer) { error in
                     guard let error = error else {
                         return
@@ -152,5 +152,15 @@ final class Store: ObservableObject {
                     print("error", error)
                 }
             }
+    }
+
+    func updateAnswer(_ answer: Answer) {
+        do {
+            try answerCollection
+                .document(answer.ping.documentId)
+                .setData(from: answer)
+        } catch {
+            alertService.present(message: "updateAnswer(_:) \(error)")
+        }
     }
 }

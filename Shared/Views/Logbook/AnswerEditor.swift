@@ -13,6 +13,10 @@ struct AnswerEditorConfig {
     var response: String
     var needToSave = false
 
+    var tags: [Tag] {
+        response.split(separator: " ").map { Tag($0) }
+    }
+
     init(answer: Answer) {
         self.pingDate = answer.ping
         self.response = answer.tags.joined(separator: " ")
@@ -54,10 +58,11 @@ struct AnswerEditor: View {
                 "PING1 PING2",
                 text: $config.response,
                 onCommit: {
-                    guard config.response.count > 0 else {
+                    let needToSave = config.response.count > 0
+                    guard needToSave else {
                         return
                     }
-                    config.dismiss()
+                    config.dismiss(save: needToSave)
                 }
             )
             .autocapitalization(.allCharacters)
