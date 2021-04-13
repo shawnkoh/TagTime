@@ -97,10 +97,6 @@ final class PingService: ObservableObject {
         }
     }
 
-    func appendPing(_ ping: Png) {
-        answerablePings.append(ping)
-    }
-
     func nextPing(after date: Date) -> Png {
         var cursor = startPing
         while cursor.date <= date {

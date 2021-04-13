@@ -209,9 +209,25 @@ final class Store: ObservableObject {
     }
 
     func answerAllUnansweredPings(tags: [Tag]) {
-        unansweredPings
+        do {
+            // TODO: This has a limit of 500 writes, we should ideally split tags into multiple chunks of 500
+            let writeBatch = Firestore.firestore().batch()
+
+            try unansweredPings
             .map { Answer(ping: $0, tags: tags) }
-            .forEach { addAnswer($0) }
+            .forEach { answer in
+                let document = answerCollection.document(answer.ping.documentId)
+                try writeBatch.setData(from: answer, forDocument: document)
+            }
+
+            writeBatch.commit() { [self] error in
+                if let error = error {
+                    alertService.present(message: "answerAllUnansweredPings \(error)")
+                }
+            }
+        } catch {
+            alertService.present(message: "answerAllUnansweredPings \(error)")
+        }
     }
 }
 
