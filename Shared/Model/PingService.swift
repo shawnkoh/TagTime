@@ -52,30 +52,47 @@ final class PingService: ObservableObject {
     var averagePingInterval: Int
 
     // Solely updated by updateAnswerablePings
-    @Published private(set) var answerablePings: [Png]
+    @Published private(set) var answerablePings: [Png] {
+        didSet {
+            updateAnswerablePings()
+        }
+    }
 
     init(startDate: Date, averagePingInterval: Int = defaultAveragePingInterval) {
         self.averagePingInterval = averagePingInterval
+        let now = Date()
+
         var cursor = Self.tagTimeBirth
         while cursor.date < startDate {
             cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
         }
         self.startPing = cursor
-        self.answerablePings = []
-        self.answerablePings = getAnswerablePings()
 
+        var pings: [Png] = []
+        while cursor.date <= now {
+            pings.append(cursor)
+            cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
+        }
+        self.answerablePings = pings
+
+        // Start looping. updateAnswerablePings does not get called when self.answerablePings is first set
         updateAnswerablePings()
     }
 
+    private var updateTimer: Timer?
+
     // TODO: Test whether this works
     private func updateAnswerablePings() {
-        let now = Date()
-        let next = nextPing(after: now)
+        updateTimer?.invalidate()
 
-        let timeInterval = next.date.timeIntervalSince(now)
+        guard let nextPing = answerablePings.last?.nextPing(averagePingInterval: averagePingInterval) else {
+            return
+        }
 
-        Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [self] date in
-            answerablePings.append(next)
+        let timeInterval = nextPing.date.timeIntervalSinceNow
+
+        updateTimer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [self] date in
+            answerablePings.append(nextPing)
             updateAnswerablePings()
         }
     }
@@ -108,17 +125,6 @@ final class PingService: ObservableObject {
             result.append(result.last!.nextPing(averagePingInterval: averagePingInterval))
         }
         return result
-    }
-
-    private func getAnswerablePings() -> [Png] {
-        let now = Date()
-        var pings = [Png]()
-        var cursor = startPing
-        while cursor.date <= now {
-            pings.append(cursor)
-            cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
-        }
-        return pings
     }
 }
 
