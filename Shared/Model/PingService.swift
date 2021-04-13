@@ -70,10 +70,12 @@ final class PingService: ObservableObject {
     // TODO: Test whether this works
     private func updateAnswerablePings() {
         let now = Date()
-        let timeInterval = nextPing(after: now).date.timeIntervalSince(now)
+        let next = nextPing(after: now)
+
+        let timeInterval = next.date.timeIntervalSince(now)
 
         Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [self] date in
-            answerablePings = getAnswerablePings()
+            answerablePings.append(next)
             updateAnswerablePings()
         }
     }
