@@ -16,6 +16,8 @@ final class Store: ObservableObject {
     @Published private(set) var answers: [Answer] = []
     // Solely updated by publisher
     @Published private(set) var unansweredPings: [Ping] = []
+    // Solely updated by Firestore listener
+    @Published private(set) var latestAnswer: Answer?
 
     let pingService: PingService
     let notificationService = NotificationService()
@@ -40,29 +42,11 @@ final class Store: ObservableObject {
         notificationService.delegate = self
 
         setup()
-        setupSubscribers()
     }
 
     private func setup() {
-        // TODO: We should not be observing the entire answer collection
-        // Rather, we should only observe a paginated version for displaying Logbook.
-        // But take note that if you change this, you also need to implement a snapshot listener for maintaining unansweredPings
-        // The most ideal solution would be to have a dedicated snapshot listener for every use case, but for now, this will do.
-        // It's a quick hack but at the cost of incurring many Firestore reads
-        answerCollection
-            .addSnapshotListener() { (snapshot, error) in
-                guard let snapshot = snapshot else {
-                    // TODO: Log error
-                    return
-                }
-                do {
-                    self.answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
-                    print("updated answers", self.answers)
-                } catch {
-                    // TODO: Log error
-                }
-            }
-            .store(in: &listeners)
+        setupFirestoreListeners()
+        setupSubscribers()
 
         notificationService.requestAuthorization() { (granted, error) in
             if let error = error {
@@ -78,31 +62,68 @@ final class Store: ObservableObject {
         }
     }
 
-    private func setupNotificationObserver() {
+    private func setupFirestoreListeners() {
+        // TODO: We should not be observing the entire answer collection
+        // Rather, we should only observe a paginated version for displaying Logbook.
+        // But take note that if you change this, you also need to implement a snapshot listener for maintaining unansweredPings
+        // The most ideal solution would be to have a dedicated snapshot listener for every use case, but for now, this will do.
+        // It's a quick hack but at the cost of incurring many Firestore reads
         answerCollection
-            .order(by: "ping", descending: true)
-            .limit(to: 1)
             .addSnapshotListener() { (snapshot, error) in
                 guard let snapshot = snapshot else {
-                    self.alertService.present(message: "Failed to update notifications. answerCollection snapshot = nil")
+                    // TODO: Log error
                     return
                 }
                 do {
-                    // TODO: Arbitrarily selected number. Maximum notifications = 64? not sure yet.
-                    let pings = self.pingService
-                        .nextPings(count: 30)
-                        .map { $0.date }
-
-                    if let answer = try snapshot.documents.first?.data(as: Answer.self) {
-                        self.notificationService.tryToScheduleNotifications(pings: pings, previousAnswer: answer)
-                    } else {
-                        self.notificationService.tryToScheduleNotifications(pings: pings, previousAnswer: nil)
-                    }
+                    self.answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
                 } catch {
-                    self.alertService.present(message: error.localizedDescription)
+                    // TODO: Log error
                 }
             }
             .store(in: &listeners)
+
+        answerCollection
+            .order(by: "ping", descending: true)
+            .limit(to: 1)
+            .addSnapshotListener() { [self] (snapshot, error) in
+                if let error = error {
+                    alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")
+                }
+
+                guard let snapshot = snapshot else {
+                    alertService.present(message: "setupFirestoreListeners unable to get snapshot")
+                    return
+                }
+
+                do {
+                    latestAnswer = try snapshot.documents.first?.data(as: Answer.self)
+                } catch {
+                    alertService.present(message: "setupFirestoreListeners unable to decode latestAnswer")
+                }
+            }
+            .store(in: &listeners)
+    }
+
+    private func setupNotificationObserver() {
+        pingService.$answerablePings
+            .compactMap { $0.last?.nextPing(averagePingInterval: self.pingService.averagePingInterval) }
+            .combineLatest($latestAnswer)
+            .sink { [self] (nextPing, latestAnswer) in
+                var nextPings = [nextPing]
+                while nextPings.count < 30 {
+                    let next = nextPings.last!.nextPing(averagePingInterval: pingService.averagePingInterval)
+                    nextPings.append(next)
+                }
+
+                let nextPingDates = nextPings.map { $0.date }
+
+                if let latestAnswer = latestAnswer {
+                    notificationService.tryToScheduleNotifications(pings: nextPingDates, previousAnswer: latestAnswer)
+                } else {
+                    notificationService.tryToScheduleNotifications(pings: nextPingDates, previousAnswer: nil)
+                }
+            }
+            .store(in: &subscribers)
     }
 
     private func setupSubscribers() {
