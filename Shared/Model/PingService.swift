@@ -97,6 +97,10 @@ final class PingService: ObservableObject {
         }
     }
 
+    func appendPing(_ ping: Png) {
+        answerablePings.append(ping)
+    }
+
     func nextPing(after date: Date) -> Png {
         var cursor = startPing
         while cursor.date <= date {
@@ -111,20 +115,6 @@ final class PingService: ObservableObject {
             cursor = cursor.nextPing(averagePingInterval: averagePingInterval)
         }
         return cursor
-    }
-
-    func nextPings(count: Int) -> [Png] {
-        guard count > 0 else {
-            return []
-        }
-
-        let now = Date()
-        let nextPing = self.nextPing(after: now)
-        var result = [nextPing]
-        while result.count < count {
-            result.append(result.last!.nextPing(averagePingInterval: averagePingInterval))
-        }
-        return result
     }
 }
 

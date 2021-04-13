@@ -93,7 +93,7 @@ public final class NotificationService: NSObject {
         pings.forEach { scheduleNotification(ping: $0) }
     }
 
-    func scheduleNotification(ping: Ping) {
+    private func scheduleNotification(ping: Ping) {
         let content = UNMutableNotificationContent()
 
         let formatter = DateFormatter()
