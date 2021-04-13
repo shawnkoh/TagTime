@@ -36,7 +36,7 @@ struct Preferences: View {
                         .font(.title)
                         .bold()
 
-                    Text("Schedule ping in ~10 seconds")
+                    Text("Schedule ping in -10 seconds")
                         .bold()
 
                     Button(action: {
@@ -48,8 +48,8 @@ struct Preferences: View {
                         while cursor.date < now {
                             cursor = cursor.nextPing(averagePingInterval: 10)
                         }
-                        store.alertService.present(message: "Scheduled a ping that is \(cursor.date.timeIntervalSinceNow) seconds later")
                         store.pingService.appendPing(cursor)
+                        store.alertService.present(message: "Scheduled a ping that is \(cursor.date.timeIntervalSinceNow) seconds later")
                     }) {
                         HStack {
                             Spacer()
