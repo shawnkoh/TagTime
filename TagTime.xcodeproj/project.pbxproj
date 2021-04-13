@@ -53,6 +53,7 @@
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
+		86EF8295262611D5001EA3C5 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF8294262611D5001EA3C5 /* Date+Extensions.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
 /* End PBXBuildFile section */
 
@@ -111,6 +112,7 @@
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
+		86EF8294262611D5001EA3C5 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				868E97CF26174A56000A41FF /* Color+Figma.swift */,
+				86EF8294262611D5001EA3C5 /* Date+Extensions.swift */,
 				86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */,
 			);
 			path = Helpers;
@@ -477,6 +480,7 @@
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
+				86EF8295262611D5001EA3C5 /* Date+Extensions.swift in Sources */,
 				86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */,
 				86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,

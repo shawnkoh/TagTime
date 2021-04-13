@@ -29,7 +29,7 @@ struct MissedPingAnswererConfig {
 
 struct MissedPingAnswerer: View {
     @Binding var config: MissedPingAnswererConfig
-    let ping: Ping
+    let ping: Date
 
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

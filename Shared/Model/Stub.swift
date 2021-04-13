@@ -12,9 +12,9 @@ enum Stub {
     static let tags: [Tag] =
         ["WORKING", "SLEEPING", "TOILETING", "EATING", "GAMING", "READING", "EXERCISING", "COOKING"]
 
-    static let pings: [Ping] =
+    static let pings: [Date] =
         [-1, -2, -3 , -5, -9, -12, -14, -15, -18, -19, -20, -24, -26, -30, -48, -50]
-            .map { Ping(timeIntervalSinceNow: $0 * 60 * 60) }
+            .map { Date(timeIntervalSinceNow: $0 * 60 * 60) }
 
     static let answers: [Answer] =
         pings.compactMap { ping in

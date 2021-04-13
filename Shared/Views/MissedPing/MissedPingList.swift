@@ -32,17 +32,17 @@ struct MissedPingList: View {
     @State private var answeringAll = false
     @State private var answerAllConfig = AnswerAllConfig()
 
-    private var pingsToday: [Ping] {
+    private var pingsToday: [Date] {
         store.unansweredPings
             .filter { Calendar.current.isDateInToday($0) }
     }
 
-    private var pingsYesterday: [Ping] {
+    private var pingsYesterday: [Date] {
         store.unansweredPings
             .filter { Calendar.current.isDateInYesterday($0) }
     }
 
-    private var pingsOlder: [Ping] {
+    private var pingsOlder: [Date] {
         store.unansweredPings
             .filter {
                 !Calendar.current.isDateInYesterday($0) && !Calendar.current.isDateInToday($0)
@@ -73,7 +73,7 @@ struct MissedPingList: View {
         }
     }
 
-    private func section<Header: View>(header: Header, pings: [Ping]) -> some View {
+    private func section<Header: View>(header: Header, pings: [Date]) -> some View {
         Section(header: header) {
             ForEach(pings, id: \.self) { ping in
                 MissedPingCard(ping: ping)

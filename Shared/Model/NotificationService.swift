@@ -9,7 +9,7 @@ import Foundation
 import UserNotifications
 
 public protocol NotificationServiceDelegate {
-    func didAnswerPing(ping: Ping, with text: String)
+    func didAnswerPing(ping: Date, with text: String)
 }
 
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
@@ -51,7 +51,7 @@ public final class NotificationService: NSObject {
 
     /// Fails if user did not grant authorisation
     // TODO: This needs to be reworked when the authorisation workflow has been thought through
-    public func tryToScheduleNotifications(pings: [Ping], previousAnswer: Answer?) {
+    public func tryToScheduleNotifications(pings: [Date], previousAnswer: Answer?) {
         center.getNotificationSettings() { settings in
             guard settings.authorizationStatus == .authorized else {
                 // TODO: Inform UI
@@ -62,7 +62,7 @@ public final class NotificationService: NSObject {
         }
     }
 
-    private func scheduleNotifications(pings: [Ping], previousAnswer: Answer?) {
+    private func scheduleNotifications(pings: [Date], previousAnswer: Answer?) {
         if let previousAnswer = previousAnswer {
             let title = previousAnswer.tags.joined(separator: " ")
             let previousAction = UNNotificationAction(identifier: ActionIdentifier.previous, title: title, options: .destructive)
@@ -94,7 +94,7 @@ public final class NotificationService: NSObject {
     }
 
     /// Do not call this function. Only used for testing
-    func scheduleNotification(ping: Ping) {
+    func scheduleNotification(ping: Date) {
         let content = UNMutableNotificationContent()
 
         let formatter = DateFormatter()
@@ -159,7 +159,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                     return
                 }
 
-                let ping = Ping(timeIntervalSince1970: timeInterval)
+                let ping = Date(timeIntervalSince1970: timeInterval)
                 delegate.didAnswerPing(ping: ping, with: response.userText)
 
             case Self.ActionIdentifier.open:

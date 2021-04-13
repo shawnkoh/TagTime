@@ -13,7 +13,7 @@ struct MissedPingCard: View {
     @EnvironmentObject var store: Store
     @State private var config = MissedPingAnswererConfig()
 
-    let ping: Ping
+    let ping: Date
 
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

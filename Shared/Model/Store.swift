@@ -15,7 +15,7 @@ final class Store: ObservableObject {
     // Solely updated by Firestore listener
     @Published private(set) var answers: [Answer] = []
     // Solely updated by publisher
-    @Published private(set) var unansweredPings: [Ping] = []
+    @Published private(set) var unansweredPings: [Date] = []
     // Solely updated by Firestore listener
     @Published private(set) var latestAnswer: Answer?
 
@@ -138,7 +138,7 @@ final class Store: ObservableObject {
         // TODO: We need to find a way to minimise the number of reads for this.
         pingService.$answerablePings
             .combineLatest($answers)
-            .map { (answerablePings, answers) -> [Ping] in
+            .map { (answerablePings, answers) -> [Date] in
                 let answeredPings = Set(answers.map { $0.ping })
 
                 let unansweredPings = answerablePings
@@ -168,7 +168,7 @@ final class Store: ObservableObject {
         }
     }
 
-    func getUnansweredPings(completion: @escaping (([Ping]) -> Void)) {
+    func getUnansweredPings(completion: @escaping (([Date]) -> Void)) {
         let now = Date()
         answerCollection
             .order(by: "ping", descending: true)
@@ -232,7 +232,7 @@ final class Store: ObservableObject {
 }
 
 extension Store: NotificationServiceDelegate {
-    func didAnswerPing(ping: Ping, with text: String) {
+    func didAnswerPing(ping: Date, with text: String) {
         let tags = text.split(separator: " ").map { Tag($0) }
         let answer = Answer(ping: ping, tags: tags)
         addAnswer(answer)

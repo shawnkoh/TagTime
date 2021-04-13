@@ -10,10 +10,10 @@ import Foundation
 public struct Answer: Identifiable, Codable {
     public let id: UUID
     public let updatedDate: Date
-    public let ping: Ping
+    public let ping: Date
     public var tags: [Tag]
 
-    init(id: UUID = UUID(), updatedDate: Date = Date(), ping: Ping, tags: [Tag]) {
+    init(id: UUID = UUID(), updatedDate: Date = Date(), ping: Date, tags: [Tag]) {
         self.id = id
         self.updatedDate = updatedDate
         self.ping = ping
