@@ -37,6 +37,8 @@ final class Store: ObservableObject {
         self.userDocument = Firestore.firestore().collection("users").document(user.id)
         self.answerCollection = userDocument.collection("answers")
 
+        notificationService.delegate = self
+
         setup()
         setupSubscribers()
     }
@@ -189,5 +191,13 @@ final class Store: ObservableObject {
         unansweredPings
             .map { Answer(ping: $0, tags: tags) }
             .forEach { addAnswer($0) }
+    }
+}
+
+extension Store: NotificationServiceDelegate {
+    func didAnswerPing(ping: Ping, with text: String) {
+        let tags = text.split(separator: " ").map { Tag($0) }
+        let answer = Answer(ping: ping, tags: tags)
+        addAnswer(answer)
     }
 }

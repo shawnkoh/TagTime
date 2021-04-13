@@ -8,6 +8,10 @@
 import Foundation
 import UserNotifications
 
+protocol NotificationServiceDelegate {
+    func didAnswerPing(ping: Ping, with text: String)
+}
+
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
 final class NotificationService: NSObject {
     enum ActionIdentifier {
@@ -25,6 +29,8 @@ final class NotificationService: NSObject {
     let center = UNUserNotificationCenter.current()
     let openAction = UNNotificationAction(identifier: ActionIdentifier.open, title: "Open", options: .foreground)
     let replyAction = UNTextInputNotificationAction(identifier: ActionIdentifier.reply, title: "Reply", options: .destructive)
+
+    var delegate: NotificationServiceDelegate?
 
     override init() {
         self.category = UNNotificationCategory(
@@ -101,7 +107,7 @@ final class NotificationService: NSObject {
         content.sound = .default
         content.categoryIdentifier = CategoryIdentifier.ping
         // TODO: Assign custom info to userInfo
-        content.targetContentIdentifier = ping.description
+        content.targetContentIdentifier = ping.documentId
 
         #if targetEnvironment(simulator)
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: Date().addingTimeInterval(7))
@@ -133,11 +139,28 @@ extension NotificationService: UNUserNotificationCenterDelegate {
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        guard let delegate = delegate else {
+            return
+        }
+
         switch response.actionIdentifier {
             case Self.ActionIdentifier.previous:
                 ()
             case Self.ActionIdentifier.reply:
-                ()
+                guard
+                    let response = response as? UNTextInputNotificationResponse,
+                    let documentId = response.notification.request.content.targetContentIdentifier,
+                    let timeInterval = TimeInterval(documentId)
+                else {
+                    // TODO: Log error
+                    // Maybe AlertService should be a global variable rather than inside Store
+                    // Either that or we can just expose it via the delegate
+                    return
+                }
+
+                let ping = Ping(timeIntervalSince1970: timeInterval)
+                delegate.didAnswerPing(ping: ping, with: response.userText)
+
             case Self.ActionIdentifier.open:
                 ()
             default:
