@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Answer: Identifiable, Codable {
-    let id: UUID
-    let updatedDate: Date
-    let ping: Ping
-    var tags: [Tag]
+public struct Answer: Identifiable, Codable {
+    public let id: UUID
+    public let updatedDate: Date
+    public let ping: Ping
+    public var tags: [Tag]
 
     init(id: UUID = UUID(), updatedDate: Date = Date(), ping: Ping, tags: [Tag]) {
         self.id = id

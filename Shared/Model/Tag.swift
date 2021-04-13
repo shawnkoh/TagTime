@@ -7,4 +7,4 @@
 
 import Foundation
 
-typealias Tag = String
+public typealias Tag = String

@@ -8,19 +8,19 @@
 import Foundation
 import UserNotifications
 
-protocol NotificationServiceDelegate {
+public protocol NotificationServiceDelegate {
     func didAnswerPing(ping: Ping, with text: String)
 }
 
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
-final class NotificationService: NSObject {
-    enum ActionIdentifier {
+public final class NotificationService: NSObject {
+    public enum ActionIdentifier {
         static let open = "OPEN_ACTION"
         static let previous = "PREVIOUS_ACTION"
         static let reply = "REPLY_ACTION"
     }
 
-    enum CategoryIdentifier {
+    public enum CategoryIdentifier {
         static let ping = "PING_CATEGORY"
     }
 
@@ -30,9 +30,9 @@ final class NotificationService: NSObject {
     let openAction = UNNotificationAction(identifier: ActionIdentifier.open, title: "Open", options: .foreground)
     let replyAction = UNTextInputNotificationAction(identifier: ActionIdentifier.reply, title: "Reply", options: .destructive)
 
-    var delegate: NotificationServiceDelegate?
+    public var delegate: NotificationServiceDelegate?
 
-    override init() {
+    public override init() {
         self.category = UNNotificationCategory(
             identifier: CategoryIdentifier.ping,
             actions: [openAction, replyAction],
@@ -45,13 +45,13 @@ final class NotificationService: NSObject {
         center.delegate = self
     }
 
-    func requestAuthorization(completionHandler: @escaping (Bool, Error?) -> Void) {
+    public func requestAuthorization(completionHandler: @escaping (Bool, Error?) -> Void) {
         center.requestAuthorization(options: [.alert, .sound, .badge], completionHandler: completionHandler)
     }
 
     /// Fails if user did not grant authorisation
     // TODO: This needs to be reworked when the authorisation workflow has been thought through
-    func tryToScheduleNotifications(pings: [Ping], previousAnswer: Answer?) {
+    public func tryToScheduleNotifications(pings: [Ping], previousAnswer: Answer?) {
         center.getNotificationSettings() { settings in
             guard settings.authorizationStatus == .authorized else {
                 // TODO: Inform UI
@@ -93,7 +93,7 @@ final class NotificationService: NSObject {
         pings.forEach { scheduleNotification(ping: $0) }
     }
 
-    private func scheduleNotification(ping: Ping) {
+    func scheduleNotification(ping: Ping) {
         let content = UNMutableNotificationContent()
 
         let formatter = DateFormatter()
@@ -109,11 +109,7 @@ final class NotificationService: NSObject {
         // TODO: Assign custom info to userInfo
         content.targetContentIdentifier = ping.documentId
 
-        #if targetEnvironment(simulator)
-        let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: Date().addingTimeInterval(7))
-        #else
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: ping)
-        #endif
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let request = UNNotificationRequest(identifier: ping.description, content: content, trigger: trigger)
@@ -128,7 +124,7 @@ final class NotificationService: NSObject {
 }
 
 extension NotificationService: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(
+    public func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
@@ -138,7 +134,11 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 //        completionHandler([.badge, .banner, .list, .sound])
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    public func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
         guard let delegate = delegate else {
             return
         }
