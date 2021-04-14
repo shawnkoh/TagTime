@@ -12,12 +12,12 @@ import FirebaseFirestore
 
 struct ContentView: View {
     @State var user: User?
-    @EnvironmentObject var settings: Settings
+    @EnvironmentObject var settingService: SettingService
 
     var body: some View {
         if let user = user {
             AuthenticatedView()
-                .environmentObject(Store(settings: settings, user: user))
+                .environmentObject(Store(settingService: settingService, user: user))
         } else {
             UnauthenticatedView()
                 .onAppear() {
@@ -80,7 +80,7 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
-    private static let settings = Settings()
+    private static let settings = SettingService()
 
     static var previews: some View {
         ContentView()

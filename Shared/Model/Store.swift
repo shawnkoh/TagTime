@@ -22,7 +22,7 @@ final class Store: ObservableObject {
     let pingService: PingService
     let notificationService = NotificationService()
 
-    let settings: Settings
+    let settingService: SettingService
     let user: User
     let userDocument: DocumentReference
     let answerCollection: CollectionReference
@@ -32,8 +32,8 @@ final class Store: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    init(settings: Settings, user: User) {
-        self.settings = settings
+    init(settingService: SettingService, user: User) {
+        self.settingService = settingService
         self.user = user
         self.pingService = .init(startDate: user.startDate)
         self.userDocument = Firestore.firestore().collection("users").document(user.id)
@@ -128,7 +128,7 @@ final class Store: ObservableObject {
 
     private func setupSubscribers() {
         // TODO: This should recompute pings
-        settings.$averagePingInterval
+        settingService.$averagePingInterval
             .sink { self.pingService.averagePingInterval = $0 * 60 }
             .store(in: &subscribers )
 

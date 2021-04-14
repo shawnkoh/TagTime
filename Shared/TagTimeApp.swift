@@ -10,7 +10,7 @@ import Firebase
 
 @main
 struct TagTimeApp: App {
-    @StateObject var settings = Settings()
+    @StateObject var settings = SettingService()
 
     init() {
         FirebaseApp.configure()
