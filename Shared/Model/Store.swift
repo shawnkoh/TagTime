@@ -19,33 +19,38 @@ final class Store: ObservableObject {
     // Solely updated by Firestore listener
     @Published private(set) var latestAnswer: Answer?
 
-    let pingService: PingService
+    let pingService = PingService(averagePingInterval: PingService.defaultAveragePingInterval)
     let notificationService = NotificationService()
+    let authenticationService = AuthenticationService()
 
-    let settingService: SettingService
-    let user: User
-    let userDocument: DocumentReference
-    let answerCollection: CollectionReference
+    var settingService = SettingService()
 
     var alertService = AlertService()
+
+    private var userSubscriber: AnyCancellable = .init({})
 
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    init(settingService: SettingService, user: User) {
-        self.settingService = settingService
-        self.user = user
-        self.pingService = .init(startDate: user.startDate)
-        self.userDocument = Firestore.firestore().collection("users").document(user.id)
-        self.answerCollection = userDocument.collection("answers")
-
+    init() {
         notificationService.delegate = self
-
-        setup()
+        userSubscriber = authenticationService.$user
+            .sink { self.setup(user: $0) }
     }
 
-    private func setup() {
-        setupFirestoreListeners()
+    private func setup(user: User?) {
+        listeners.forEach { $0.remove() }
+        listeners = []
+        subscribers.forEach { $0.cancel() }
+        subscribers = []
+
+        guard let user = user else {
+            return
+        }
+
+        pingService.changeStartDate(to: user.startDate)
+
+        setupFirestoreListeners(user: user)
         setupSubscribers()
 
         notificationService.requestAuthorization() { (granted, error) in
@@ -62,13 +67,13 @@ final class Store: ObservableObject {
         }
     }
 
-    private func setupFirestoreListeners() {
+    private func setupFirestoreListeners(user: User) {
         // TODO: We should not be observing the entire answer collection
         // Rather, we should only observe a paginated version for displaying Logbook.
         // But take note that if you change this, you also need to implement a snapshot listener for maintaining unansweredPings
         // The most ideal solution would be to have a dedicated snapshot listener for every use case, but for now, this will do.
         // It's a quick hack but at the cost of incurring many Firestore reads
-        answerCollection
+        user.answerCollection
             .addSnapshotListener() { (snapshot, error) in
                 guard let snapshot = snapshot else {
                     // TODO: Log error
@@ -82,7 +87,7 @@ final class Store: ObservableObject {
             }
             .store(in: &listeners)
 
-        answerCollection
+        user.answerCollection
             .order(by: "ping", descending: true)
             .limit(to: 1)
             .addSnapshotListener() { [self] (snapshot, error) in
@@ -152,8 +157,12 @@ final class Store: ObservableObject {
     }
 
     func addAnswer(_ answer: Answer) {
+        guard let user = authenticationService.user else {
+            return
+        }
+
         do {
-            try answerCollection
+            try user.answerCollection
                 .document(answer.ping.documentId)
                 .setData(from: answer) { error in
                     guard let error = error else {
@@ -168,39 +177,13 @@ final class Store: ObservableObject {
         }
     }
 
-    func getUnansweredPings(completion: @escaping (([Date]) -> Void)) {
-        let now = Date()
-        answerCollection
-            .order(by: "ping", descending: true)
-            .whereField("ping", isGreaterThanOrEqualTo: user.startDate)
-            // TODO: We should probably filter this even more to not incur so many reads.
-            .whereField("ping", isLessThanOrEqualTo: now)
-            .getDocuments() { (snapshot, error) in
-                guard let snapshot = snapshot else {
-                    print("returned")
-                    // TODO: Log this
-                    return
-                }
-                do {
-                    let answerablePings = self.pingService.answerablePings
-                        .map { $0.date }
-                    var answerablePingSet = Set(answerablePings)
-                    try snapshot.documents
-                        .compactMap { try $0.data(as: Answer.self) }
-                        .map { $0.ping }
-                        .forEach { answerablePingSet.remove($0) }
-                    let result = answerablePingSet.sorted()
-                    completion(result)
-                } catch {
-                    // TODO: Log this
-                    print("error", error)
-                }
-            }
-    }
-
     func updateAnswer(_ answer: Answer) {
+        guard let user = authenticationService.user else {
+            return
+        }
+
         do {
-            try answerCollection
+            try user.answerCollection
                 .document(answer.ping.documentId)
                 .setData(from: answer)
         } catch {
@@ -209,16 +192,20 @@ final class Store: ObservableObject {
     }
 
     func answerAllUnansweredPings(tags: [Tag]) {
+        guard let user = authenticationService.user else {
+            return
+        }
+
         do {
             // TODO: This has a limit of 500 writes, we should ideally split tags into multiple chunks of 500
             let writeBatch = Firestore.firestore().batch()
 
             try unansweredPings
-            .map { Answer(ping: $0, tags: tags) }
-            .forEach { answer in
-                let document = answerCollection.document(answer.ping.documentId)
-                try writeBatch.setData(from: answer, forDocument: document)
-            }
+                .map { Answer(ping: $0, tags: tags) }
+                .forEach { answer in
+                    let document = user.answerCollection.document(answer.ping.documentId)
+                    try writeBatch.setData(from: answer, forDocument: document)
+                }
 
             writeBatch.commit() { [self] error in
                 if let error = error {

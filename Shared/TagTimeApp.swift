@@ -10,7 +10,7 @@ import Firebase
 
 @main
 struct TagTimeApp: App {
-    @StateObject var settings = SettingService()
+    @StateObject var store = Store()
 
     init() {
         FirebaseApp.configure()
@@ -22,7 +22,7 @@ struct TagTimeApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(settings)
+                .environmentObject(store)
         }
     }
 }

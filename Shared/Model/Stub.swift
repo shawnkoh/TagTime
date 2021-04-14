@@ -30,5 +30,5 @@ enum Stub {
 
     static let settingService = SettingService()
 
-    static let store = Store(settingService: settingService, user: user)
+    static let store = Store()
 }
