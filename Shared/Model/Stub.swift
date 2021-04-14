@@ -28,7 +28,7 @@ enum Stub {
             return Answer(updatedDate: ping, ping: ping, tags: tags)
         }
 
-    static let settings = Settings()
+    static let settingService = SettingService()
 
-    static let store = Store(settings: settings, user: user)
+    static let store = Store()
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 final class PingService: ObservableObject {
-    let startPing: Ping
+    var startPing: Ping
 
     // Average gap between pings, in seconds
     var averagePingInterval: Int
@@ -20,8 +20,13 @@ final class PingService: ObservableObject {
         }
     }
 
-    init(startDate: Date, averagePingInterval: Int = defaultAveragePingInterval) {
+    init(averagePingInterval: Int = defaultAveragePingInterval) {
         self.averagePingInterval = averagePingInterval
+        self.startPing = Self.tagTimeBirth
+        self.answerablePings = []
+    }
+
+    func changeStartDate(to startDate: Date) {
         let now = Date()
 
         var cursor = Self.tagTimeBirth

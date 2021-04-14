@@ -64,7 +64,7 @@ struct AuthenticatedView: View {
 struct AuthenticatedView_Previews: PreviewProvider {
     static var previews: some View {
         AuthenticatedView()
-            .environmentObject(Stub.settings)
+            .environmentObject(Stub.settingService)
             .environmentObject(Stub.store)
             .preferredColorScheme(.dark)
     }
