@@ -35,6 +35,7 @@ final class Store: ObservableObject {
     init() {
         notificationService.delegate = self
         userSubscriber = authenticationService.$user
+            .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
     }
 
@@ -113,6 +114,7 @@ final class Store: ObservableObject {
         pingService.$answerablePings
             .compactMap { $0.last?.nextPing(averagePingInterval: self.pingService.averagePingInterval) }
             .combineLatest($latestAnswer)
+            .receive(on: DispatchQueue.main)
             .sink { [self] (nextPing, latestAnswer) in
                 var nextPings = [nextPing]
                 while nextPings.count < 30 {
@@ -152,29 +154,39 @@ final class Store: ObservableObject {
 
                 return unansweredPings
             }
+            .receive(on: DispatchQueue.main)
             .sink { self.unansweredPings = $0 }
             .store(in: &subscribers)
     }
 
-    func addAnswer(_ answer: Answer) {
+    enum AnswerError: Error {
+        case notAuthenticated
+    }
+
+    func addAnswer(_ answer: Answer) -> Result<Answer, Error> {
         guard let user = authenticationService.user else {
-            return
+            return .failure(AnswerError.notAuthenticated)
         }
 
+        var result: Result<Answer, Error>!
+        let semaphore = DispatchSemaphore(value: 0)
         do {
             try user.answerCollection
-                .document(answer.ping.documentId)
+                .document(answer.documentId)
                 .setData(from: answer) { error in
-                    guard let error = error else {
-                        return
+                    if let error = error {
+                        result = .failure(error)
+                    } else {
+                        result = .success(answer)
                     }
-                    // TODO: Log error
-                    print("unable to save answer", error)
+                    semaphore.signal()
                 }
         } catch {
-            // TODO: Log error
-            print("Unable to add answer")
+            return .failure(error)
         }
+        _ = semaphore.wait(wallTimeout: .distantFuture)
+
+        return result
     }
 
     func updateAnswer(_ answer: Answer) {
@@ -184,7 +196,7 @@ final class Store: ObservableObject {
 
         do {
             try user.answerCollection
-                .document(answer.ping.documentId)
+                .document(answer.documentId)
                 .setData(from: answer)
         } catch {
             alertService.present(message: "updateAnswer(_:) \(error)")
@@ -203,7 +215,7 @@ final class Store: ObservableObject {
             try unansweredPings
                 .map { Answer(ping: $0, tags: tags) }
                 .forEach { answer in
-                    let document = user.answerCollection.document(answer.ping.documentId)
+                    let document = user.answerCollection.document(answer.documentId)
                     try writeBatch.setData(from: answer, forDocument: document)
                 }
 
@@ -219,9 +231,31 @@ final class Store: ObservableObject {
 }
 
 extension Store: NotificationServiceDelegate {
-    func didAnswerPing(ping: Date, with text: String) {
+    func didAnswerPing(ping: Date, with text: String, completionHandler: @escaping () -> Void) {
         let tags = text.split(separator: " ").map { Tag($0) }
         let answer = Answer(ping: ping, tags: tags)
-        addAnswer(answer)
+
+        DispatchQueue.global(qos: .utility).async { [self] in
+            let result: Result<Answer, Error>
+            if self.authenticationService.user == nil {
+                result = globalStore.authenticationService
+                    .signIn()
+                    .flatMap { _ in addAnswer(answer) }
+            } else {
+                result = addAnswer(answer)
+            }
+
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    ()
+                case let .failure(error):
+                    // TODO: Figure out how to handle this situation. Maybe re-route the notification?
+                    ()
+                }
+                completionHandler()
+            }
+        }
+
     }
 }

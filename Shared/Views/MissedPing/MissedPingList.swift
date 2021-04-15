@@ -120,7 +120,7 @@ struct MissedPingList: View {
                         }
                         store.unansweredPings
                             .map { Answer(ping: $0, tags: answerAllConfig.tags) }
-                            .forEach { store.addAnswer($0) }
+                            .forEach { _ = store.addAnswer($0) }
                     }
                 ) {
                     VStack {

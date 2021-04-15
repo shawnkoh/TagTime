@@ -9,7 +9,7 @@ import Foundation
 import UserNotifications
 
 public protocol NotificationServiceDelegate {
-    func didAnswerPing(ping: Date, with text: String)
+    func didAnswerPing(ping: Date, with text: String, completionHandler: @escaping () -> Void)
 }
 
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
@@ -42,7 +42,6 @@ public final class NotificationService: NSObject {
             options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
         )
         super.init()
-        center.delegate = self
     }
 
     public func requestAuthorization(completionHandler: @escaping (Bool, Error?) -> Void) {
@@ -108,7 +107,7 @@ public final class NotificationService: NSObject {
         content.sound = .default
         content.categoryIdentifier = CategoryIdentifier.ping
         // TODO: Assign custom info to userInfo
-        content.targetContentIdentifier = ping.documentId
+        content.targetContentIdentifier = ping.timeIntervalSince1970.description
 
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: ping)
 
@@ -160,13 +159,12 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 }
 
                 let ping = Date(timeIntervalSince1970: timeInterval)
-                delegate.didAnswerPing(ping: ping, with: response.userText)
+                delegate.didAnswerPing(ping: ping, with: response.userText, completionHandler: completionHandler)
 
             case Self.ActionIdentifier.open:
                 ()
             default:
                 break
         }
-        completionHandler()
     }
 }
