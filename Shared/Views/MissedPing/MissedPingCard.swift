@@ -42,7 +42,7 @@ struct MissedPingCard: View {
                     }
                     let tags = config.answer.split(separator: " ").map { Tag($0) }
                     let answer = Answer(ping: ping, tags: tags)
-                    store.addAnswer(answer)
+                    _ = store.addAnswer(answer)
                 }
         }
     }

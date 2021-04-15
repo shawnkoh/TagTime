@@ -9,63 +9,111 @@ import Foundation
 import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import Combine
 
 final class AuthenticationService: ObservableObject {
+    enum AuthenticationError: Error {
+        case couldNotSignInAnonymously
+    }
+
     @Published private(set) var user: User?
 
-    init() {
-        if let user = Auth.auth().currentUser {
-            getUser(id: user.uid)
-        } else {
-            signInAnonymously()
-        }
+    init() {}
+
+    func signIn() -> Result<User, Error> {
+        getUserIdOrMakeOne()
+            .flatMap(getUserOrMakeOne)
+            .map { user in
+                self.user = user
+                return user
+            }
     }
 
-    private func setupUser(id: String) {
-        let user = User(id: id, startDate: Date())
-        do {
-            try Firestore.firestore()
-                .collection("users")
-                .document(user.id)
-                .setData(from: user) { error in
-                    if let error = error {
-                        print(error)
-                    } else {
-                        self.user = user
-                    }
-                }
-        } catch {
-            // TODO: Handle this
-            print("Unable to save user", user)
-        }
+    private func getUserId() -> String? {
+        Auth.auth().currentUser?.uid
     }
 
-    private func getUser(id: String) {
+    private func getUserIdOrMakeOne() -> Result<String, Error> {
+        if let uid = getUserId() {
+            return .success(uid)
+        }
+
+        var result: Result<String, Error>!
+        let semaphore = DispatchSemaphore(value: 0)
+        Auth.auth().signInAnonymously() { (data, error) in
+            if let uid = data?.user.uid {
+                result = .success(uid)
+            } else {
+                result = .failure(AuthenticationError.couldNotSignInAnonymously)
+            }
+            semaphore.signal()
+        }
+        _ = semaphore.wait(wallTimeout: .distantFuture)
+
+        return result
+    }
+
+    private func getUser(id: String) -> Result<User?, Error> {
+        var result: Result<User?, Error>!
+
+        let semaphore = DispatchSemaphore(value: 0)
+
         Firestore.firestore()
             .collection("users")
             .document(id)
-            .getDocument() { [self] (snapshot, error) in
-                do {
-                    guard let user = try snapshot?.data(as: User.self) else {
-                        setupUser(id: id)
-                        return
-                    }
-                    self.user = user
-                } catch {
-                    // TODO: Handle this
-                    print("Unable to get user")
+            .getDocument() { (snapshot, error) in
+                if let error = error {
+                    result = .failure(error)
+                    return
                 }
+
+                do {
+                    result = .success(try snapshot?.data(as: User.self))
+                } catch {
+                    result = .failure(error)
+                }
+
+                semaphore.signal()
             }
+
+        _ = semaphore.wait(wallTimeout: .distantFuture)
+
+        return result
     }
 
-    private func signInAnonymously() {
-        Auth.auth().signInAnonymously() { [self] (result, error) in
-            guard let result = result else {
-                // TODO: Find a way to display this
-                print("unable to sign in anonymously", error?.localizedDescription as Any)
-                return
-            }
-            setupUser(id: result.user.uid)
+    private func createUser(id: String) -> Result<User, Error> {
+        let user = User(id: id)
+
+        var result: Result<User, Error>!
+        let semaphore = DispatchSemaphore(value: 0)
+        do {
+            try Firestore.firestore()
+                .collection("users")
+                .document(id)
+                .setData(from: user) { error in
+                    if let error = error {
+                        result = .failure(error)
+                    } else {
+                        result = .success(user)
+                    }
+                    semaphore.signal()
+                }
+        } catch {
+            result = .failure(error)
+            semaphore.signal()
         }
+        _ = semaphore.wait(wallTimeout: .distantFuture)
+        return result
+    }
+
+    private func getUserOrMakeOne(id: String) -> Result<User, Error> {
+        getUser(id: id)
+            .flatMap { user in
+                if let user = user {
+                    return .success(user)
+                } else {
+                    return createUser(id: id)
+                }
+            }
     }
 }

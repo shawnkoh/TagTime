@@ -13,6 +13,10 @@ public struct Answer: Identifiable, Codable {
     public let ping: Date
     public var tags: [Tag]
 
+    var documentId: String {
+        ping.timeIntervalSince1970.description
+    }
+
     init(id: UUID = UUID(), updatedDate: Date = Date(), ping: Date, tags: [Tag]) {
         self.id = id
         self.updatedDate = updatedDate
