@@ -11,6 +11,8 @@ final class AlertService: ObservableObject {
     @Published var isPresented = false
     @Published private(set) var message = ""
 
+    static let shared = AlertService()
+
     // TODO: This should connect to somewhere like Sentry
     // TODO: Explore Apple's Logger mechanism
 

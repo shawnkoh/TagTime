@@ -16,6 +16,7 @@ struct AuthenticatedView: View {
     }
 
     @EnvironmentObject var store: Store
+    @EnvironmentObject var alertService: AlertService
 
     @State private var currentPage: Page = .missedPingList
 
@@ -55,8 +56,8 @@ struct AuthenticatedView: View {
             }
         }
         .statusBar(hidden: true)
-        .alert(isPresented: $store.alertService.isPresented) {
-            Alert(title: Text(store.alertService.message))
+        .alert(isPresented: $alertService.isPresented) {
+            Alert(title: Text(alertService.message))
         }
     }
 }

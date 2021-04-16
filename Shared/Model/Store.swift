@@ -28,8 +28,6 @@ final class Store: ObservableObject {
 
     var settingService = SettingService()
 
-    var alertService = AlertService()
-
     private var userSubscriber: AnyCancellable = .init({})
 
     private var subscribers = Set<AnyCancellable>()
@@ -59,11 +57,11 @@ final class Store: ObservableObject {
 
         notificationService.requestAuthorization() { (granted, error) in
             if let error = error {
-                self.alertService.present(message: "error while requesting authorisation \(error.localizedDescription)")
+                AlertService.shared.present(message: "error while requesting authorisation \(error.localizedDescription)")
             }
 
             guard granted else {
-                self.alertService.present(message: "Unable to schedule notifications, not granted permission")
+                AlertService.shared.present(message: "Unable to schedule notifications, not granted permission")
                 return
             }
 
@@ -94,20 +92,20 @@ final class Store: ObservableObject {
         user.answerCollection
             .order(by: "ping", descending: true)
             .limit(to: 1)
-            .addSnapshotListener() { [self] (snapshot, error) in
+            .addSnapshotListener() { (snapshot, error) in
                 if let error = error {
-                    alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")
+                    AlertService.shared.present(message: "setupFirestoreListeners \(error.localizedDescription)")
                 }
 
                 guard let snapshot = snapshot else {
-                    alertService.present(message: "setupFirestoreListeners unable to get snapshot")
+                    AlertService.shared.present(message: "setupFirestoreListeners unable to get snapshot")
                     return
                 }
 
                 do {
-                    latestAnswer = try snapshot.documents.first?.data(as: Answer.self)
+                    self.latestAnswer = try snapshot.documents.first?.data(as: Answer.self)
                 } catch {
-                    alertService.present(message: "setupFirestoreListeners unable to decode latestAnswer")
+                    AlertService.shared.present(message: "setupFirestoreListeners unable to decode latestAnswer")
                 }
             }
             .store(in: &listeners)
@@ -202,7 +200,7 @@ final class Store: ObservableObject {
                 .document(answer.documentId)
                 .setData(from: answer)
         } catch {
-            alertService.present(message: "updateAnswer(_:) \(error)")
+            AlertService.shared.present(message: "updateAnswer(_:) \(error)")
         }
     }
 
@@ -222,13 +220,13 @@ final class Store: ObservableObject {
                     try writeBatch.setData(from: answer, forDocument: document)
                 }
 
-            writeBatch.commit() { [self] error in
+            writeBatch.commit() { error in
                 if let error = error {
-                    alertService.present(message: "answerAllUnansweredPings \(error)")
+                    AlertService.shared.present(message: "answerAllUnansweredPings \(error)")
                 }
             }
         } catch {
-            alertService.present(message: "answerAllUnansweredPings \(error)")
+            AlertService.shared.present(message: "answerAllUnansweredPings \(error)")
         }
     }
 }

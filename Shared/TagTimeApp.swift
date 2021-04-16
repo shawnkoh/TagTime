@@ -16,6 +16,7 @@ let globalStore = Store()
 struct TagTimeApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject var store = globalStore
+    @StateObject var alertService = AlertService.shared
 
     init() {
         FirebaseApp.configure()
@@ -28,6 +29,7 @@ struct TagTimeApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(store)
+                .environmentObject(alertService)
                 .onAppear() {
                     DispatchQueue.global(qos: .utility).async {
                         _ = store.authenticationService.signIn()
