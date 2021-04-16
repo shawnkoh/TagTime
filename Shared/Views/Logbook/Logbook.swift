@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct Logbook: View {
-    @EnvironmentObject var store: Store
-
     @State private var showingSheet: Answer? = nil
 
+    @EnvironmentObject var answerService: AnswerService
+
     private var answers: [Answer] {
-        AnswerService.shared.answers
+        answerService.answers
     }
 
     private var answersToday: [Answer] {
@@ -104,6 +104,5 @@ struct Logbook: View {
 struct Logbook_Previews: PreviewProvider {
     static var previews: some View {
         Logbook()
-            .environmentObject(Stub.store)
     }
 }

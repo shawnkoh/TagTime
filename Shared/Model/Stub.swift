@@ -29,6 +29,4 @@ enum Stub {
         }
 
     static let settingService = SettingService()
-
-    static let store = Store()
 }

@@ -9,13 +9,9 @@ import SwiftUI
 import Firebase
 import UserNotifications
 
-// Required to pass instance to AppDelegate
-let globalStore = Store()
-
 @main
 struct TagTimeApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    @StateObject var store = globalStore
     @StateObject var alertService = AlertService.shared
     @StateObject var answerService = AnswerService.shared
     @StateObject var authenticationService = AuthenticationService.shared

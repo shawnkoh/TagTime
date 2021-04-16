@@ -15,7 +15,6 @@ struct AuthenticatedView: View {
         case preferences
     }
 
-    @EnvironmentObject var store: Store
     @EnvironmentObject var alertService: AlertService
 
     @State private var currentPage: Page = .missedPingList
@@ -66,7 +65,6 @@ struct AuthenticatedView_Previews: PreviewProvider {
     static var previews: some View {
         AuthenticatedView()
             .environmentObject(Stub.settingService)
-            .environmentObject(Stub.store)
             .preferredColorScheme(.dark)
     }
 }

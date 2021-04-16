@@ -34,7 +34,7 @@ struct MissedPingList: View {
     @State private var answerAllConfig = AnswerAllConfig()
 
     private var unansweredPings: [Date] {
-        AnswerService.shared.unansweredPings
+        answerService.unansweredPings
     }
 
     private var pingsToday: [Date] {
