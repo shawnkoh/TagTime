@@ -9,10 +9,10 @@ import SwiftUI
 import Firebase
 
 struct ContentView: View {
-    @EnvironmentObject var store: Store
+    @EnvironmentObject var appService: AppService
 
     var body: some View {
-        if store.authenticationService.user != nil {
+        if appService.isAuthenticated {
             AuthenticatedView()
         } else {
             UnauthenticatedView()
@@ -25,7 +25,7 @@ struct ContentView_Previews: PreviewProvider {
 
     static var previews: some View {
         ContentView()
-            .environmentObject(Stub.store)
+            .environmentObject(AppService.shared)
             .preferredColorScheme(.dark)
     }
 }

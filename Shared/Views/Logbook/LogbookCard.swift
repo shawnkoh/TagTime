@@ -10,7 +10,7 @@ import SwiftUI
 struct LogbookCard: View {
     var answer: Answer
 
-    @EnvironmentObject var store: Store
+    @EnvironmentObject var answerService: AnswerService
 
     @State var config: AnswerEditorConfig
 
@@ -47,7 +47,7 @@ struct LogbookCard: View {
                     return
                 }
                 let answer = Answer(ping: config.pingDate, tags: config.tags)
-                store.updateAnswer(answer)
+                answerService.updateAnswer(answer)
             }
         ) {
             AnswerEditor(config: $config)

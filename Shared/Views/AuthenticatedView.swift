@@ -15,7 +15,7 @@ struct AuthenticatedView: View {
         case preferences
     }
 
-    @EnvironmentObject var store: Store
+    @EnvironmentObject var alertService: AlertService
 
     @State private var currentPage: Page = .missedPingList
 
@@ -55,8 +55,8 @@ struct AuthenticatedView: View {
             }
         }
         .statusBar(hidden: true)
-        .alert(isPresented: $store.alertService.isPresented) {
-            Alert(title: Text(store.alertService.message))
+        .alert(isPresented: $alertService.isPresented) {
+            Alert(title: Text(alertService.message))
         }
     }
 }
@@ -65,7 +65,6 @@ struct AuthenticatedView_Previews: PreviewProvider {
     static var previews: some View {
         AuthenticatedView()
             .environmentObject(Stub.settingService)
-            .environmentObject(Stub.store)
             .preferredColorScheme(.dark)
     }
 }

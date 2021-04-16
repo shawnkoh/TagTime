@@ -10,7 +10,7 @@ import SwiftUI
 struct MissedPingCard: View {
     // TODO: I'm not sure if we should use EnvironmentObject here, but I'm not sure how else
     // I can delete the ping from MissedPingList.
-    @EnvironmentObject var store: Store
+    @EnvironmentObject var answerService: AnswerService
     @State private var config = MissedPingAnswererConfig()
 
     let ping: Date
@@ -42,7 +42,7 @@ struct MissedPingCard: View {
                     }
                     let tags = config.answer.split(separator: " ").map { Tag($0) }
                     let answer = Answer(ping: ping, tags: tags)
-                    _ = store.addAnswer(answer)
+                    _ = answerService.addAnswer(answer)
                 }
         }
     }
@@ -53,6 +53,5 @@ struct MissedPingCard_Previews: PreviewProvider {
 
     static var previews: some View {
         MissedPingCard(ping: Stub.pings.first!)
-            .environmentObject(Stub.store)
     }
 }

@@ -7,13 +7,10 @@
 
 import Foundation
 import UserNotifications
-
-public protocol NotificationServiceDelegate {
-    func didAnswerPing(ping: Date, with text: String, completionHandler: @escaping () -> Void)
-}
+import Combine
 
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
-public final class NotificationService: NSObject {
+public final class NotificationService: NSObject, ObservableObject {
     public enum ActionIdentifier {
         static let open = "OPEN_ACTION"
         static let previous = "PREVIOUS_ACTION"
@@ -24,13 +21,17 @@ public final class NotificationService: NSObject {
         static let ping = "PING_CATEGORY"
     }
 
+    static let shared = NotificationService()
+
     private(set) var category: UNNotificationCategory
 
     let center = UNUserNotificationCenter.current()
     let openAction = UNNotificationAction(identifier: ActionIdentifier.open, title: "Open", options: .foreground)
     let replyAction = UNTextInputNotificationAction(identifier: ActionIdentifier.reply, title: "Reply", options: .destructive)
 
-    public var delegate: NotificationServiceDelegate?
+    private var userSubscriber: AnyCancellable = .init({})
+
+    private var subscribers = Set<AnyCancellable>()
 
     public override init() {
         self.category = UNNotificationCategory(
@@ -42,6 +43,54 @@ public final class NotificationService: NSObject {
             options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
         )
         super.init()
+        userSubscriber = AuthenticationService.shared.$user
+            .receive(on: DispatchQueue.main)
+            .sink { self.setup(user: $0) }
+    }
+
+    private func setup(user: User?) {
+        subscribers.forEach { $0.cancel() }
+        subscribers = []
+
+        guard let user = user else {
+            return
+        }
+
+        requestAuthorization() { (granted, error) in
+            if let error = error {
+                AlertService.shared.present(message: "error while requesting authorisation \(error.localizedDescription)")
+            }
+
+            guard granted else {
+                AlertService.shared.present(message: "Unable to schedule notifications, not granted permission")
+                return
+            }
+
+            self.setupNotificationObserver()
+        }
+    }
+
+    private func setupNotificationObserver() {
+        PingService.shared.$answerablePings
+            .compactMap { $0.last?.nextPing(averagePingInterval: PingService.shared.averagePingInterval) }
+            .combineLatest(AnswerService.shared.$latestAnswer)
+            .receive(on: DispatchQueue.main)
+            .sink { [self] (nextPing, latestAnswer) in
+                var nextPings = [nextPing]
+                while nextPings.count < 30 {
+                    let next = nextPings.last!.nextPing(averagePingInterval: PingService.shared.averagePingInterval)
+                    nextPings.append(next)
+                }
+
+                let nextPingDates = nextPings.map { $0.date }
+
+                if let latestAnswer = latestAnswer {
+                    tryToScheduleNotifications(pings: nextPingDates, previousAnswer: latestAnswer)
+                } else {
+                    tryToScheduleNotifications(pings: nextPingDates, previousAnswer: nil)
+                }
+            }
+            .store(in: &subscribers)
     }
 
     public func requestAuthorization(completionHandler: @escaping (Bool, Error?) -> Void) {
@@ -139,10 +188,6 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        guard let delegate = delegate else {
-            return
-        }
-
         switch response.actionIdentifier {
             case Self.ActionIdentifier.previous:
                 ()
@@ -159,12 +204,40 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 }
 
                 let ping = Date(timeIntervalSince1970: timeInterval)
-                delegate.didAnswerPing(ping: ping, with: response.userText, completionHandler: completionHandler)
+                didAnswerPing(ping: ping, with: response.userText, completionHandler: completionHandler)
 
             case Self.ActionIdentifier.open:
                 ()
             default:
                 break
         }
+    }
+
+    private func didAnswerPing(ping: Date, with text: String, completionHandler: @escaping () -> Void) {
+        let tags = text.split(separator: " ").map { Tag($0) }
+        let answer = Answer(ping: ping, tags: tags)
+
+        DispatchQueue.global(qos: .utility).async {
+            let result: Result<Answer, Error>
+            if AuthenticationService.shared.user == nil {
+                result = AuthenticationService.shared
+                    .signIn()
+                    .flatMap { _ in AnswerService.shared.addAnswer(answer) }
+            } else {
+                result = AnswerService.shared.addAnswer(answer)
+            }
+
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    ()
+                case let .failure(error):
+                    // TODO: Figure out how to handle this situation. Maybe re-route the notification?
+                    ()
+                }
+                completionHandler()
+            }
+        }
+
     }
 }

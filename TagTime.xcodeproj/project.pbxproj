@@ -17,7 +17,6 @@
 		861256F526139CAB00C2B81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 861256C926139CAB00C2B81B /* Assets.xcassets */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
-		8684C04226183698006717FC /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C04126183698006717FC /* Store.swift */; };
 		8684C04D26186C37006717FC /* AnswerEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C04C26186C37006717FC /* AnswerEditor.swift */; };
 		868E97B3261736A7000A41FF /* Ping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B2261736A7000A41FF /* Ping.swift */; };
 		868E97B9261736EE000A41FF /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B8261736EE000A41FF /* Tag.swift */; };
@@ -49,11 +48,13 @@
 		86ADBB812617330B003CBA6B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB802617330B003CBA6B /* Preferences.swift */; };
 		86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */; };
 		86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
+		86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C4C0C3262A09C90023C2A0 /* AppService.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
 		86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */; };
+		86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD582D2629F52300B32B59 /* AnswerService.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
 /* End PBXBuildFile section */
 
@@ -91,7 +92,6 @@
 		861256EF26139CAB00C2B81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
-		8684C04126183698006717FC /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		8684C04C26186C37006717FC /* AnswerEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerEditor.swift; sourceTree = "<group>"; };
 		868E97B2261736A7000A41FF /* Ping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ping.swift; sourceTree = "<group>"; };
 		868E97B8261736EE000A41FF /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -108,11 +108,13 @@
 		86ADBB802617330B003CBA6B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingAnswerer.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
+		86C4C0C3262A09C90023C2A0 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
 		86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
+		86FD582D2629F52300B32B59 /* AnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerService.swift; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -244,7 +246,6 @@
 			children = (
 				868E97C826173AAD000A41FF /* Answer.swift */,
 				868E97B2261736A7000A41FF /* Ping.swift */,
-				8684C04126183698006717FC /* Store.swift */,
 				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
 				86A5914F261DBCBD00A25D1F /* User.swift */,
@@ -308,6 +309,8 @@
 			isa = PBXGroup;
 			children = (
 				86E3AB59262354F900092CE6 /* AlertService.swift */,
+				86FD582D2629F52300B32B59 /* AnswerService.swift */,
+				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
 				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
 				86C5A701261E2104001451E9 /* PingService.swift */,
@@ -495,6 +498,7 @@
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
+				86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
@@ -502,6 +506,7 @@
 				8684C04D26186C37006717FC /* AnswerEditor.swift in Sources */,
 				8672E70526181B01004081FC /* SettingService.swift in Sources */,
 				86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */,
+				86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,
 				868E97C926173AAD000A41FF /* Answer.swift in Sources */,
@@ -509,7 +514,6 @@
 				861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				86A59147261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
 				86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */,
-				8684C04226183698006717FC /* Store.swift in Sources */,
 				86A59150261DBCBD00A25D1F /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
