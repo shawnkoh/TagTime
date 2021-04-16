@@ -19,7 +19,6 @@ final class Store: ObservableObject {
     // Solely updated by Firestore listener
     @Published private(set) var latestAnswer: Answer?
 
-    let pingService = PingService(averagePingInterval: PingService.defaultAveragePingInterval)
     let notificationService = NotificationService()
 
     var authenticationService: AuthenticationService {
@@ -49,8 +48,6 @@ final class Store: ObservableObject {
         guard let user = user else {
             return
         }
-
-        pingService.changeStartDate(to: user.startDate)
 
         setupFirestoreListeners(user: user)
         setupSubscribers()
@@ -112,14 +109,14 @@ final class Store: ObservableObject {
     }
 
     private func setupNotificationObserver() {
-        pingService.$answerablePings
-            .compactMap { $0.last?.nextPing(averagePingInterval: self.pingService.averagePingInterval) }
+        PingService.shared.$answerablePings
+            .compactMap { $0.last?.nextPing(averagePingInterval: PingService.shared.averagePingInterval) }
             .combineLatest($latestAnswer)
             .receive(on: DispatchQueue.main)
             .sink { [self] (nextPing, latestAnswer) in
                 var nextPings = [nextPing]
                 while nextPings.count < 30 {
-                    let next = nextPings.last!.nextPing(averagePingInterval: pingService.averagePingInterval)
+                    let next = nextPings.last!.nextPing(averagePingInterval: PingService.shared.averagePingInterval)
                     nextPings.append(next)
                 }
 
@@ -135,16 +132,11 @@ final class Store: ObservableObject {
     }
 
     private func setupSubscribers() {
-        // TODO: This should recompute pings
-        settingService.$averagePingInterval
-            .sink { self.pingService.averagePingInterval = $0 * 60 }
-            .store(in: &subscribers )
-
         // Update unansweredPings by comparing answerablePings with answers.
         // answerablePings is maintained by PingService
         // answers is maintained by observing Firestore's answers
         // TODO: We need to find a way to minimise the number of reads for this.
-        pingService.$answerablePings
+        PingService.shared.$answerablePings
             .combineLatest($answers)
             .map { (answerablePings, answers) -> [Date] in
                 let answeredPings = Set(answers.map { $0.ping })
