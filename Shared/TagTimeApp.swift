@@ -17,6 +17,11 @@ struct TagTimeApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject var store = globalStore
     @StateObject var alertService = AlertService.shared
+    @StateObject var answerService = AnswerService.shared
+    @StateObject var authenticationService = AuthenticationService.shared
+    // @StateObject var notificationService = NotificationService.shared
+    @StateObject var pingService = PingService.shared
+    @StateObject var settingService = SettingService.shared
 
     init() {
         FirebaseApp.configure()
@@ -28,11 +33,15 @@ struct TagTimeApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(store)
                 .environmentObject(alertService)
+                .environmentObject(answerService)
+                .environmentObject(authenticationService)
+//                .environmentObject(notificationService)
+                .environmentObject(pingService)
+                .environmentObject(settingService)
                 .onAppear() {
                     DispatchQueue.global(qos: .utility).async {
-                        _ = store.authenticationService.signIn()
+                        _ = AuthenticationService.shared.signIn()
                     }
                 }
         }

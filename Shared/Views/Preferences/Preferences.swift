@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Preferences: View {
     @EnvironmentObject var store: Store
+    @EnvironmentObject var settingService: SettingService
 
     private var debugMode = true
 
@@ -22,7 +23,7 @@ struct Preferences: View {
 
                 TextField(
                     "Ping Interval",
-                    value: $store.settingService.averagePingInterval,
+                    value: $settingService.averagePingInterval,
                     formatter: NumberFormatter(),
                     onEditingChanged: { _ in },
                     onCommit: {}
@@ -62,7 +63,7 @@ struct Preferences: View {
 struct Preferences_Previews: PreviewProvider {
     static var previews: some View {
         Preferences()
-            .environmentObject(SettingService())
+            .environmentObject(SettingService.shared)
             .environmentObject(Stub.store)
     }
 }

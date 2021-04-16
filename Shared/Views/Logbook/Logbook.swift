@@ -12,18 +12,22 @@ struct Logbook: View {
 
     @State private var showingSheet: Answer? = nil
 
+    private var answers: [Answer] {
+        AnswerService.shared.answers
+    }
+
     private var answersToday: [Answer] {
-        store.answers
+        answers
             .filter { Calendar.current.isDateInToday($0.ping) }
     }
 
     private var answersYesterday: [Answer] {
-        store.answers
+        answers
             .filter { Calendar.current.isDateInYesterday($0.ping) }
     }
 
     private var answersOther: [Answer] {
-        store.answers
+        answers
             .filter { !Calendar.current.isDateInToday($0.ping) }
             .filter { !Calendar.current.isDateInYesterday($0.ping) }
     }
