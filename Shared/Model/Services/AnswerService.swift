@@ -1,17 +1,19 @@
 //
-//  Store.swift
+//  AnswerService.swift
 //  TagTime (iOS)
 //
-//  Created by Shawn Koh on 3/4/21.
+//  Created by Shawn Koh on 17/4/21.
 //
 
 import Foundation
-import Firebase
-import FirebaseFirestoreSwift
 import Combine
+import Firebase
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
-final class Store: ObservableObject {
-    @Published private(set) var tags: [Tag] = Stub.tags
+final class AnswerService: ObservableObject {
+    static let shared = AnswerService()
+
     // Solely updated by Firestore listener
     @Published private(set) var answers: [Answer] = []
     // Solely updated by publisher
@@ -19,22 +21,17 @@ final class Store: ObservableObject {
     // Solely updated by Firestore listener
     @Published private(set) var latestAnswer: Answer?
 
-    let pingService = PingService(averagePingInterval: PingService.defaultAveragePingInterval)
-    let notificationService = NotificationService()
-    let authenticationService = AuthenticationService()
-
-    var settingService = SettingService()
-
-    var alertService = AlertService()
-
     private var userSubscriber: AnyCancellable = .init({})
 
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
+    var answerCollection: CollectionReference? {
+        AuthenticationService.shared.user?.answerCollection
+    }
+
     init() {
-        notificationService.delegate = self
-        userSubscriber = authenticationService.$user
+        userSubscriber = AuthenticationService.shared.$user
             .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
     }
@@ -49,23 +46,8 @@ final class Store: ObservableObject {
             return
         }
 
-        pingService.changeStartDate(to: user.startDate)
-
         setupFirestoreListeners(user: user)
         setupSubscribers()
-
-        notificationService.requestAuthorization() { (granted, error) in
-            if let error = error {
-                self.alertService.present(message: "error while requesting authorisation \(error.localizedDescription)")
-            }
-
-            guard granted else {
-                self.alertService.present(message: "Unable to schedule notifications, not granted permission")
-                return
-            }
-
-            self.setupNotificationObserver()
-        }
     }
 
     private func setupFirestoreListeners(user: User) {
@@ -91,59 +73,31 @@ final class Store: ObservableObject {
         user.answerCollection
             .order(by: "ping", descending: true)
             .limit(to: 1)
-            .addSnapshotListener() { [self] (snapshot, error) in
+            .addSnapshotListener() { (snapshot, error) in
                 if let error = error {
-                    alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")
+                    AlertService.shared.present(message: "setupFirestoreListeners \(error.localizedDescription)")
                 }
 
                 guard let snapshot = snapshot else {
-                    alertService.present(message: "setupFirestoreListeners unable to get snapshot")
+                    AlertService.shared.present(message: "setupFirestoreListeners unable to get snapshot")
                     return
                 }
 
                 do {
-                    latestAnswer = try snapshot.documents.first?.data(as: Answer.self)
+                    self.latestAnswer = try snapshot.documents.first?.data(as: Answer.self)
                 } catch {
-                    alertService.present(message: "setupFirestoreListeners unable to decode latestAnswer")
+                    AlertService.shared.present(message: "setupFirestoreListeners unable to decode latestAnswer")
                 }
             }
             .store(in: &listeners)
     }
 
-    private func setupNotificationObserver() {
-        pingService.$answerablePings
-            .compactMap { $0.last?.nextPing(averagePingInterval: self.pingService.averagePingInterval) }
-            .combineLatest($latestAnswer)
-            .receive(on: DispatchQueue.main)
-            .sink { [self] (nextPing, latestAnswer) in
-                var nextPings = [nextPing]
-                while nextPings.count < 30 {
-                    let next = nextPings.last!.nextPing(averagePingInterval: pingService.averagePingInterval)
-                    nextPings.append(next)
-                }
-
-                let nextPingDates = nextPings.map { $0.date }
-
-                if let latestAnswer = latestAnswer {
-                    notificationService.tryToScheduleNotifications(pings: nextPingDates, previousAnswer: latestAnswer)
-                } else {
-                    notificationService.tryToScheduleNotifications(pings: nextPingDates, previousAnswer: nil)
-                }
-            }
-            .store(in: &subscribers)
-    }
-
     private func setupSubscribers() {
-        // TODO: This should recompute pings
-        settingService.$averagePingInterval
-            .sink { self.pingService.averagePingInterval = $0 * 60 }
-            .store(in: &subscribers )
-
         // Update unansweredPings by comparing answerablePings with answers.
         // answerablePings is maintained by PingService
         // answers is maintained by observing Firestore's answers
         // TODO: We need to find a way to minimise the number of reads for this.
-        pingService.$answerablePings
+        PingService.shared.$answerablePings
             .combineLatest($answers)
             .map { (answerablePings, answers) -> [Date] in
                 let answeredPings = Set(answers.map { $0.ping })
@@ -159,19 +113,20 @@ final class Store: ObservableObject {
             .store(in: &subscribers)
     }
 
+
     enum AnswerError: Error {
         case notAuthenticated
     }
 
     func addAnswer(_ answer: Answer) -> Result<Answer, Error> {
-        guard let user = authenticationService.user else {
+        guard let answerCollection = answerCollection else {
             return .failure(AnswerError.notAuthenticated)
         }
 
         var result: Result<Answer, Error>!
         let semaphore = DispatchSemaphore(value: 0)
         do {
-            try user.answerCollection
+            try answerCollection
                 .document(answer.documentId)
                 .setData(from: answer) { error in
                     if let error = error {
@@ -190,21 +145,21 @@ final class Store: ObservableObject {
     }
 
     func updateAnswer(_ answer: Answer) {
-        guard let user = authenticationService.user else {
+        guard let answerCollection = answerCollection else {
             return
         }
 
         do {
-            try user.answerCollection
+            try answerCollection
                 .document(answer.documentId)
                 .setData(from: answer)
         } catch {
-            alertService.present(message: "updateAnswer(_:) \(error)")
+            AlertService.shared.present(message: "updateAnswer(_:) \(error)")
         }
     }
 
     func answerAllUnansweredPings(tags: [Tag]) {
-        guard let user = authenticationService.user else {
+        guard let answerCollection = answerCollection else {
             return
         }
 
@@ -215,47 +170,17 @@ final class Store: ObservableObject {
             try unansweredPings
                 .map { Answer(ping: $0, tags: tags) }
                 .forEach { answer in
-                    let document = user.answerCollection.document(answer.documentId)
+                    let document = answerCollection.document(answer.documentId)
                     try writeBatch.setData(from: answer, forDocument: document)
                 }
 
-            writeBatch.commit() { [self] error in
+            writeBatch.commit() { error in
                 if let error = error {
-                    alertService.present(message: "answerAllUnansweredPings \(error)")
+                    AlertService.shared.present(message: "answerAllUnansweredPings \(error)")
                 }
             }
         } catch {
-            alertService.present(message: "answerAllUnansweredPings \(error)")
+            AlertService.shared.present(message: "answerAllUnansweredPings \(error)")
         }
-    }
-}
-
-extension Store: NotificationServiceDelegate {
-    func didAnswerPing(ping: Date, with text: String, completionHandler: @escaping () -> Void) {
-        let tags = text.split(separator: " ").map { Tag($0) }
-        let answer = Answer(ping: ping, tags: tags)
-
-        DispatchQueue.global(qos: .utility).async { [self] in
-            let result: Result<Answer, Error>
-            if self.authenticationService.user == nil {
-                result = globalStore.authenticationService
-                    .signIn()
-                    .flatMap { _ in addAnswer(answer) }
-            } else {
-                result = addAnswer(answer)
-            }
-
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    ()
-                case let .failure(error):
-                    // TODO: Figure out how to handle this situation. Maybe re-route the notification?
-                    ()
-                }
-                completionHandler()
-            }
-        }
-
     }
 }

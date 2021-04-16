@@ -28,22 +28,27 @@ struct AnswerAllConfig {
 }
 
 struct MissedPingList: View {
-    @EnvironmentObject var store: Store
+    @EnvironmentObject var answerService: AnswerService
+
     @State private var answeringAll = false
     @State private var answerAllConfig = AnswerAllConfig()
 
+    private var unansweredPings: [Date] {
+        answerService.unansweredPings
+    }
+
     private var pingsToday: [Date] {
-        store.unansweredPings
+        unansweredPings
             .filter { Calendar.current.isDateInToday($0) }
     }
 
     private var pingsYesterday: [Date] {
-        store.unansweredPings
+        unansweredPings
             .filter { Calendar.current.isDateInYesterday($0) }
     }
 
     private var pingsOlder: [Date] {
-        store.unansweredPings
+        unansweredPings
             .filter {
                 !Calendar.current.isDateInYesterday($0) && !Calendar.current.isDateInToday($0)
             }
@@ -100,7 +105,7 @@ struct MissedPingList: View {
                 }
             }
 
-            if store.unansweredPings.count > 1 {
+            if unansweredPings.count > 1 {
                 Button(action: { answeringAll = true }) {
                     HStack {
                         Spacer()
@@ -118,9 +123,9 @@ struct MissedPingList: View {
                         guard answerAllConfig.needToSave else {
                             return
                         }
-                        store.unansweredPings
+                        unansweredPings
                             .map { Answer(ping: $0, tags: answerAllConfig.tags) }
-                            .forEach { _ = store.addAnswer($0) }
+                            .forEach { _ = answerService.addAnswer($0) }
                     }
                 ) {
                     VStack {
@@ -143,7 +148,7 @@ struct MissedPingList: View {
 struct MissedPingList_Previews: PreviewProvider {
     static var previews: some View {
         MissedPingList()
-            .environmentObject(Stub.store)
+            .environmentObject(AnswerService.shared)
             .preferredColorScheme(.dark)
     }
 }

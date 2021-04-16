@@ -8,6 +8,7 @@
 import Foundation
 
 final class SettingService: ObservableObject {
+    static let shared = SettingService()
     // Average gap between pings, in minutes
     @Published var averagePingInterval: Int
     @Published var beeminderAuthToken: String?

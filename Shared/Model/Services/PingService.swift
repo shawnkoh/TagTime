@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 final class PingService: ObservableObject {
+    static let shared = PingService()
+
     var startPing: Ping
 
     // Average gap between pings, in seconds
@@ -20,10 +23,26 @@ final class PingService: ObservableObject {
         }
     }
 
+    private var userSubscriber: AnyCancellable = .init({})
+    private var subscribers = Set<AnyCancellable>()
+
     init(averagePingInterval: Int = defaultAveragePingInterval) {
         self.averagePingInterval = averagePingInterval
         self.startPing = Self.tagTimeBirth
         self.answerablePings = []
+        self.userSubscriber = AuthenticationService.shared.$user
+            .receive(on: DispatchQueue.main)
+            .sink { self.setup(user: $0) }
+    }
+
+    private func setup(user: User?) {
+        guard let user = user else {
+            updateTimer?.invalidate()
+            answerablePings = []
+            return
+        }
+
+        changeStartDate(to: user.startDate)
     }
 
     func changeStartDate(to startDate: Date) {

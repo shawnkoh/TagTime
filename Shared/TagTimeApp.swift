@@ -9,13 +9,15 @@ import SwiftUI
 import Firebase
 import UserNotifications
 
-// Required to pass instance to AppDelegate
-let globalStore = Store()
-
 @main
 struct TagTimeApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    @StateObject var store = globalStore
+    @StateObject var alertService = AlertService.shared
+    @StateObject var answerService = AnswerService.shared
+    @StateObject var appService = AppService.shared
+    @StateObject var notificationService = NotificationService.shared
+    @StateObject var pingService = PingService.shared
+    @StateObject var settingService = SettingService.shared
 
     init() {
         FirebaseApp.configure()
@@ -27,10 +29,15 @@ struct TagTimeApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(store)
+                .environmentObject(alertService)
+                .environmentObject(answerService)
+                .environmentObject(appService)
+                .environmentObject(notificationService)
+                .environmentObject(pingService)
+                .environmentObject(settingService)
                 .onAppear() {
                     DispatchQueue.global(qos: .utility).async {
-                        _ = store.authenticationService.signIn()
+                        _ = AuthenticationService.shared.signIn()
                     }
                 }
         }
@@ -42,7 +49,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
-        UNUserNotificationCenter.current().delegate = globalStore.notificationService
+        UNUserNotificationCenter.current().delegate = NotificationService.shared
         return true
     }
 }

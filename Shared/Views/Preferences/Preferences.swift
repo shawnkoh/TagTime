@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct Preferences: View {
-    @EnvironmentObject var store: Store
+    @EnvironmentObject var notificationService: NotificationService
+    @EnvironmentObject var settingService: SettingService
 
     private var debugMode = true
 
@@ -22,7 +23,7 @@ struct Preferences: View {
 
                 TextField(
                     "Ping Interval",
-                    value: $store.settingService.averagePingInterval,
+                    value: $settingService.averagePingInterval,
                     formatter: NumberFormatter(),
                     onEditingChanged: { _ in },
                     onCommit: {}
@@ -39,7 +40,7 @@ struct Preferences: View {
                         .bold()
 
                     Button(action: {
-                        store.notificationService.scheduleNotification(ping: .init(timeIntervalSinceNow: 7))
+                        notificationService.scheduleNotification(ping: .init(timeIntervalSinceNow: 7))
                     }) {
                         HStack {
                             Spacer()
@@ -62,7 +63,7 @@ struct Preferences: View {
 struct Preferences_Previews: PreviewProvider {
     static var previews: some View {
         Preferences()
-            .environmentObject(SettingService())
-            .environmentObject(Stub.store)
+            .environmentObject(SettingService.shared)
+            .environmentObject(NotificationService.shared)
     }
 }
