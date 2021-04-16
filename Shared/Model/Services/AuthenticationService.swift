@@ -11,7 +11,10 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Combine
 
-final class AuthenticationService: ObservableObject {
+// AuthenticationService is intentionally not an ObservableObject
+// Because it is not intended to be used directly by a View.
+// Rather, it is a supporting service that helps the other services
+final class AuthenticationService {
     enum AuthenticationError: Error {
         case couldNotSignInAnonymously
     }
@@ -26,9 +29,7 @@ final class AuthenticationService: ObservableObject {
         getUserIdOrMakeOne()
             .flatMap(getUserOrMakeOne)
             .map { user in
-                DispatchQueue.main.async {
-                    self.user = user
-                }
+                self.user = user
                 return user
             }
     }
