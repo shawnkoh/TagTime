@@ -19,7 +19,7 @@ struct TagTimeApp: App {
     @StateObject var alertService = AlertService.shared
     @StateObject var answerService = AnswerService.shared
     @StateObject var authenticationService = AuthenticationService.shared
-    // @StateObject var notificationService = NotificationService.shared
+    @StateObject var notificationService = NotificationService.shared
     @StateObject var pingService = PingService.shared
     @StateObject var settingService = SettingService.shared
 
@@ -36,7 +36,7 @@ struct TagTimeApp: App {
                 .environmentObject(alertService)
                 .environmentObject(answerService)
                 .environmentObject(authenticationService)
-//                .environmentObject(notificationService)
+                .environmentObject(notificationService)
                 .environmentObject(pingService)
                 .environmentObject(settingService)
                 .onAppear() {
@@ -53,7 +53,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
-        UNUserNotificationCenter.current().delegate = globalStore.notificationService
+        UNUserNotificationCenter.current().delegate = NotificationService.shared
         return true
     }
 }

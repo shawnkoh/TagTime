@@ -26,7 +26,9 @@ final class AuthenticationService: ObservableObject {
         getUserIdOrMakeOne()
             .flatMap(getUserOrMakeOne)
             .map { user in
-                self.user = user
+                DispatchQueue.main.async {
+                    self.user = user
+                }
                 return user
             }
     }
