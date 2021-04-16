@@ -16,6 +16,8 @@ final class AuthenticationService: ObservableObject {
         case couldNotSignInAnonymously
     }
 
+    static let shared = AuthenticationService()
+
     @Published private(set) var user: User?
 
     init() {}

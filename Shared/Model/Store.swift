@@ -21,7 +21,10 @@ final class Store: ObservableObject {
 
     let pingService = PingService(averagePingInterval: PingService.defaultAveragePingInterval)
     let notificationService = NotificationService()
-    let authenticationService = AuthenticationService()
+
+    var authenticationService: AuthenticationService {
+        AuthenticationService.shared
+    }
 
     var settingService = SettingService()
 
