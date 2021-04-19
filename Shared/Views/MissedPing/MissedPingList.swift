@@ -123,9 +123,7 @@ struct MissedPingList: View {
                         guard answerAllConfig.needToSave else {
                             return
                         }
-                        unansweredPings
-                            .map { Answer(ping: $0, tags: answerAllConfig.tags) }
-                            .forEach { _ = answerService.addAnswer($0) }
+                        answerService.answerAllUnansweredPings(tags: answerAllConfig.tags)
                     }
                 ) {
                     VStack {
