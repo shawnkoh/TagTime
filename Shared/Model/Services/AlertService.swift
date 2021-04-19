@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os
 
 final class AlertService: ObservableObject {
     @Published var isPresented = false
@@ -17,6 +18,7 @@ final class AlertService: ObservableObject {
     // TODO: Explore Apple's Logger mechanism
 
     func present(message: String) {
+        Logger().critical("\(message)")
         self.message = message
         isPresented = true
     }
