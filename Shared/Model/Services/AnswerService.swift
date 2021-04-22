@@ -13,8 +13,11 @@ import FirebaseFirestoreSwift
 
 final class AnswerService: ObservableObject {
     static let shared = AnswerService()
+    // 2 days worth of pings = 2 * 24 * 60 / 45
+    static let answerablePingCount = 64
 
     // Solely updated by Firestore listener
+    // Sorted in descending order
     @Published private(set) var answers: [Answer] = []
     // Solely updated by publisher
     @Published private(set) var unansweredPings: [Date] = []
@@ -51,29 +54,10 @@ final class AnswerService: ObservableObject {
     }
 
     private func setupFirestoreListeners(user: User) {
-        // TODO: We should not be observing the entire answer collection
-        // Rather, we should only observe a paginated version for displaying Logbook.
-        // But take note that if you change this, you also need to implement a snapshot listener for maintaining unansweredPings
-        // The most ideal solution would be to have a dedicated snapshot listener for every use case, but for now, this will do.
-        // It's a quick hack but at the cost of incurring many Firestore reads
-        user.answerCollection
-            .addSnapshotListener() { (snapshot, error) in
-                guard let snapshot = snapshot else {
-                    // TODO: Log error
-                    return
-                }
-                do {
-                    self.answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
-                } catch {
-                    // TODO: Log error
-                }
-            }
-            .store(in: &listeners)
-
         user.answerCollection
             .order(by: "ping", descending: true)
-            .limit(to: 1)
-            .addSnapshotListener() { (snapshot, error) in
+            .limit(to: Self.answerablePingCount)
+            .addSnapshotListener() { [self] (snapshot, error) in
                 if let error = error {
                     AlertService.shared.present(message: "setupFirestoreListeners \(error.localizedDescription)")
                 }
@@ -84,7 +68,9 @@ final class AnswerService: ObservableObject {
                 }
 
                 do {
-                    self.latestAnswer = try snapshot.documents.first?.data(as: Answer.self)
+                    // TODO: this is problematic for pagination because it overwrites all the answers.
+                    answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
+                    latestAnswer = answers.first
                 } catch {
                     AlertService.shared.present(message: "setupFirestoreListeners unable to decode latestAnswer")
                 }
@@ -96,17 +82,20 @@ final class AnswerService: ObservableObject {
         // Update unansweredPings by comparing answerablePings with answers.
         // answerablePings is maintained by PingService
         // answers is maintained by observing Firestore's answers
-        // TODO: We need to find a way to minimise the number of reads for this.
-        PingService.shared.$answerablePings
-            .combineLatest($answers)
-            .map { (answerablePings, answers) -> [Date] in
-                let answeredPings = Set(answers.map { $0.ping })
-
-                let unansweredPings = answerablePings
+        // TODO: Consider adding pagination for this
+        PingService.shared
+            .$answerablePings
+            .map { $0.suffix(Self.answerablePingCount) }
+            .combineLatest(
+                $answers
+                    .map { $0.prefix(Self.answerablePingCount) }
+                    .map { $0.map { $0.ping }}
+                    .map { Set($0) }
+            )
+            .map { (answerablePings, answeredPings) -> [Date] in
+                answerablePings
                     .filter { !answeredPings.contains($0.date) }
                     .map { $0.date }
-
-                return unansweredPings
             }
             .receive(on: DispatchQueue.main)
             .sink { self.unansweredPings = $0 }

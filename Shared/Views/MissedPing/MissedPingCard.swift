@@ -42,7 +42,18 @@ struct MissedPingCard: View {
                     }
                     let tags = config.answer.split(separator: " ").map { Tag($0) }
                     let answer = Answer(ping: ping, tags: tags)
-                    _ = answerService.addAnswer(answer)
+                    DispatchQueue.global(qos: .utility).async {
+                        let result = answerService.addAnswer(answer)
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success:
+                                // TODO: Maybe show some animation?
+                                ()
+                            case let .failure(error):
+                                AlertService.shared.present(message: error.localizedDescription)
+                            }
+                        }
+                    }
                 }
         }
     }
