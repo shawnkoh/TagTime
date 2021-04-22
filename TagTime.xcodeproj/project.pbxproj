@@ -48,6 +48,9 @@
 		86ADBB812617330B003CBA6B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB802617330B003CBA6B /* Preferences.swift */; };
 		86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */; };
 		86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
+		86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D2E26318D040046C0E3 /* FacebookCore */; };
+		86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3026318D040046C0E3 /* FacebookLogin */; };
+		86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3226318D040046C0E3 /* FacebookShare */; };
 		86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C4C0C3262A09C90023C2A0 /* AppService.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
@@ -123,9 +126,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */,
 				86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */,
+				86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */,
 				86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */,
 				86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */,
+				86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +345,9 @@
 				86A59126261DB71600A25D1F /* FirebaseAuth */,
 				86A59128261DB71600A25D1F /* FirebaseFirestore */,
 				86A5912A261DB71600A25D1F /* FirebaseFirestoreSwift-Beta */,
+				86C04D2E26318D040046C0E3 /* FacebookCore */,
+				86C04D3026318D040046C0E3 /* FacebookLogin */,
+				86C04D3226318D040046C0E3 /* FacebookShare */,
 			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
@@ -433,6 +442,7 @@
 			mainGroup = 861256C126139CAA00C2B81B;
 			packageReferences = (
 				86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = 861256CF26139CAB00C2B81B /* Products */;
 			projectDirPath = "";
@@ -920,6 +930,14 @@
 				minimumVersion = 7.11.0;
 			};
 		};
+		86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -937,6 +955,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseFirestoreSwift-Beta";
+		};
+		86C04D2E26318D040046C0E3 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		86C04D3026318D040046C0E3 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+		86C04D3226318D040046C0E3 /* FacebookShare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookShare;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
