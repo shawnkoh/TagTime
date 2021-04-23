@@ -153,13 +153,13 @@ public final class NotificationService: NSObject, ObservableObject {
         content.badge = 1
         content.sound = .default
         content.categoryIdentifier = CategoryIdentifier.ping
-        // TODO: Assign custom info to userInfo
-        content.targetContentIdentifier = ping.timeIntervalSince1970.description
+        let unixtime = ping.timeIntervalSince1970.description
+        content.targetContentIdentifier = unixtime
 
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: ping)
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: ping.description, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: unixtime, content: content, trigger: trigger)
 
         center.add(request) { error in
             if let error = error {
@@ -188,6 +188,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         switch response.actionIdentifier {
             case Self.ActionIdentifier.previous:
                 ()
+
             case Self.ActionIdentifier.reply:
                 guard
                     let response = response as? UNTextInputNotificationResponse,
@@ -200,6 +201,9 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 
                 let ping = Date(timeIntervalSince1970: timeInterval)
                 didAnswerPing(ping: ping, with: response.userText, completionHandler: completionHandler)
+
+            case UNNotificationDefaultActionIdentifier:
+                ()
 
             default:
                 break
