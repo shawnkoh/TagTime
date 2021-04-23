@@ -44,6 +44,7 @@ struct TagTimeApp: App {
                         _ = AuthenticationService.shared.signIn()
                     }
                 }
+                .statusBar(hidden: true)
         }
     }
 }

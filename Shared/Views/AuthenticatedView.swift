@@ -52,7 +52,6 @@ struct AuthenticatedView: View {
                 page(name: "preferences", destination: .preferences)
             }
         }
-        .statusBar(hidden: true)
     }
 }
 
