@@ -15,6 +15,7 @@
 		861256F326139CAB00C2B81B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C826139CAA00C2B81B /* ContentView.swift */; };
 		861256F426139CAB00C2B81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 861256C926139CAB00C2B81B /* Assets.xcassets */; };
 		861256F526139CAB00C2B81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 861256C926139CAB00C2B81B /* Assets.xcassets */; };
+		864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864203B02632710700668EC1 /* FacebookLoginService.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
 		8684C04D26186C37006717FC /* AnswerEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C04C26186C37006717FC /* AnswerEditor.swift */; };
@@ -93,6 +94,7 @@
 		861256E926139CAB00C2B81B /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		861256ED26139CAB00C2B81B /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
 		861256EF26139CAB00C2B81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
 		8684C04C26186C37006717FC /* AnswerEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerEditor.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
+				864203B02632710700668EC1 /* FacebookLoginService.swift */,
 				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
 				86C5A701261E2104001451E9 /* PingService.swift */,
 				8672E70426181B01004081FC /* SettingService.swift */,
@@ -507,6 +510,7 @@
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
+				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
