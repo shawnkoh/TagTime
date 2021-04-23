@@ -30,6 +30,9 @@ struct TagTimeApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .alert(isPresented: $alertService.isPresented) {
+                    Alert(title: Text(alertService.message))
+                }
                 .environmentObject(alertService)
                 .environmentObject(answerService)
                 .environmentObject(appService)
