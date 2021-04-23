@@ -9,7 +9,7 @@ import Foundation
 import FBSDKLoginKit
 import FirebaseAuth
 
-final class FacebookLoginService: ObservableObject {
+final class FacebookLoginService {
     static let shared = FacebookLoginService()
 
     let loginManager = LoginManager()
@@ -19,14 +19,19 @@ final class FacebookLoginService: ObservableObject {
             if let error = error {
                 AlertService.shared.present(message: error.localizedDescription)
             }
-            guard let result = result, let accessToken = AccessToken.current else {
+            guard
+                result != nil,
+                let accessToken = AccessToken.current,
+                let user = Auth.auth().currentUser
+            else {
                 return
             }
             let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
-
-//            Auth.auth().signIn(with: credential) { result, error in
-//
-//            }
+            user.link(with: credential) { result, error in
+                if let error = error {
+                    AlertService.shared.present(message: error.localizedDescription)
+                }
+            }
         }
     }
 }

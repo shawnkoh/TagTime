@@ -27,7 +27,7 @@ final class AuthenticationService {
 
     func signIn() -> Result<User, Error> {
         getUserIdOrMakeOne()
-            .flatMap(getUserOrMakeOne)
+            .flatMap(getUserDocumentOrMakeOne)
             .map { user in
                 self.user = user
                 return user
@@ -58,7 +58,7 @@ final class AuthenticationService {
         return result
     }
 
-    private func getUser(id: String) -> Result<User?, Error> {
+    private func getUserDocument(id: String) -> Result<User?, Error> {
         var result: Result<User?, Error>!
 
         let semaphore = DispatchSemaphore(value: 0)
@@ -111,8 +111,8 @@ final class AuthenticationService {
         return result
     }
 
-    private func getUserOrMakeOne(id: String) -> Result<User, Error> {
-        getUser(id: id)
+    private func getUserDocumentOrMakeOne(id: String) -> Result<User, Error> {
+        getUserDocument(id: id)
             .flatMap { user in
                 if let user = user {
                     return .success(user)

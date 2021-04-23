@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct Preferences: View {
-    @StateObject var facebookLoginService = FacebookLoginService.shared
     @EnvironmentObject var notificationService: NotificationService
     @EnvironmentObject var settingService: SettingService
 
@@ -30,7 +29,7 @@ struct Preferences: View {
                     onCommit: {}
                 )
 
-                Button(action: { facebookLoginService.login() }) {
+                Button(action: { FacebookLoginService.shared.login() }) {
                     HStack {
                         Spacer()
                         Text("Login with Facebook")
@@ -78,6 +77,5 @@ struct Preferences_Previews: PreviewProvider {
         Preferences()
             .environmentObject(SettingService.shared)
             .environmentObject(NotificationService.shared)
-            .environmentObject(FacebookLoginService.shared)
     }
 }
