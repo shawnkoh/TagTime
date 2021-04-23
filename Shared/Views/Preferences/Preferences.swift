@@ -29,30 +29,42 @@ struct Preferences: View {
                     onCommit: {}
                 )
 
-                if debugMode {
-                    Divider()
-
-                    Text("Debug Mode")
-                        .font(.title)
-                        .bold()
-
-                    Text("Schedule notification in 7 seconds")
-                        .bold()
-
-                    Button(action: {
-                        notificationService.scheduleNotification(ping: .init(timeIntervalSinceNow: 7))
-                    }) {
-                        HStack {
-                            Spacer()
-                            Text("SCHEDULE")
-                                .foregroundColor(.primary)
-                                .padding()
-                            Spacer()
-                        }
-                        .background(Color.hsb(223, 69, 90))
-                        .cornerRadius(8)
+                Button(action: { FacebookLoginService.shared.login() }) {
+                    HStack {
+                        Spacer()
+                        Text("Login with Facebook")
+                            .foregroundColor(.primary)
+                            .padding()
+                        Spacer()
                     }
+                    .background(Color.hsb(223, 69, 98))
+                    .cornerRadius(8)
                 }
+
+                #if DEBUG
+                Divider()
+
+                Text("Debug Mode")
+                    .font(.title)
+                    .bold()
+
+                Text("Schedule notification in 7 seconds")
+                    .bold()
+
+                Button(action: {
+                    notificationService.scheduleNotification(ping: .init(timeIntervalSinceNow: 7))
+                }) {
+                    HStack {
+                        Spacer()
+                        Text("SCHEDULE")
+                            .foregroundColor(.primary)
+                            .padding()
+                        Spacer()
+                    }
+                    .background(Color.hsb(223, 69, 90))
+                    .cornerRadius(8)
+                }
+                #endif
             }
 
             Spacer()

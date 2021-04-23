@@ -165,8 +165,7 @@ public final class NotificationService: NSObject, ObservableObject {
 
         center.add(request) { error in
             if let error = error {
-                // TODO: Log
-                print("error scheduling notification", error)
+                AlertService.shared.present(message: error.localizedDescription)
             }
         }
     }

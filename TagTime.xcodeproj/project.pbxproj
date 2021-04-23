@@ -15,6 +15,7 @@
 		861256F326139CAB00C2B81B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C826139CAA00C2B81B /* ContentView.swift */; };
 		861256F426139CAB00C2B81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 861256C926139CAB00C2B81B /* Assets.xcassets */; };
 		861256F526139CAB00C2B81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 861256C926139CAB00C2B81B /* Assets.xcassets */; };
+		864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864203B02632710700668EC1 /* FacebookLoginService.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
 		8684C04D26186C37006717FC /* AnswerEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C04C26186C37006717FC /* AnswerEditor.swift */; };
@@ -48,6 +49,9 @@
 		86ADBB812617330B003CBA6B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB802617330B003CBA6B /* Preferences.swift */; };
 		86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */; };
 		86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
+		86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D2E26318D040046C0E3 /* FacebookCore */; };
+		86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3026318D040046C0E3 /* FacebookLogin */; };
+		86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3226318D040046C0E3 /* FacebookShare */; };
 		86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C4C0C3262A09C90023C2A0 /* AppService.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
@@ -90,6 +94,7 @@
 		861256E926139CAB00C2B81B /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		861256ED26139CAB00C2B81B /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
 		861256EF26139CAB00C2B81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
 		8684C04C26186C37006717FC /* AnswerEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerEditor.swift; sourceTree = "<group>"; };
@@ -123,9 +128,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */,
 				86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */,
+				86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */,
 				86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */,
 				86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */,
+				86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +320,7 @@
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
+				864203B02632710700668EC1 /* FacebookLoginService.swift */,
 				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
 				86C5A701261E2104001451E9 /* PingService.swift */,
 				8672E70426181B01004081FC /* SettingService.swift */,
@@ -339,6 +348,9 @@
 				86A59126261DB71600A25D1F /* FirebaseAuth */,
 				86A59128261DB71600A25D1F /* FirebaseFirestore */,
 				86A5912A261DB71600A25D1F /* FirebaseFirestoreSwift-Beta */,
+				86C04D2E26318D040046C0E3 /* FacebookCore */,
+				86C04D3026318D040046C0E3 /* FacebookLogin */,
+				86C04D3226318D040046C0E3 /* FacebookShare */,
 			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
@@ -433,6 +445,7 @@
 			mainGroup = 861256C126139CAA00C2B81B;
 			packageReferences = (
 				86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = 861256CF26139CAB00C2B81B /* Products */;
 			projectDirPath = "";
@@ -497,6 +510,7 @@
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
+				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
@@ -693,7 +707,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.TagTime;
+				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.tagtime;
 				PRODUCT_NAME = TagTime;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -715,7 +729,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.TagTime;
+				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.tagtime;
 				PRODUCT_NAME = TagTime;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -741,7 +755,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.TagTime;
+				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.tagtime;
 				PRODUCT_NAME = TagTime;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -765,7 +779,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.TagTime;
+				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.tagtime;
 				PRODUCT_NAME = TagTime;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -920,6 +934,14 @@
 				minimumVersion = 7.11.0;
 			};
 		};
+		86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -937,6 +959,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseFirestoreSwift-Beta";
+		};
+		86C04D2E26318D040046C0E3 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		86C04D3026318D040046C0E3 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+		86C04D3226318D040046C0E3 /* FacebookShare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookShare;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
