@@ -20,7 +20,9 @@ public final class NotificationService: NSObject, ObservableObject {
         static let ping = "PING_CATEGORY"
     }
 
-    static let shared = NotificationService()
+    public static let shared = NotificationService()
+
+    @Published public private(set) var openedPing: Date?
 
     private(set) var category: UNNotificationCategory
 
@@ -203,7 +205,11 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 didAnswerPing(ping: ping, with: response.userText, completionHandler: completionHandler)
 
             case UNNotificationDefaultActionIdentifier:
-                ()
+                guard let pingDate = TimeInterval(response.notification.request.identifier) else {
+                    return
+                }
+                let ping = Date(timeIntervalSince1970: pingDate)
+                self.openedPing = ping
 
             default:
                 break
