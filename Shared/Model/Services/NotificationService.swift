@@ -12,7 +12,6 @@ import Combine
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
 public final class NotificationService: NSObject, ObservableObject {
     public enum ActionIdentifier {
-        static let open = "OPEN_ACTION"
         static let previous = "PREVIOUS_ACTION"
         static let reply = "REPLY_ACTION"
     }
@@ -26,7 +25,6 @@ public final class NotificationService: NSObject, ObservableObject {
     private(set) var category: UNNotificationCategory
 
     let center = UNUserNotificationCenter.current()
-    let openAction = UNNotificationAction(identifier: ActionIdentifier.open, title: "Open", options: .foreground)
     let replyAction = UNTextInputNotificationAction(identifier: ActionIdentifier.reply, title: "Reply", options: .destructive)
 
     private var userSubscriber: AnyCancellable = .init({})
@@ -36,7 +34,7 @@ public final class NotificationService: NSObject, ObservableObject {
     public override init() {
         self.category = UNNotificationCategory(
             identifier: CategoryIdentifier.ping,
-            actions: [openAction, replyAction],
+            actions: [replyAction],
             intentIdentifiers: [],
             hiddenPreviewsBodyPlaceholder: nil,
             categorySummaryFormat: nil,
@@ -116,7 +114,7 @@ public final class NotificationService: NSObject, ObservableObject {
             let previousAction = UNNotificationAction(identifier: ActionIdentifier.previous, title: title, options: .destructive)
             self.category = UNNotificationCategory(
                 identifier: CategoryIdentifier.ping,
-                actions: [previousAction, replyAction, openAction],
+                actions: [previousAction, replyAction],
                 intentIdentifiers: [],
                 hiddenPreviewsBodyPlaceholder: nil,
                 categorySummaryFormat: nil,
@@ -125,7 +123,7 @@ public final class NotificationService: NSObject, ObservableObject {
         } else {
             self.category = UNNotificationCategory(
                 identifier: CategoryIdentifier.ping,
-                actions: [replyAction, openAction],
+                actions: [replyAction],
                 intentIdentifiers: [],
                 hiddenPreviewsBodyPlaceholder: nil,
                 categorySummaryFormat: nil,
@@ -203,8 +201,6 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 let ping = Date(timeIntervalSince1970: timeInterval)
                 didAnswerPing(ping: ping, with: response.userText, completionHandler: completionHandler)
 
-            case Self.ActionIdentifier.open:
-                ()
             default:
                 break
         }
