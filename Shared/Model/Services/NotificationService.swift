@@ -197,8 +197,6 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                     let timeInterval = TimeInterval(documentId)
                 else {
                     // TODO: Log error
-                    // Maybe AlertService should be a global variable rather than inside Store
-                    // Either that or we can just expose it via the delegate
                     return
                 }
 
