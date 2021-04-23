@@ -21,17 +21,12 @@ final class FacebookLoginService {
             }
             guard
                 result != nil,
-                let accessToken = AccessToken.current,
-                let user = Auth.auth().currentUser
+                let accessToken = AccessToken.current
             else {
                 return
             }
             let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
-            user.link(with: credential) { result, error in
-                if let error = error {
-                    AlertService.shared.present(message: error.localizedDescription)
-                }
-            }
+            AuthenticationService.shared.signIn(with: credential)
         }
     }
 }

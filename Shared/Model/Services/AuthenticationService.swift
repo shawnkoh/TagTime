@@ -34,6 +34,30 @@ final class AuthenticationService {
             }
     }
 
+    func signIn(with credential: AuthCredential) {
+        guard let user = Auth.auth().currentUser else {
+            return
+        }
+        user.link(with: credential) { result, error in
+            if let error = error as NSError?, let code = AuthErrorCode(rawValue: error.code) {
+                switch code {
+                case .credentialAlreadyInUse:
+                    Auth.auth().signIn(with: credential) { result, error in
+                        if let error = error {
+                            AlertService.shared.present(message: error.localizedDescription)
+                        }
+                        guard let result = result else {
+                            return
+                        }
+                        self.user = User(id: result.user.uid)
+                    }
+                default:
+                    AlertService.shared.present(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+
     private func getUserId() -> String? {
         Auth.auth().currentUser?.uid
     }
