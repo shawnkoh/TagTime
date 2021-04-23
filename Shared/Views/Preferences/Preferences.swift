@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Preferences: View {
-    @EnvironmentObject var facebookLoginService: FacebookLoginService
+    @StateObject var facebookLoginService = FacebookLoginService.shared
     @EnvironmentObject var notificationService: NotificationService
     @EnvironmentObject var settingService: SettingService
 
