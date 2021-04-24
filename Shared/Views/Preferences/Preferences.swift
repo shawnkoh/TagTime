@@ -42,44 +42,7 @@ struct Preferences: View {
 
                 #if DEBUG
                 Divider()
-
-                Text("Debug Mode")
-                    .font(.title)
-                    .bold()
-
-                Text("Schedule notification in 7 seconds")
-                    .bold()
-
-                Button(action: {
-                    NotificationService.shared.scheduleNotification(
-                        ping: .init(timeIntervalSinceNow: 7),
-                        badge: AnswerService.shared.unansweredPings.count + 1
-                    )
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("SCHEDULE")
-                            .foregroundColor(.primary)
-                            .padding()
-                        Spacer()
-                    }
-                    .background(Color.hsb(223, 69, 90))
-                    .cornerRadius(8)
-                }
-
-                Button(action: {
-                    AnswerService.shared.deleteAllAnswers()
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("DELETE ALL ANSWERS")
-                            .foregroundColor(.primary)
-                            .padding()
-                        Spacer()
-                    }
-                    .background(Color.hsb(223, 69, 90))
-                    .cornerRadius(8)
-                }
+                DebugMenu()
                 #endif
             }
 
