@@ -173,3 +173,29 @@ final class AnswerService: ObservableObject {
         }
     }
 }
+
+#if DEBUG
+extension AnswerService {
+    func deleteAllAnswers() {
+        guard let answerCollection = answerCollection else {
+            return
+        }
+        // TODO: This has a limit of 500 writes, we should ideally split tags into multiple chunks of 500
+        let writeBatch = Firestore.firestore().batch()
+        answerCollection.getDocuments() { result, error in
+            if let error = error {
+                AlertService.shared.present(message: error.localizedDescription)
+            }
+            guard let result = result else {
+                return
+            }
+            result.documents.forEach { writeBatch.deleteDocument($0.reference) }
+            writeBatch.commit() { error in
+                if let error = error {
+                    AlertService.shared.present(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+}
+#endif

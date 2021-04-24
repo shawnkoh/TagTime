@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct Preferences: View {
-    @EnvironmentObject var notificationService: NotificationService
     @EnvironmentObject var settingService: SettingService
 
     private var debugMode = true
@@ -52,7 +51,7 @@ struct Preferences: View {
                     .bold()
 
                 Button(action: {
-                    notificationService.scheduleNotification(
+                    NotificationService.shared.scheduleNotification(
                         ping: .init(timeIntervalSinceNow: 7),
                         badge: AnswerService.shared.unansweredPings.count + 1
                     )
@@ -60,6 +59,20 @@ struct Preferences: View {
                     HStack {
                         Spacer()
                         Text("SCHEDULE")
+                            .foregroundColor(.primary)
+                            .padding()
+                        Spacer()
+                    }
+                    .background(Color.hsb(223, 69, 90))
+                    .cornerRadius(8)
+                }
+
+                Button(action: {
+                    AnswerService.shared.deleteAllAnswers()
+                }) {
+                    HStack {
+                        Spacer()
+                        Text("DELETE ALL ANSWERS")
                             .foregroundColor(.primary)
                             .padding()
                         Spacer()
@@ -79,6 +92,5 @@ struct Preferences_Previews: PreviewProvider {
     static var previews: some View {
         Preferences()
             .environmentObject(SettingService.shared)
-            .environmentObject(NotificationService.shared)
     }
 }
