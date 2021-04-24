@@ -52,7 +52,10 @@ struct Preferences: View {
                     .bold()
 
                 Button(action: {
-                    notificationService.scheduleNotification(ping: .init(timeIntervalSinceNow: 7))
+                    notificationService.scheduleNotification(
+                        ping: .init(timeIntervalSinceNow: 7),
+                        badge: AnswerService.shared.unansweredPings.count + 1
+                    )
                 }) {
                     HStack {
                         Spacer()
