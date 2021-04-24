@@ -15,6 +15,7 @@ struct AuthenticatedView: View {
         case preferences
     }
 
+    @EnvironmentObject var appService: AppService
     @State private var currentPage: Page = .missedPingList
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
@@ -51,6 +52,29 @@ struct AuthenticatedView: View {
                 Spacer()
                 page(name: "preferences", destination: .preferences)
             }
+        }
+        .sheet(
+            isPresented: $appService.pingNotification.isPresented,
+            onDismiss: {
+                guard appService.pingNotification.needsSave else {
+                    return
+                }
+                let answer = Answer(ping: appService.pingNotification.pingDate, tags: appService.pingNotification.tags)
+                DispatchQueue.global(qos: .utility).async {
+                    let result = AnswerService.shared.addAnswer(answer)
+
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success:
+                            appService.pingNotification.dismiss()
+                        case let .failure(error):
+                            AlertService.shared.present(message: error.localizedDescription)
+                        }
+                    }
+                }
+            }
+        ) {
+            AnswerCreator(config: $appService.pingNotification)
         }
     }
 }

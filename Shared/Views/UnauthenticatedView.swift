@@ -10,8 +10,11 @@ import SwiftUI
 struct UnauthenticatedView: View {
     var body: some View {
         VStack {
-            Text("Unable to log in.")
-            Text("You should not be seeing this page.")
+            Spacer()
+            Text("TAGTIME")
+                .bold()
+                .font(.largeTitle)
+            Spacer()
         }
     }
 }
