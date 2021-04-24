@@ -47,7 +47,6 @@
 		86ADBB7526173303003CBA6B /* Logbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7426173303003CBA6B /* Logbook.swift */; };
 		86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7A26173307003CBA6B /* Statistics.swift */; };
 		86ADBB812617330B003CBA6B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB802617330B003CBA6B /* Preferences.swift */; };
-		86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */; };
 		86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
 		86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D2E26318D040046C0E3 /* FacebookCore */; };
 		86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3026318D040046C0E3 /* FacebookLogin */; };
@@ -111,7 +110,6 @@
 		86ADBB7426173303003CBA6B /* Logbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logbook.swift; sourceTree = "<group>"; };
 		86ADBB7A26173307003CBA6B /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		86ADBB802617330B003CBA6B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingAnswerer.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
 		86C4C0C3262A09C90023C2A0 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
@@ -289,7 +287,6 @@
 		86ADBB6A261732D2003CBA6B /* MissedPing */ = {
 			isa = PBXGroup;
 			children = (
-				86BEE82E2618CA5000645F2F /* MissedPingAnswerer.swift */,
 				86BEE8382618D43700645F2F /* MissedPingCard.swift */,
 				86ADBB6E261732FD003CBA6B /* MissedPingList.swift */,
 			);
@@ -535,7 +532,6 @@
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,
 				861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				86A59147261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
-				86BEE82F2618CA5000645F2F /* MissedPingAnswerer.swift in Sources */,
 				86A59150261DBCBD00A25D1F /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
