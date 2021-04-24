@@ -146,3 +146,25 @@ final class AuthenticationService {
             }
     }
 }
+
+#if DEBUG
+extension AuthenticationService {
+    func resetUserStartDate() {
+        guard let user = user else {
+            return
+        }
+        let newUser = User(id: user.id, startDate: Date())
+        do {
+            try Firestore.firestore().collection("users").document(user.id).setData(from: newUser) { error in
+                if let error = error {
+                    AlertService.shared.present(message: error.localizedDescription)
+                } else {
+                    self.user = newUser
+                }
+            }
+        } catch {
+            AlertService.shared.present(message: error.localizedDescription)
+        }
+    }
+}
+#endif

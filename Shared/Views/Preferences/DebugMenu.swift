@@ -40,6 +40,10 @@ struct DebugMenu: View {
             button("Delete all answers") {
                 AnswerService.shared.deleteAllAnswers()
             }
+
+            button("Reset User Start Date") {
+                AuthenticationService.shared.resetUserStartDate()
+            }
         }
     }
 }
