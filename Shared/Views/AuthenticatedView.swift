@@ -53,27 +53,7 @@ struct AuthenticatedView: View {
                 page(name: "preferences", destination: .preferences)
             }
         }
-        .sheet(
-            isPresented: $appService.pingNotification.isPresented,
-            onDismiss: {
-                guard appService.pingNotification.needsSave else {
-                    return
-                }
-                let answer = Answer(ping: appService.pingNotification.pingDate, tags: appService.pingNotification.tags)
-                DispatchQueue.global(qos: .utility).async {
-                    let result = AnswerService.shared.addAnswer(answer)
-
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success:
-                            appService.pingNotification.dismiss()
-                        case let .failure(error):
-                            AlertService.shared.present(message: error.localizedDescription)
-                        }
-                    }
-                }
-            }
-        ) {
+        .sheet(isPresented: $appService.pingNotification.isPresented) {
             AnswerCreator(config: $appService.pingNotification)
         }
     }
@@ -83,5 +63,6 @@ struct AuthenticatedView_Previews: PreviewProvider {
     static var previews: some View {
         AuthenticatedView()
             .preferredColorScheme(.dark)
+            .environmentObject(AppService.shared)
     }
 }
