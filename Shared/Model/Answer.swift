@@ -24,3 +24,9 @@ public struct Answer: Identifiable, Codable {
         self.tags = tags
     }
 }
+
+extension Answer {
+    var tagDescription: String {
+        tags.joined(separator: " ")
+    }
+}

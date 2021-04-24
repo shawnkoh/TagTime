@@ -19,7 +19,6 @@
 		865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865391EB2633D4A700F202F7 /* AnswerCreator.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
-		8684C04D26186C37006717FC /* AnswerEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C04C26186C37006717FC /* AnswerEditor.swift */; };
 		868E97B3261736A7000A41FF /* Ping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B2261736A7000A41FF /* Ping.swift */; };
 		868E97B9261736EE000A41FF /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B8261736EE000A41FF /* Tag.swift */; };
 		868E97C3261738C5000A41FF /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C2261738C5000A41FF /* Stub.swift */; };
@@ -99,7 +98,6 @@
 		865391EB2633D4A700F202F7 /* AnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCreator.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
-		8684C04C26186C37006717FC /* AnswerEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerEditor.swift; sourceTree = "<group>"; };
 		868E97B2261736A7000A41FF /* Ping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ping.swift; sourceTree = "<group>"; };
 		868E97B8261736EE000A41FF /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		868E97C2261738C5000A41FF /* Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
@@ -301,7 +299,6 @@
 		86ADBB6B261732DE003CBA6B /* Logbook */ = {
 			isa = PBXGroup;
 			children = (
-				8684C04C26186C37006717FC /* AnswerEditor.swift */,
 				86ADBB7426173303003CBA6B /* Logbook.swift */,
 				86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */,
 			);
@@ -528,7 +525,6 @@
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
-				8684C04D26186C37006717FC /* AnswerEditor.swift in Sources */,
 				8672E70526181B01004081FC /* SettingService.swift in Sources */,
 				86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */,
 				86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */,

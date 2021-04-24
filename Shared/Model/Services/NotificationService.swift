@@ -112,7 +112,7 @@ public final class NotificationService: NSObject, ObservableObject {
 
     private func scheduleNotifications(pings: [Date], previousAnswer: Answer?) {
         if let previousAnswer = previousAnswer {
-            let title = previousAnswer.tags.joined(separator: " ")
+            let title = previousAnswer.tagDescription
             let previousAction = UNNotificationAction(identifier: ActionIdentifier.previous, title: title, options: .destructive)
             self.category = UNNotificationCategory(
                 identifier: CategoryIdentifier.ping,

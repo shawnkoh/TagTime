@@ -16,10 +16,10 @@ struct AnswerCreatorConfig {
         response.split(separator: " ").map { Tag($0) }
     }
 
-    mutating func present(pingDate: Date) {
+    mutating func present(pingDate: Date, response: String = "") {
         isPresented = true
         self.pingDate = pingDate
-        response = ""
+        self.response = response
     }
 
     mutating func dismiss() {

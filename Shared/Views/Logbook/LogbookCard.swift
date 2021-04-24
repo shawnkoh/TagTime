@@ -12,11 +12,10 @@ struct LogbookCard: View {
 
     @EnvironmentObject var answerService: AnswerService
 
-    @State var config: AnswerEditorConfig
+    @State var config = AnswerCreatorConfig()
 
     init(answer: Answer) {
         self.answer = answer
-        self._config = State(initialValue: AnswerEditorConfig(answer: answer))
     }
 
     private let dateFormatter: DateFormatter = {
@@ -27,11 +26,11 @@ struct LogbookCard: View {
     }()
     
     var body: some View {
-        Button(action: { config.present() }) {
+        Button(action: { config.present(pingDate: answer.ping, response: answer.tagDescription) }) {
             HStack {
                 Spacer()
                 VStack {
-                    Text(answer.tags.joined(separator: " "))
+                    Text(answer.tagDescription)
                     Text(dateFormatter.string(from: answer.ping))
                 }
                 .foregroundColor(.white)
@@ -40,17 +39,8 @@ struct LogbookCard: View {
         }
         .background(Color.hsb(211, 26, 86))
         .cornerRadius(10)
-        .sheet(
-            isPresented: $config.isPresented,
-            onDismiss: {
-                guard config.needToSave else {
-                    return
-                }
-                let answer = Answer(ping: config.pingDate, tags: config.tags)
-                answerService.updateAnswer(answer)
-            }
-        ) {
-            AnswerEditor(config: $config)
+        .sheet(isPresented: $config.isPresented) {
+            AnswerCreator(config: $config)
         }
 
     }
