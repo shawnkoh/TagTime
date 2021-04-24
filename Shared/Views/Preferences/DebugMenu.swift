@@ -33,7 +33,7 @@ struct DebugMenu: View {
             button("Schedule notification in 7 seconds") {
                 NotificationService.shared.scheduleNotification(
                     ping: .init(timeIntervalSinceNow: 7),
-                    badge: AnswerService.shared.unansweredPings.count + 1
+                    badge: AnswerService.shared.unansweredPings.count
                 )
             }
 
