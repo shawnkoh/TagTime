@@ -12,12 +12,25 @@ final class AppService: ObservableObject {
     static let shared = AppService()
 
     @Published var isAuthenticated = false
+    @Published var pingNotification = AnswerCreatorConfig()
 
-    private var userSubscriber: AnyCancellable!
+    private var subscribers = Set<AnyCancellable>()
 
     init() {
-        userSubscriber = AuthenticationService.shared.$user
+        AuthenticationService.shared.$user
             .receive(on: DispatchQueue.main)
             .sink { self.isAuthenticated = $0 != nil }
+            .store(in: &subscribers)
+
+        NotificationService.shared.$openedPing
+            .receive(on: DispatchQueue.main)
+            .sink { [self] in
+                if let pingDate = $0 {
+                    pingNotification.present(pingDate: pingDate)
+                } else {
+                    pingNotification.dismiss()
+                }
+            }
+            .store(in: &subscribers)
     }
 }

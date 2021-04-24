@@ -12,7 +12,6 @@ import Combine
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
 public final class NotificationService: NSObject, ObservableObject {
     public enum ActionIdentifier {
-        static let open = "OPEN_ACTION"
         static let previous = "PREVIOUS_ACTION"
         static let reply = "REPLY_ACTION"
     }
@@ -21,12 +20,13 @@ public final class NotificationService: NSObject, ObservableObject {
         static let ping = "PING_CATEGORY"
     }
 
-    static let shared = NotificationService()
+    public static let shared = NotificationService()
+
+    @Published public private(set) var openedPing: Date?
 
     private(set) var category: UNNotificationCategory
 
     let center = UNUserNotificationCenter.current()
-    let openAction = UNNotificationAction(identifier: ActionIdentifier.open, title: "Open", options: .foreground)
     let replyAction = UNTextInputNotificationAction(identifier: ActionIdentifier.reply, title: "Reply", options: .destructive)
 
     private var userSubscriber: AnyCancellable = .init({})
@@ -36,7 +36,7 @@ public final class NotificationService: NSObject, ObservableObject {
     public override init() {
         self.category = UNNotificationCategory(
             identifier: CategoryIdentifier.ping,
-            actions: [openAction, replyAction],
+            actions: [replyAction],
             intentIdentifiers: [],
             hiddenPreviewsBodyPlaceholder: nil,
             categorySummaryFormat: nil,
@@ -116,7 +116,7 @@ public final class NotificationService: NSObject, ObservableObject {
             let previousAction = UNNotificationAction(identifier: ActionIdentifier.previous, title: title, options: .destructive)
             self.category = UNNotificationCategory(
                 identifier: CategoryIdentifier.ping,
-                actions: [previousAction, replyAction, openAction],
+                actions: [previousAction, replyAction],
                 intentIdentifiers: [],
                 hiddenPreviewsBodyPlaceholder: nil,
                 categorySummaryFormat: nil,
@@ -125,7 +125,7 @@ public final class NotificationService: NSObject, ObservableObject {
         } else {
             self.category = UNNotificationCategory(
                 identifier: CategoryIdentifier.ping,
-                actions: [replyAction, openAction],
+                actions: [replyAction],
                 intentIdentifiers: [],
                 hiddenPreviewsBodyPlaceholder: nil,
                 categorySummaryFormat: nil,
@@ -155,13 +155,13 @@ public final class NotificationService: NSObject, ObservableObject {
         content.badge = 1
         content.sound = .default
         content.categoryIdentifier = CategoryIdentifier.ping
-        // TODO: Assign custom info to userInfo
-        content.targetContentIdentifier = ping.timeIntervalSince1970.description
+        let unixtime = ping.timeIntervalSince1970.description
+        content.targetContentIdentifier = unixtime
 
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: ping)
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: ping.description, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: unixtime, content: content, trigger: trigger)
 
         center.add(request) { error in
             if let error = error {
@@ -190,6 +190,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         switch response.actionIdentifier {
             case Self.ActionIdentifier.previous:
                 ()
+
             case Self.ActionIdentifier.reply:
                 guard
                     let response = response as? UNTextInputNotificationResponse,
@@ -197,16 +198,19 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                     let timeInterval = TimeInterval(documentId)
                 else {
                     // TODO: Log error
-                    // Maybe AlertService should be a global variable rather than inside Store
-                    // Either that or we can just expose it via the delegate
                     return
                 }
 
                 let ping = Date(timeIntervalSince1970: timeInterval)
                 didAnswerPing(ping: ping, with: response.userText, completionHandler: completionHandler)
 
-            case Self.ActionIdentifier.open:
-                ()
+            case UNNotificationDefaultActionIdentifier:
+                guard let pingDate = TimeInterval(response.notification.request.identifier) else {
+                    return
+                }
+                let ping = Date(timeIntervalSince1970: pingDate)
+                self.openedPing = ping
+
             default:
                 break
         }
