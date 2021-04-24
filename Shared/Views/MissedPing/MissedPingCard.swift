@@ -11,7 +11,7 @@ struct MissedPingCard: View {
     // TODO: I'm not sure if we should use EnvironmentObject here, but I'm not sure how else
     // I can delete the ping from MissedPingList.
     @EnvironmentObject var answerService: AnswerService
-    @State private var config = MissedPingAnswererConfig()
+    @State private var config = AnswerCreatorConfig()
 
     let ping: Date
 
@@ -23,7 +23,7 @@ struct MissedPingCard: View {
     }()
 
     var body: some View {
-        Button(action: { config.present() }) {
+        Button(action: { config.present(pingDate: ping) }) {
             HStack {
                 Spacer()
                 Text(dateFormatter.string(from: ping))
@@ -35,33 +35,12 @@ struct MissedPingCard: View {
             .cornerRadius(10)
         }
         .sheet(isPresented: $config.isPresented) {
-            MissedPingAnswerer(config: $config, ping: ping)
-                .onDisappear {
-                    guard config.needsSave else {
-                        return
-                    }
-                    let tags = config.answer.split(separator: " ").map { Tag($0) }
-                    let answer = Answer(ping: ping, tags: tags)
-                    DispatchQueue.global(qos: .utility).async {
-                        let result = answerService.addAnswer(answer)
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success:
-                                // TODO: Maybe show some animation?
-                                ()
-                            case let .failure(error):
-                                AlertService.shared.present(message: error.localizedDescription)
-                            }
-                        }
-                    }
-                }
+            AnswerCreator(config: $config)
         }
     }
 }
 
 struct MissedPingCard_Previews: PreviewProvider {
-    @State private var config = MissedPingAnswererConfig()
-
     static var previews: some View {
         MissedPingCard(ping: Stub.pings.first!)
     }

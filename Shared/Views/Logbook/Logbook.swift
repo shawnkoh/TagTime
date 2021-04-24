@@ -56,7 +56,7 @@ struct Logbook: View {
                 HStack {
                     Spacer()
                     VStack {
-                        Text(answer.tags.joined(separator: " "))
+                        Text(answer.tagDescription)
                         Text(dateFormatter.string(from: answer.ping))
                     }
                     .foregroundColor(.white)
