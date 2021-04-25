@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>968709302758-vvjnkcu9e691icsqh1jf6huur2gjmtv6.apps.googleusercontent.com</string>
+	<string>968709302758-40gvejsi14p3ph7r5to4f0bq6s06a83c.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.968709302758-vvjnkcu9e691icsqh1jf6huur2gjmtv6</string>
+	<string>com.googleusercontent.apps.968709302758-40gvejsi14p3ph7r5to4f0bq6s06a83c</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDw5WIDySdpGr5mEyCu128izTWLcwMdgwg</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,22 +13,22 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>sg.shawnkoh.TagTime</string>
+	<string>sg.shawnkoh.tagtime</string>
 	<key>PROJECT_ID</key>
 	<string>tagtime-shawnkoh</string>
 	<key>STORAGE_BUCKET</key>
 	<string>tagtime-shawnkoh.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:968709302758:ios:14b49302fb4bbdeedf0e27</string>
+	<string>1:968709302758:ios:9417800baddd3dcedf0e27</string>
 </dict>
 </plist>
