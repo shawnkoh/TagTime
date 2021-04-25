@@ -8,6 +8,7 @@
 import Foundation
 import UserNotifications
 import Combine
+import UIKit
 
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
 public final class NotificationService: NSObject, ObservableObject {
@@ -71,24 +72,26 @@ public final class NotificationService: NSObject, ObservableObject {
     }
 
     private func setupNotificationObserver() {
+        AnswerService.shared.$unansweredPings
+            .map { $0.count }
+            .receive(on: DispatchQueue.main)
+            .sink { UIApplication.shared.applicationIconBadgeNumber = $0 }
+            .store(in: &subscribers)
+
         PingService.shared.$answerablePings
             .compactMap { $0.last?.nextPing(averagePingInterval: PingService.shared.averagePingInterval) }
-            .combineLatest(AnswerService.shared.$latestAnswer)
-            .receive(on: DispatchQueue.main)
-            .sink { [self] (nextPing, latestAnswer) in
+            .map { nextPing -> [Date] in
                 var nextPings = [nextPing]
                 while nextPings.count < 30 {
                     let next = nextPings.last!.nextPing(averagePingInterval: PingService.shared.averagePingInterval)
                     nextPings.append(next)
                 }
-
-                let nextPingDates = nextPings.map { $0.date }
-
-                if let latestAnswer = latestAnswer {
-                    tryToScheduleNotifications(pings: nextPingDates, previousAnswer: latestAnswer)
-                } else {
-                    tryToScheduleNotifications(pings: nextPingDates, previousAnswer: nil)
-                }
+                return nextPings.map { $0.date }
+            }
+            .combineLatest(AnswerService.shared.$latestAnswer)
+            .receive(on: DispatchQueue.main)
+            .sink { [self] (nextPings, latestAnswer) in
+                tryToScheduleNotifications(pings: nextPings, previousAnswer: latestAnswer)
             }
             .store(in: &subscribers)
     }
@@ -112,8 +115,7 @@ public final class NotificationService: NSObject, ObservableObject {
 
     private func scheduleNotifications(pings: [Date], previousAnswer: Answer?) {
         if let previousAnswer = previousAnswer {
-            let title = previousAnswer.tagDescription
-            let previousAction = UNNotificationAction(identifier: ActionIdentifier.previous, title: title, options: .destructive)
+            let previousAction = UNNotificationAction(identifier: ActionIdentifier.previous, title: previousAnswer.tagDescription, options: .destructive)
             self.category = UNNotificationCategory(
                 identifier: CategoryIdentifier.ping,
                 actions: [previousAction, replyAction],
@@ -136,13 +138,16 @@ public final class NotificationService: NSObject, ObservableObject {
         center.setNotificationCategories([category])
         // TODO: I'm not sure how to deal with these yet
         center.removeAllDeliveredNotifications()
+
         center.removeAllPendingNotificationRequests()
 
-        pings.forEach { scheduleNotification(ping: $0) }
+        pings.enumerated().forEach { index, ping in
+            scheduleNotification(ping: ping, badge: AnswerService.shared.unansweredPings.count + index + 1)
+        }
     }
 
     /// Do not call this function. Only used for testing
-    func scheduleNotification(ping: Date) {
+    func scheduleNotification(ping: Date, badge: Int) {
         let content = UNMutableNotificationContent()
 
         let formatter = DateFormatter()
@@ -152,7 +157,7 @@ public final class NotificationService: NSObject, ObservableObject {
         content.title = "It's tag time!"
         // TODO: Not sure if I should display the date since the notification center already displays it.
         content.body = "What are you doing RIGHT NOW (\(formatter.string(from: ping)))?"
-        content.badge = 1
+        content.badge = NSNumber(integerLiteral: badge)
         content.sound = .default
         content.categoryIdentifier = CategoryIdentifier.ping
         let unixtime = ping.timeIntervalSince1970.description
@@ -177,9 +182,15 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        print("foreground")
-        completionHandler([])
-//        completionHandler([.badge, .banner, .list, .sound])
+        guard let pingDate = TimeInterval(notification.request.identifier) else {
+            // TODO: Not sure about this completion handler.
+            completionHandler([])
+            return
+        }
+        let ping = Date(timeIntervalSince1970: pingDate)
+        self.openedPing = ping
+        // TODO: Not sure about this completion handler.
+        completionHandler([.badge, .sound])
     }
 
     public func userNotificationCenter(
@@ -194,29 +205,32 @@ extension NotificationService: UNUserNotificationCenterDelegate {
             case Self.ActionIdentifier.reply:
                 guard
                     let response = response as? UNTextInputNotificationResponse,
-                    let documentId = response.notification.request.content.targetContentIdentifier,
-                    let timeInterval = TimeInterval(documentId)
+                    let timeInterval = TimeInterval(response.notification.request.identifier)
                 else {
                     // TODO: Log error
+                    completionHandler()
                     return
                 }
 
                 let ping = Date(timeIntervalSince1970: timeInterval)
-                didAnswerPing(ping: ping, with: response.userText, completionHandler: completionHandler)
+                answerPing(ping, with: response.userText, completionHandler: completionHandler)
 
             case UNNotificationDefaultActionIdentifier:
                 guard let pingDate = TimeInterval(response.notification.request.identifier) else {
+                    // TODO: Log error
+                    completionHandler()
                     return
                 }
                 let ping = Date(timeIntervalSince1970: pingDate)
                 self.openedPing = ping
+                completionHandler()
 
             default:
                 break
         }
     }
 
-    private func didAnswerPing(ping: Date, with text: String, completionHandler: @escaping () -> Void) {
+    private func answerPing(_ ping: Date, with text: String, completionHandler: @escaping () -> Void) {
         let tags = text.split(separator: " ").map { Tag($0) }
         let answer = Answer(ping: ping, tags: tags)
 

@@ -18,7 +18,7 @@ final class AlertService: ObservableObject {
     // TODO: Explore Apple's Logger mechanism
 
     func present(message: String) {
-        Logger().critical("\(message)")
+        Logger().critical("\(message, privacy: .public)")
         self.message = message
         isPresented = true
     }

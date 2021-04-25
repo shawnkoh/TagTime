@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct Preferences: View {
-    @EnvironmentObject var notificationService: NotificationService
     @EnvironmentObject var settingService: SettingService
 
     private var debugMode = true
@@ -43,27 +42,7 @@ struct Preferences: View {
 
                 #if DEBUG
                 Divider()
-
-                Text("Debug Mode")
-                    .font(.title)
-                    .bold()
-
-                Text("Schedule notification in 7 seconds")
-                    .bold()
-
-                Button(action: {
-                    notificationService.scheduleNotification(ping: .init(timeIntervalSinceNow: 7))
-                }) {
-                    HStack {
-                        Spacer()
-                        Text("SCHEDULE")
-                            .foregroundColor(.primary)
-                            .padding()
-                        Spacer()
-                    }
-                    .background(Color.hsb(223, 69, 90))
-                    .cornerRadius(8)
-                }
+                DebugMenu()
                 #endif
             }
 
@@ -76,6 +55,5 @@ struct Preferences_Previews: PreviewProvider {
     static var previews: some View {
         Preferences()
             .environmentObject(SettingService.shared)
-            .environmentObject(NotificationService.shared)
     }
 }
