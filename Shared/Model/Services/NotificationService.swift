@@ -8,6 +8,7 @@
 import Foundation
 import UserNotifications
 import Combine
+import UIKit
 
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
 public final class NotificationService: NSObject, ObservableObject {
@@ -71,6 +72,12 @@ public final class NotificationService: NSObject, ObservableObject {
     }
 
     private func setupNotificationObserver() {
+        AnswerService.shared.$unansweredPings
+            .map { $0.count }
+            .receive(on: DispatchQueue.main)
+            .sink { UIApplication.shared.applicationIconBadgeNumber = $0 }
+            .store(in: &subscribers)
+
         PingService.shared.$answerablePings
             .compactMap { $0.last?.nextPing(averagePingInterval: PingService.shared.averagePingInterval) }
             .map { nextPing -> [Date] in
@@ -131,6 +138,7 @@ public final class NotificationService: NSObject, ObservableObject {
         center.setNotificationCategories([category])
         // TODO: I'm not sure how to deal with these yet
         center.removeAllDeliveredNotifications()
+
         center.removeAllPendingNotificationRequests()
 
         pings.enumerated().forEach { index, ping in
