@@ -11,6 +11,7 @@ struct LogbookCard: View {
     var answer: Answer
 
     @EnvironmentObject var answerService: AnswerService
+    @EnvironmentObject var alertService: AlertService
 
     @State var config = AnswerCreatorConfig()
 
@@ -41,6 +42,8 @@ struct LogbookCard: View {
         .cornerRadius(10)
         .sheet(isPresented: $config.isPresented) {
             AnswerCreator(config: $config)
+                .environmentObject(self.answerService)
+                .environmentObject(self.alertService)
         }
 
     }

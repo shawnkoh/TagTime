@@ -11,6 +11,7 @@ struct MissedPingCard: View {
     // TODO: I'm not sure if we should use EnvironmentObject here, but I'm not sure how else
     // I can delete the ping from MissedPingList.
     @EnvironmentObject var answerService: AnswerService
+    @EnvironmentObject var alertService: AlertService
     @State private var config = AnswerCreatorConfig()
 
     let ping: Date
@@ -36,6 +37,8 @@ struct MissedPingCard: View {
         }
         .sheet(isPresented: $config.isPresented) {
             AnswerCreator(config: $config)
+                .environmentObject(self.answerService)
+                .environmentObject(self.alertService)
         }
     }
 }

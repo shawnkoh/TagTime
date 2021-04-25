@@ -50,39 +50,49 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            TextField(
-                "PING1 PING2",
-                text: $config.response,
-                onCommit: {
-                    let needToSave = config.response.count > 0
-                    guard needToSave else {
-                        return
-                    }
-
-                    let answer = Answer(ping: config.pingDate, tags: config.tags)
-                    DispatchQueue.global(qos: .utility).async {
-                        let result = answerService.addAnswer(answer)
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success:
-                                // TODO: Not sure what to do here
-                                ()
-                            case let .failure(error):
-                                alertService.present(message: error.localizedDescription)
-                            }
-                        }
-                    }
-                    config.dismiss()
-                }
-            )
-            .autocapitalization(.allCharacters)
-            .multilineTextAlignment(.center)
-            .background(Color.hsb(207, 26, 14))
-            .cornerRadius(8)
-            .foregroundColor(.white)
+            TextField("PING1 PING2", text: $config.response, onCommit: { addAnswer(tags: config.tags) })
+                .autocapitalization(.allCharacters)
+                .multilineTextAlignment(.center)
+                .background(Color.hsb(207, 26, 14))
+                .cornerRadius(8)
+                .foregroundColor(.white)
 
             Spacer()
+
+            if let latestAnswer = answerService.latestAnswer {
+                Button(action: { addAnswer(tags: latestAnswer.tags) }) {
+                    HStack {
+                        Spacer()
+                        Text(latestAnswer.tagDescription)
+                            .foregroundColor(.primary)
+                            .padding()
+                        Spacer()
+                    }
+                    .background(Color.hsb(223, 69, 90))
+                    .cornerRadius(8)
+                }
+            }
         }
+    }
+
+    private func addAnswer(tags: [Tag]) {
+        guard tags.count > 0 else {
+            return
+        }
+        let answer = Answer(ping: config.pingDate, tags: tags)
+        DispatchQueue.global(qos: .utility).async {
+            let result = answerService.addAnswer(answer)
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    // TODO: Not sure what to do here
+                    ()
+                case let .failure(error):
+                    alertService.present(message: error.localizedDescription)
+                }
+            }
+        }
+        config.dismiss()
     }
 }
 

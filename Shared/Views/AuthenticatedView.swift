@@ -16,6 +16,8 @@ struct AuthenticatedView: View {
     }
 
     @EnvironmentObject var appService: AppService
+    @EnvironmentObject var answerService: AnswerService
+    @EnvironmentObject var alertService: AlertService
     @State private var currentPage: Page = .missedPingList
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
@@ -55,6 +57,8 @@ struct AuthenticatedView: View {
         }
         .sheet(isPresented: $appService.pingNotification.isPresented) {
             AnswerCreator(config: $appService.pingNotification)
+                .environmentObject(self.answerService)
+                .environmentObject(self.alertService)
         }
     }
 }
