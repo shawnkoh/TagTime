@@ -24,6 +24,11 @@
 		865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865391EB2633D4A700F202F7 /* AnswerCreator.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
+		867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858C8263709D9009370F6 /* BatchAnswerCreator.swift */; };
+		867858D926370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
+		867858DA26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
+		867858DB26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
+		867858DC26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		868E97B3261736A7000A41FF /* Ping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B2261736A7000A41FF /* Ping.swift */; };
 		868E97B9261736EE000A41FF /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B8261736EE000A41FF /* Tag.swift */; };
 		868E97C3261738C5000A41FF /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C2261738C5000A41FF /* Stub.swift */; };
@@ -102,6 +107,8 @@
 		865391EB2633D4A700F202F7 /* AnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCreator.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
+		867858C8263709D9009370F6 /* BatchAnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchAnswerCreator.swift; sourceTree = "<group>"; };
+		867858D826370F3F009370F6 /* AnswerSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerSuggester.swift; sourceTree = "<group>"; };
 		868E97B2261736A7000A41FF /* Ping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ping.swift; sourceTree = "<group>"; };
 		868E97B8261736EE000A41FF /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		868E97C2261738C5000A41FF /* Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
@@ -240,6 +247,8 @@
 			isa = PBXGroup;
 			children = (
 				865391EB2633D4A700F202F7 /* AnswerCreator.swift */,
+				867858D826370F3F009370F6 /* AnswerSuggester.swift */,
+				867858C8263709D9009370F6 /* BatchAnswerCreator.swift */,
 			);
 			path = Answer;
 			sourceTree = "<group>";
@@ -527,9 +536,11 @@
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
+				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
+				867858D926370F3F009370F6 /* AnswerSuggester.swift in Sources */,
 				8672E70526181B01004081FC /* SettingService.swift in Sources */,
 				86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */,
 				86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */,
@@ -553,6 +564,7 @@
 				861256F326139CAB00C2B81B /* ContentView.swift in Sources */,
 				86A59148261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
 				86A5913F261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
+				867858DA26370F3F009370F6 /* AnswerSuggester.swift in Sources */,
 				86A59151261DBCBD00A25D1F /* User.swift in Sources */,
 				861256F126139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 			);
@@ -562,6 +574,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				867858DB26370F3F009370F6 /* AnswerSuggester.swift in Sources */,
 				86A59152261DBCBD00A25D1F /* User.swift in Sources */,
 				86A59140261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				86A59149261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
@@ -573,6 +586,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				867858DC26370F3F009370F6 /* AnswerSuggester.swift in Sources */,
 				86A59153261DBCBD00A25D1F /* User.swift in Sources */,
 				86A59141261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				86A5914A261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,

@@ -7,31 +7,10 @@
 
 import SwiftUI
 
-struct AnswerAllConfig {
-    private(set) var isPresented = false
-    var response = ""
-    private(set) var needToSave = false
-
-    var tags: [Tag] {
-        response.split(separator: " ").map { Tag($0) }
-    }
-
-    mutating func show() {
-        response = ""
-        isPresented = true
-    }
-
-    mutating func dismiss(save: Bool) {
-        needToSave = save
-        isPresented = false
-    }
-}
-
 struct MissedPingList: View {
     @EnvironmentObject var answerService: AnswerService
 
-    @State private var answeringAll = false
-    @State private var answerAllConfig = AnswerAllConfig()
+    @State private var batchAnswerConfig = BatchAnswerConfig()
 
     private var unansweredPings: [Date] {
         answerService.unansweredPings
@@ -106,7 +85,7 @@ struct MissedPingList: View {
             }
 
             if unansweredPings.count > 1 {
-                Button(action: { answeringAll = true }) {
+                Button(action: { batchAnswerConfig.show() }) {
                     HStack {
                         Spacer()
                         Text("ANSWER ALL")
@@ -117,26 +96,9 @@ struct MissedPingList: View {
                     .background(Color.hsb(223, 69, 90))
                     .cornerRadius(8)
                 }
-                .sheet(
-                    isPresented: $answeringAll,
-                    onDismiss: {
-                        guard answerAllConfig.needToSave else {
-                            return
-                        }
-                        answerService.answerAllUnansweredPings(tags: answerAllConfig.tags)
-                    }
-                ) {
-                    VStack {
-                        Text("What were you doing from")
-                        Text("")
-                        TextField(
-                            "PING1 PING2",
-                            text: $answerAllConfig.response,
-                            onCommit: {
-                                answerAllConfig.dismiss(save: answerAllConfig.response.count > 0)
-                            }
-                        )
-                    }
+                .sheet(isPresented: $batchAnswerConfig.isPresented) {
+                    BatchAnswerCreator(config: $batchAnswerConfig)
+                        .environmentObject(self.answerService)
                 }
             }
         }

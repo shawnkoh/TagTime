@@ -133,36 +133,16 @@ final class AnswerService: ObservableObject {
         return result
     }
 
-    func updateAnswer(_ answer: Answer) {
+    func batchAnswers(_ answers: [Answer]) {
         guard let answerCollection = answerCollection else {
             return
         }
-
+        // TODO: This has a limit of 500 writes, we should ideally split into multiple chunks of 500
+        let writeBatch = Firestore.firestore().batch()
         do {
-            try answerCollection
-                .document(answer.documentId)
-                .setData(from: answer)
-        } catch {
-            AlertService.shared.present(message: "updateAnswer(_:) \(error)")
-        }
-    }
-
-    func answerAllUnansweredPings(tags: [Tag]) {
-        guard let answerCollection = answerCollection else {
-            return
-        }
-
-        do {
-            // TODO: This has a limit of 500 writes, we should ideally split tags into multiple chunks of 500
-            let writeBatch = Firestore.firestore().batch()
-
-            try unansweredPings
-                .map { Answer(ping: $0, tags: tags) }
-                .forEach { answer in
-                    let document = answerCollection.document(answer.documentId)
-                    try writeBatch.setData(from: answer, forDocument: document)
-                }
-
+            try answers.forEach { answer in
+                try writeBatch.setData(from: answer, forDocument: answerCollection.document(answer.documentId))
+            }
             writeBatch.commit() { error in
                 if let error = error {
                     AlertService.shared.present(message: "answerAllUnansweredPings \(error)")
@@ -172,6 +152,7 @@ final class AnswerService: ObservableObject {
             AlertService.shared.present(message: "answerAllUnansweredPings \(error)")
         }
     }
+
 }
 
 #if DEBUG
