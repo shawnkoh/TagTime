@@ -27,6 +27,7 @@ struct Tappable: ViewModifier {
 }
 
 extension View {
+    /// Used in place of onTapGesture to avoid MacOS issues.
     func tappable(do action: @escaping () -> ()) -> some View {
         self.modifier(Tappable(action: action))
     }

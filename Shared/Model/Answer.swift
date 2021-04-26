@@ -8,6 +8,7 @@
 import Foundation
 
 public struct Answer: Identifiable, Codable {
+    // TODO: Why do I need an ID for? Isn't the documentId already the ID?
     public let id: UUID
     public let updatedDate: Date
     public let ping: Date

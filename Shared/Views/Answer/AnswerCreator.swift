@@ -59,19 +59,7 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            if let latestAnswer = answerService.latestAnswer {
-                Button(action: { addAnswer(tags: latestAnswer.tags) }) {
-                    HStack {
-                        Spacer()
-                        Text(latestAnswer.tagDescription)
-                            .foregroundColor(.primary)
-                            .padding()
-                        Spacer()
-                    }
-                    .background(Color.hsb(223, 69, 90))
-                    .cornerRadius(8)
-                }
-            }
+            AnswerSuggester(action: addAnswer(tags:))
         }
     }
 
