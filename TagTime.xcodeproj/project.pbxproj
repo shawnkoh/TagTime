@@ -54,6 +54,7 @@
 		86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3226318D040046C0E3 /* FacebookShare */; };
 		86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C4C0C3262A09C90023C2A0 /* AppService.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
+		86C6C7402636A19700A24EBA /* Tappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C6C73F2636A19700A24EBA /* Tappable.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
@@ -96,6 +97,7 @@
 		861256EF26139CAB00C2B81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		862914E42634A1D6006BF198 /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
 		863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TagTime.entitlements; sourceTree = "<group>"; };
 		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
 		865391EB2633D4A700F202F7 /* AnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCreator.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
 		86C4C0C3262A09C90023C2A0 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
+		86C6C73F2636A19700A24EBA /* Tappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tappable.swift; sourceTree = "<group>"; };
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
@@ -164,6 +167,7 @@
 		861256C126139CAA00C2B81B = {
 			isa = PBXGroup;
 			children = (
+				863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */,
 				863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */,
 				861256C626139CAA00C2B81B /* Shared */,
 				861256D026139CAB00C2B81B /* iOS */,
@@ -244,6 +248,7 @@
 			isa = PBXGroup;
 			children = (
 				8672E71426182204004081FC /* PageTitle.swift */,
+				86C6C73F2636A19700A24EBA /* Tappable.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -528,6 +533,7 @@
 				8672E70526181B01004081FC /* SettingService.swift in Sources */,
 				86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */,
 				86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */,
+				86C6C7402636A19700A24EBA /* Tappable.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
 				865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,
@@ -706,6 +712,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TagTime.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GLF5FGPT59;
 				ENABLE_PREVIEWS = YES;
@@ -718,6 +726,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.tagtime;
 				PRODUCT_NAME = TagTime;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -728,6 +737,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TagTime.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GLF5FGPT59;
 				ENABLE_PREVIEWS = YES;
@@ -740,6 +751,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.tagtime;
 				PRODUCT_NAME = TagTime;
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

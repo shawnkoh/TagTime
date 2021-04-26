@@ -28,7 +28,7 @@ struct AuthenticatedView: View {
             Image("\(name)-active")
         case false:
             Image(name)
-                .onTapGesture { currentPage = destination }
+                .tappable { currentPage = destination }
         }
     }
 
@@ -68,5 +68,7 @@ struct AuthenticatedView_Previews: PreviewProvider {
         AuthenticatedView()
             .preferredColorScheme(.dark)
             .environmentObject(AppService.shared)
+            .environmentObject(AnswerService.shared)
+            .environmentObject(AlertService.shared)
     }
 }
