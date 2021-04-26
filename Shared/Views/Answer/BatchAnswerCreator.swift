@@ -49,7 +49,7 @@ struct BatchAnswerCreator: View {
         guard tags.count > 0 else {
             return
         }
-        let answers = answerService.unansweredPings.map { Answer(ping: $0, tags: config.tags) }
+        let answers = answerService.unansweredPings.map { Answer(ping: $0, tags: tags) }
         answerService.batchAnswers(answers)
         config.dismiss()
     }
