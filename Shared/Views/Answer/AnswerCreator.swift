@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIX
 
 struct AnswerCreatorConfig {
     var isPresented = false
@@ -50,7 +51,8 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            TextField("PING1 PING2", text: $config.response, onCommit: { addAnswer(tags: config.tags) })
+            CocoaTextField("PING1 PING2", text: $config.response, onCommit: { addAnswer(tags: config.tags) })
+                .isInitialFirstResponder(true)
                 .autocapitalization(.allCharacters)
                 .multilineTextAlignment(.center)
                 .background(Color.hsb(207, 26, 14))

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIX
 
 struct BatchAnswerConfig {
     var isPresented = false
@@ -33,11 +34,12 @@ struct BatchAnswerCreator: View {
         VStack(alignment: .leading) {
             Text("What were you doing from")
             Text("")
-            TextField(
+            CocoaTextField(
                 "PING1 PING2",
                 text: $config.response,
                 onCommit: { answerAllUnansweredPings(tags: config.tags) }
             )
+            .isInitialFirstResponder(true)
 
             Spacer()
 

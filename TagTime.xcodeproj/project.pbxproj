@@ -22,6 +22,7 @@
 		863CA83B2635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864203B02632710700668EC1 /* FacebookLoginService.swift */; };
 		865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865391EB2633D4A700F202F7 /* AnswerCreator.swift */; };
+		8658964326382F2D009D9299 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 8658964226382F2D009D9299 /* SwiftUIX */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
 		867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858C8263709D9009370F6 /* BatchAnswerCreator.swift */; };
@@ -138,6 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8658964326382F2D009D9299 /* SwiftUIX in Frameworks */,
 				86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */,
 				86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */,
@@ -373,6 +375,7 @@
 				86C04D2E26318D040046C0E3 /* FacebookCore */,
 				86C04D3026318D040046C0E3 /* FacebookLogin */,
 				86C04D3226318D040046C0E3 /* FacebookShare */,
+				8658964226382F2D009D9299 /* SwiftUIX */,
 			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
@@ -468,6 +471,7 @@
 			packageReferences = (
 				86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				8658964126382F2D009D9299 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
 			);
 			productRefGroup = 861256CF26139CAB00C2B81B /* Products */;
 			projectDirPath = "";
@@ -962,6 +966,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8658964126382F2D009D9299 /* XCRemoteSwiftPackageReference "SwiftUIX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftUIX/SwiftUIX";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -981,6 +993,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8658964226382F2D009D9299 /* SwiftUIX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8658964126382F2D009D9299 /* XCRemoteSwiftPackageReference "SwiftUIX" */;
+			productName = SwiftUIX;
+		};
 		86A59126261DB71600A25D1F /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
