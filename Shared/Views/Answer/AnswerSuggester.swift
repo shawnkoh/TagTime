@@ -12,30 +12,40 @@ struct AnswerSuggester: View {
     @EnvironmentObject var answerService: AnswerService
 
     @Binding var search: String
-    
-    let action: ([Tag]) -> Void
 
     var filteredTags: [String] {
         let tags = answerService.answers.flatMap { $0.tags }
         let uniqueTags = Array(Set(tags))
         // TODO: Use async search instead to make it not laggy
+        guard let keyword = search.split(separator: " ").last else {
+            return []
+        }
         let fuse = Fuse()
-        let results = fuse.search(search, in: uniqueTags)
+        let results = fuse.search(String(keyword), in: uniqueTags)
         return results.map { uniqueTags[$0.index] }
     }
 
     var body: some View {
         if search == "", let latestAnswer = answerService.latestAnswer {
-            button(text: latestAnswer.tagDescription, action: { action(latestAnswer.tags) })
+            button(
+                text: latestAnswer.tagDescription,
+                action: { replaceKeyword(with: latestAnswer.tagDescription) }
+            )
         } else if search != "" {
             VStack {
                 ForEach(filteredTags, id: \.self) { tag in
-                    button(text: tag, action: { action([tag]) })
+                    button(text: tag, action: { replaceKeyword(with: tag) })
                 }
             }
         } else {
             EmptyView()
         }
+    }
+
+    private func replaceKeyword(with suggestion: String) {
+        var result = search.split(separator: " ").dropLast().joined(separator: " ")
+        result += " \(suggestion)"
+        search = result
     }
 
     @ViewBuilder
@@ -56,7 +66,7 @@ struct AnswerSuggester: View {
 
 struct AnswerSuggester_Previews: PreviewProvider {
     static var previews: some View {
-        AnswerSuggester(search: .constant(""), action: { _ in })
+        AnswerSuggester(search: .constant(""))
             .environmentObject(AnswerService.shared)
     }
 }

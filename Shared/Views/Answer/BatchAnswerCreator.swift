@@ -43,7 +43,7 @@ struct BatchAnswerCreator: View {
 
             Spacer()
 
-            AnswerSuggester(search: $config.response, action: answerAllUnansweredPings(tags:))
+            AnswerSuggester(search: $config.response)
         }
     }
 

@@ -51,7 +51,6 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            // TODO: This should not add answer, rather, it should just append into the textfield
             CocoaTextField("PING1 PING2", text: $config.response, onCommit: { addAnswer(tags: config.tags) })
                 .isInitialFirstResponder(true)
                 .autocapitalization(.allCharacters)
@@ -62,8 +61,7 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            // TODO: This should not add answer, rather, it should just append into the textfield
-            AnswerSuggester(search: $config.response, action: addAnswer(tags:))
+            AnswerSuggester(search: $config.response)
         }
     }
 
