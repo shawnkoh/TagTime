@@ -142,12 +142,13 @@ public final class NotificationService: NSObject, ObservableObject {
         center.removeAllPendingNotificationRequests()
 
         pings.enumerated().forEach { index, ping in
-            scheduleNotification(ping: ping, badge: AnswerService.shared.unansweredPings.count + index + 1)
+            scheduleNotification(ping: ping, badge: AnswerService.shared.unansweredPings.count + index + 1, previousAnswer: previousAnswer)
         }
     }
 
     /// Do not call this function. Only used for testing
-    func scheduleNotification(ping: Date, badge: Int) {
+    func scheduleNotification(ping: Date, badge: Int, previousAnswer: Answer?) {
+        // TODO: Strip microseconds from pingDate
         let content = UNMutableNotificationContent()
 
         let formatter = DateFormatter()
@@ -161,7 +162,15 @@ public final class NotificationService: NSObject, ObservableObject {
         content.sound = .default
         content.categoryIdentifier = CategoryIdentifier.ping
         let unixtime = ping.timeIntervalSince1970.description
-        content.targetContentIdentifier = unixtime
+
+        // Preferred using userInfo because that's what the documentation uses. Not sure about other properties yet.
+        // Reference:: https://developer.apple.com/documentation/usernotifications/handling_notifications_and_notification-related_actions
+        content.userInfo["pingDate"] = unixtime
+        // Store previousAnswer here rather than rely on the Category's title because
+        // the category gets set only when scheduling a notification
+        // Do not retrieve previousAnswer from AnswerService because it might be different.
+        // There should be a singular source of truth.
+        content.userInfo["previousAnswer"] = previousAnswer?.tagDescription
 
         let dateComponents = Calendar.current.dateComponents([.day, .month, .year, .second, .minute, .hour], from: ping)
 
@@ -182,13 +191,16 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        guard let pingDate = TimeInterval(notification.request.identifier) else {
-            // TODO: Not sure about this completion handler.
+        guard
+            let unixtime = notification.request.content.userInfo["pingDate"] as? String,
+            let timeInterval = TimeInterval(unixtime)
+        else {
+            // TODO: Not sure about this completion handler
             completionHandler([])
             return
         }
-        let ping = Date(timeIntervalSince1970: pingDate)
-        self.openedPing = ping
+        let pingDate = Date(timeIntervalSince1970: timeInterval)
+        self.openedPing = pingDate
         // TODO: Not sure about this completion handler.
         completionHandler([.badge, .sound])
     }
@@ -198,31 +210,35 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
+        let userInfo = response.notification.request.content.userInfo
+        guard
+            let unixtime = userInfo["pingDate"] as? String,
+            let timeInterval = TimeInterval(unixtime)
+        else {
+            completionHandler()
+            return
+        }
+        let pingDate = Date(timeIntervalSince1970: timeInterval)
+
         switch response.actionIdentifier {
             case Self.ActionIdentifier.previous:
-                ()
+                guard let previousAnswer = userInfo["previousAnswer"] as? String else {
+                    // TODO: Log error
+                    completionHandler()
+                    return
+                }
+                answerPing(pingDate, with: previousAnswer, completionHandler: completionHandler)
 
             case Self.ActionIdentifier.reply:
-                guard
-                    let response = response as? UNTextInputNotificationResponse,
-                    let timeInterval = TimeInterval(response.notification.request.identifier)
-                else {
+                guard let response = response as? UNTextInputNotificationResponse else {
                     // TODO: Log error
                     completionHandler()
                     return
                 }
-
-                let ping = Date(timeIntervalSince1970: timeInterval)
-                answerPing(ping, with: response.userText, completionHandler: completionHandler)
+                answerPing(pingDate, with: response.userText, completionHandler: completionHandler)
 
             case UNNotificationDefaultActionIdentifier:
-                guard let pingDate = TimeInterval(response.notification.request.identifier) else {
-                    // TODO: Log error
-                    completionHandler()
-                    return
-                }
-                let ping = Date(timeIntervalSince1970: pingDate)
-                self.openedPing = ping
+                self.openedPing = pingDate
                 completionHandler()
 
             default:
