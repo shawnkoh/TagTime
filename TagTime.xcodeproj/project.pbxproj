@@ -23,6 +23,7 @@
 		864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864203B02632710700668EC1 /* FacebookLoginService.swift */; };
 		865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865391EB2633D4A700F202F7 /* AnswerCreator.swift */; };
 		8658964326382F2D009D9299 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 8658964226382F2D009D9299 /* SwiftUIX */; };
+		86589646263840E7009D9299 /* Fuse in Frameworks */ = {isa = PBXBuildFile; productRef = 86589645263840E7009D9299 /* Fuse */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
 		867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858C8263709D9009370F6 /* BatchAnswerCreator.swift */; };
@@ -146,6 +147,7 @@
 				86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */,
 				86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */,
 				86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */,
+				86589646263840E7009D9299 /* Fuse in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,6 +378,7 @@
 				86C04D3026318D040046C0E3 /* FacebookLogin */,
 				86C04D3226318D040046C0E3 /* FacebookShare */,
 				8658964226382F2D009D9299 /* SwiftUIX */,
+				86589645263840E7009D9299 /* Fuse */,
 			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
@@ -472,6 +475,7 @@
 				86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 				8658964126382F2D009D9299 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
+				86589644263840E6009D9299 /* XCRemoteSwiftPackageReference "fuse-swift" */,
 			);
 			productRefGroup = 861256CF26139CAB00C2B81B /* Products */;
 			projectDirPath = "";
@@ -974,6 +978,14 @@
 				kind = branch;
 			};
 		};
+		86589644263840E6009D9299 /* XCRemoteSwiftPackageReference "fuse-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krisk/fuse-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -997,6 +1009,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8658964126382F2D009D9299 /* XCRemoteSwiftPackageReference "SwiftUIX" */;
 			productName = SwiftUIX;
+		};
+		86589645263840E7009D9299 /* Fuse */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86589644263840E6009D9299 /* XCRemoteSwiftPackageReference "fuse-swift" */;
+			productName = Fuse;
 		};
 		86A59126261DB71600A25D1F /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
