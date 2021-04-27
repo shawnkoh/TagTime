@@ -31,9 +31,12 @@ struct DebugMenu: View {
                 .bold()
 
             button("Schedule notification in 7 seconds") {
+                let timeInterval = Date(timeIntervalSinceNow: 7).timeIntervalSince1970.rounded()
+                let pingDate = Date(timeIntervalSince1970: timeInterval)
                 NotificationService.shared.scheduleNotification(
-                    ping: .init(timeIntervalSinceNow: 7),
-                    badge: AnswerService.shared.unansweredPings.count
+                    ping: pingDate,
+                    badge: AnswerService.shared.unansweredPings.count,
+                    previousAnswer: AnswerService.shared.latestAnswer
                 )
             }
 
