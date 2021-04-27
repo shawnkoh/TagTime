@@ -61,7 +61,7 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            AnswerSuggester(action: addAnswer(tags:))
+            AnswerSuggester(search: $config.response)
         }
     }
 
