@@ -12,18 +12,7 @@ struct AnswerSuggester: View {
     @EnvironmentObject var answerService: AnswerService
 
     @Binding var search: String
-
-    var filteredTags: [String] {
-        let tags = answerService.answers.flatMap { $0.tags }
-        let uniqueTags = Array(Set(tags))
-        // TODO: Use async search instead to make it not laggy
-        guard let keyword = search.split(separator: " ").last else {
-            return []
-        }
-        let fuse = Fuse()
-        let results = fuse.search(String(keyword), in: uniqueTags)
-        return results.map { uniqueTags[$0.index] }
-    }
+    @State private var filteredTags = [String]()
 
     var body: some View {
         if search == "", let latestAnswer = answerService.latestAnswer {
@@ -35,6 +24,18 @@ struct AnswerSuggester: View {
             VStack {
                 ForEach(filteredTags, id: \.self) { tag in
                     button(text: tag, action: { replaceKeyword(with: tag) })
+                }
+            }
+            .onChange(of: search) { search in
+                guard let keyword = search.split(separator: " ").last else {
+                    filteredTags = []
+                    return
+                }
+                let tags = answerService.answers.flatMap { $0.tags }
+                let uniqueTags = Array(Set(tags))
+                let fuse = Fuse()
+                fuse.search(String(keyword), in: uniqueTags) { results in
+                    filteredTags = results.map { uniqueTags[$0.index] }
                 }
             }
         } else {
