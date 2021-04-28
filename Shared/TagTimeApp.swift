@@ -19,6 +19,7 @@ struct TagTimeApp: App {
     @StateObject var notificationService = NotificationService.shared
     @StateObject var pingService = PingService.shared
     @StateObject var settingService = SettingService.shared
+    @StateObject var tagService = TagService.shared
 
     init() {
         FirebaseApp.configure()

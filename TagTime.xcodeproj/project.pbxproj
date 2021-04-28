@@ -31,6 +31,8 @@
 		867858DA26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		867858DB26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		867858DC26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
+		868D83EE26396B49000211A6 /* TagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83ED26396B49000211A6 /* TagService.swift */; };
+		868D83F026396BF3000211A6 /* UserTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83EF26396BF3000211A6 /* UserTags.swift */; };
 		868E97B3261736A7000A41FF /* Ping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B2261736A7000A41FF /* Ping.swift */; };
 		868E97B9261736EE000A41FF /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B8261736EE000A41FF /* Tag.swift */; };
 		868E97C3261738C5000A41FF /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C2261738C5000A41FF /* Stub.swift */; };
@@ -111,6 +113,8 @@
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
 		867858C8263709D9009370F6 /* BatchAnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchAnswerCreator.swift; sourceTree = "<group>"; };
 		867858D826370F3F009370F6 /* AnswerSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerSuggester.swift; sourceTree = "<group>"; };
+		868D83ED26396B49000211A6 /* TagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagService.swift; sourceTree = "<group>"; };
+		868D83EF26396BF3000211A6 /* UserTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTags.swift; sourceTree = "<group>"; };
 		868E97B2261736A7000A41FF /* Ping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ping.swift; sourceTree = "<group>"; };
 		868E97B8261736EE000A41FF /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		868E97C2261738C5000A41FF /* Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
@@ -192,8 +196,9 @@
 		861256C626139CAA00C2B81B /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				868E97CE26174A4C000A41FF /* Helpers */,
 				86ADBB64261730E5003CBA6B /* Model */,
+				86EF829E2626949A001EA3C5 /* Services */,
+				868E97CE26174A4C000A41FF /* Helpers */,
 				86ADBB65261730F4003CBA6B /* Views */,
 				861256C726139CAA00C2B81B /* TagTimeApp.swift */,
 				861256C926139CAB00C2B81B /* Assets.xcassets */,
@@ -283,7 +288,7 @@
 				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
 				86A5914F261DBCBD00A25D1F /* User.swift */,
-				86EF829E2626949A001EA3C5 /* Services */,
+				868D83EF26396BF3000211A6 /* UserTags.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -350,6 +355,7 @@
 				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
 				86C5A701261E2104001451E9 /* PingService.swift */,
 				8672E70426181B01004081FC /* SettingService.swift */,
+				868D83ED26396B49000211A6 /* TagService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -532,6 +538,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
+				868D83F026396BF3000211A6 /* UserTags.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
 				86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */,
@@ -555,6 +562,7 @@
 				86C6C7402636A19700A24EBA /* Tappable.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
 				865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */,
+				868D83EE26396B49000211A6 /* TagService.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,
 				862914E52634A1D6006BF198 /* DebugMenu.swift in Sources */,
 				868E97C926173AAD000A41FF /* Answer.swift in Sources */,
