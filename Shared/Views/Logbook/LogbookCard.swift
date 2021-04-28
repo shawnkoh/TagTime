@@ -27,7 +27,7 @@ struct LogbookCard: View {
     }()
     
     var body: some View {
-        Button(action: { config.present(pingDate: answer.ping, response: answer.tagDescription) }) {
+        Button(action: { config.edit(answer: answer) }) {
             HStack {
                 Spacer()
                 VStack {

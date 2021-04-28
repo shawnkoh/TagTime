@@ -81,6 +81,11 @@ final class TagService: ObservableObject {
         guard let cacheReference = cache else {
             return
         }
+        // you can't deregister tags like this
+        // because we need to check how many are pointing to it in firestore, not just locally
+        // the problem is, that requires multiple reads to retrieve those a tag that contains
+        // okay so the solution is to maintain a count of the tags
+        // that data can be useful for recommending also i guess
         let tagsToRemove = tags.filter { cacheContains(tag: $0) }
         guard tagsToRemove.count > 0 else {
             return

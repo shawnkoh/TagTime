@@ -26,7 +26,7 @@ final class AppService: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [self] in
                 if let pingDate = $0 {
-                    pingNotification.present(pingDate: pingDate)
+                    pingNotification.create(pingDate: pingDate)
                 } else {
                     pingNotification.dismiss()
                 }

@@ -12,19 +12,34 @@ struct AnswerCreatorConfig {
     var isPresented = false
     var pingDate = Date()
     var response = ""
+    var editingAnswer: Answer? = nil
 
     var tags: [String] {
         response.split(separator: " ").map { Tag($0) }
     }
-
-    mutating func present(pingDate: Date, response: String = "") {
+    
+    mutating func create(pingDate: Date) {
         isPresented = true
         self.pingDate = pingDate
-        self.response = response
+        self.response = ""
+        self.editingAnswer = nil
+    }
+    
+    mutating func edit(answer: Answer) {
+        isPresented = true
+        self.pingDate = answer.ping
+        self.response = answer.tagDescription
+        self.editingAnswer = answer
     }
 
     mutating func dismiss() {
         isPresented = false
+        // It's not really necessary to set these because the modal will
+        // only get presented when the user calls one of the mutating functions
+        // but this is just defensive coding i guess
+        self.pingDate = Date()
+        self.response = ""
+        self.editingAnswer = nil
     }
 }
 

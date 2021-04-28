@@ -24,7 +24,7 @@ struct MissedPingCard: View {
     }()
 
     var body: some View {
-        Button(action: { config.present(pingDate: ping) }) {
+        Button(action: { config.create(pingDate: ping) }) {
             HStack {
                 Spacer()
                 Text(dateFormatter.string(from: ping))
