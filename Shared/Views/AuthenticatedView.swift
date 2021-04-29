@@ -18,6 +18,7 @@ struct AuthenticatedView: View {
     @EnvironmentObject var appService: AppService
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var alertService: AlertService
+    @EnvironmentObject var tagService: TagService
     @State private var currentPage: Page = .missedPingList
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
@@ -59,6 +60,7 @@ struct AuthenticatedView: View {
             AnswerCreator(config: $appService.pingNotification)
                 .environmentObject(self.answerService)
                 .environmentObject(self.alertService)
+                .environmentObject(self.tagService)
         }
     }
 }

@@ -43,7 +43,7 @@ struct BatchAnswerCreator: View {
 
             Spacer()
 
-            AnswerSuggester(search: $config.response)
+            AnswerSuggester(keyword: $config.response)
         }
     }
 

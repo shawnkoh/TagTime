@@ -12,23 +12,37 @@ struct AnswerCreatorConfig {
     var isPresented = false
     var pingDate = Date()
     var response = ""
+    var editingAnswer: Answer? = nil
 
     var tags: [String] {
         response.split(separator: " ").map { Tag($0) }
     }
-
-    mutating func present(pingDate: Date, response: String = "") {
+    
+    mutating func create(pingDate: Date) {
         isPresented = true
         self.pingDate = pingDate
-        self.response = response
+        self.response = ""
+        self.editingAnswer = nil
+    }
+    
+    mutating func edit(answer: Answer) {
+        isPresented = true
+        self.pingDate = answer.ping
+        self.response = answer.tagDescription
+        self.editingAnswer = answer
     }
 
     mutating func dismiss() {
         isPresented = false
+        // It's not really necessary to set these because the modal will
+        // only get presented when the user calls one of the mutating functions
+        // but this is just defensive coding i guess
+        self.pingDate = Date()
+        self.response = ""
+        self.editingAnswer = nil
     }
 }
 
-// This is intended to replace AnswerEditor & MissedPingAnswerer
 struct AnswerCreator: View {
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var alertService: AlertService
@@ -61,7 +75,7 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            AnswerSuggester(search: $config.response)
+            AnswerSuggester(keyword: $config.response)
         }
     }
 
@@ -69,6 +83,17 @@ struct AnswerCreator: View {
         guard tags.count > 0 else {
             return
         }
+        if let editingAnswer = config.editingAnswer {
+            let oldTags = Set(editingAnswer.tags)
+            let newTags = Set(tags)
+            let removedTags = Array(oldTags.subtracting(newTags))
+            let addedTags = Array(newTags.subtracting(oldTags))
+            TagService.shared.batchTags(register: addedTags, deregister: removedTags)
+        } else {
+            TagService.shared.registerTags(tags)
+        }
+        
+        // TOOD: it would be ideal if the calls in TagService and AnswerService were batched
         let answer = Answer(ping: config.pingDate, tags: tags)
         DispatchQueue.global(qos: .utility).async {
             let result = answerService.addAnswer(answer)
@@ -91,5 +116,6 @@ struct AnswerCreator_Previews: PreviewProvider {
         AnswerCreator(config: .constant(AnswerCreatorConfig()))
             .environmentObject(AnswerService.shared)
             .environmentObject(AlertService.shared)
+            .environmentObject(TagService.shared)
     }
 }

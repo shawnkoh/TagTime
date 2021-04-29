@@ -10,32 +10,39 @@ import Fuse
 
 struct AnswerSuggester: View {
     @EnvironmentObject var answerService: AnswerService
+    @EnvironmentObject var tagService: TagService
 
-    @Binding var search: String
+    @Binding var keyword: String
     @State private var filteredTags = [String]()
+    
+    var tags: [Tag] {
+        tagService.tags
+            .filter { $0.value.count > 0 }
+            .reduce(into: []) { result, cursor in
+                result.append(cursor.key)
+            }
+    }
 
     var body: some View {
-        if search == "", let latestAnswer = answerService.latestAnswer {
+        if keyword == "", let latestAnswer = answerService.latestAnswer {
             button(
                 text: latestAnswer.tagDescription,
                 action: { replaceKeyword(with: latestAnswer.tagDescription) }
             )
-        } else if search != "" {
+        } else if keyword != "" {
             VStack {
                 ForEach(filteredTags, id: \.self) { tag in
                     button(text: tag, action: { replaceKeyword(with: tag) })
                 }
             }
-            .onChange(of: search) { search in
+            .onChange(of: keyword) { search in
                 guard let keyword = search.split(separator: " ").last else {
                     filteredTags = []
                     return
                 }
-                let tags = answerService.answers.flatMap { $0.tags }
-                let uniqueTags = Array(Set(tags))
                 let fuse = Fuse()
-                fuse.search(String(keyword), in: uniqueTags) { results in
-                    filteredTags = results.map { uniqueTags[$0.index] }
+                fuse.search(String(keyword), in: tags) { results in
+                    filteredTags = results.map { tags[$0.index] }
                 }
             }
         } else {
@@ -44,9 +51,9 @@ struct AnswerSuggester: View {
     }
 
     private func replaceKeyword(with suggestion: String) {
-        var result = search.split(separator: " ").dropLast().joined(separator: " ")
+        var result = keyword.split(separator: " ").dropLast().joined(separator: " ")
         result += " \(suggestion)"
-        search = result
+        keyword = result
     }
 
     @ViewBuilder
@@ -67,7 +74,7 @@ struct AnswerSuggester: View {
 
 struct AnswerSuggester_Previews: PreviewProvider {
     static var previews: some View {
-        AnswerSuggester(search: .constant(""))
+        AnswerSuggester(keyword: .constant(""))
             .environmentObject(AnswerService.shared)
     }
 }

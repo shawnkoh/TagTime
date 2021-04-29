@@ -19,6 +19,7 @@ struct TagTimeApp: App {
     @StateObject var notificationService = NotificationService.shared
     @StateObject var pingService = PingService.shared
     @StateObject var settingService = SettingService.shared
+    @StateObject var tagService = TagService.shared
 
     init() {
         FirebaseApp.configure()
@@ -39,6 +40,7 @@ struct TagTimeApp: App {
                 .environmentObject(notificationService)
                 .environmentObject(pingService)
                 .environmentObject(settingService)
+                .environmentObject(tagService)
                 .onAppear() {
                     DispatchQueue.global(qos: .utility).async {
                         _ = AuthenticationService.shared.signIn()
