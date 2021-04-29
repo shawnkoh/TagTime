@@ -12,6 +12,7 @@ struct MissedPingCard: View {
     // I can delete the ping from MissedPingList.
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var alertService: AlertService
+    @EnvironmentObject var tagService: TagService
     @State private var config = AnswerCreatorConfig()
 
     let ping: Date
@@ -39,6 +40,7 @@ struct MissedPingCard: View {
             AnswerCreator(config: $config)
                 .environmentObject(self.answerService)
                 .environmentObject(self.alertService)
+                .environmentObject(self.tagService)
         }
     }
 }

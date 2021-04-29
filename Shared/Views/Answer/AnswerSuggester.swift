@@ -10,6 +10,7 @@ import Fuse
 
 struct AnswerSuggester: View {
     @EnvironmentObject var answerService: AnswerService
+    @EnvironmentObject var tagService: TagService
 
     @Binding var keyword: String
     @State private var filteredTags = [String]()

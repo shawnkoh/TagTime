@@ -43,7 +43,6 @@ struct AnswerCreatorConfig {
     }
 }
 
-// This is intended to replace AnswerEditor & MissedPingAnswerer
 struct AnswerCreator: View {
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var alertService: AlertService
@@ -106,5 +105,6 @@ struct AnswerCreator_Previews: PreviewProvider {
         AnswerCreator(config: .constant(AnswerCreatorConfig()))
             .environmentObject(AnswerService.shared)
             .environmentObject(AlertService.shared)
+            .environmentObject(TagService.shared)
     }
 }

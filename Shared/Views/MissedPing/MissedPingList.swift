@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MissedPingList: View {
     @EnvironmentObject var answerService: AnswerService
+    @EnvironmentObject var tagService: TagService
 
     @State private var batchAnswerConfig = BatchAnswerConfig()
 
@@ -99,6 +100,7 @@ struct MissedPingList: View {
                 .sheet(isPresented: $batchAnswerConfig.isPresented) {
                     BatchAnswerCreator(config: $batchAnswerConfig)
                         .environmentObject(self.answerService)
+                        .environmentObject(self.tagService)
                 }
             }
         }

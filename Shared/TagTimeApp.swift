@@ -40,6 +40,7 @@ struct TagTimeApp: App {
                 .environmentObject(notificationService)
                 .environmentObject(pingService)
                 .environmentObject(settingService)
+                .environmentObject(tagService)
                 .onAppear() {
                     DispatchQueue.global(qos: .utility).async {
                         _ = AuthenticationService.shared.signIn()
