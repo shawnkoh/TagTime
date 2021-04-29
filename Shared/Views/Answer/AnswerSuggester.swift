@@ -14,6 +14,14 @@ struct AnswerSuggester: View {
 
     @Binding var keyword: String
     @State private var filteredTags = [String]()
+    
+    var tags: [Tag] {
+        tagService.tags
+            .filter { $0.value.count > 0 }
+            .reduce(into: []) { result, cursor in
+                result.append(cursor.key)
+            }
+    }
 
     var body: some View {
         if keyword == "", let latestAnswer = answerService.latestAnswer {
@@ -32,11 +40,9 @@ struct AnswerSuggester: View {
                     filteredTags = []
                     return
                 }
-                let tags = answerService.answers.flatMap { $0.tags }
-                let uniqueTags = Array(Set(tags))
                 let fuse = Fuse()
-                fuse.search(String(keyword), in: uniqueTags) { results in
-                    filteredTags = results.map { uniqueTags[$0.index] }
+                fuse.search(String(keyword), in: tags) { results in
+                    filteredTags = results.map { tags[$0.index] }
                 }
             }
         } else {
