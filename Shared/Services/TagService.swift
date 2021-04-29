@@ -13,7 +13,7 @@ import FirebaseFirestoreSwift
 final class TagService: ObservableObject {
     static let shared = TagService()
     
-    @Published var tags: [Tag: Tag] = [:]
+    @Published var tags: [Tag: Int] = [:]
     private var userSubscriber: AnyCancellable = .init({})
     
     private var subscribers = Set<AnyCancellable>()
@@ -24,8 +24,8 @@ final class TagService: ObservableObject {
             .sink { self.setup(user: $0) }
     }
     
-    var cache: DocumentReference? {
-        AuthenticationService.shared.user?.userDocument.collection("cache").document("tags")
+    var cache: CollectionReference? {
+        AuthenticationService.shared.user?.userDocument.collection("tags")
     }
     
     private func setup(user: User?) {
@@ -36,7 +36,7 @@ final class TagService: ObservableObject {
         guard let user = user else {
             return
         }
-        user.userDocument.collection("cache").document("tags")
+        user.userDocument.collection("tags")
             .addSnapshotListener() { snapshot, error in
                 if let error = error {
                     AlertService.shared.present(message: error.localizedDescription)
@@ -44,14 +44,11 @@ final class TagService: ObservableObject {
                 guard let snapshot = snapshot else {
                     return
                 }
-                do {
-                    if let userTags = try snapshot.data(as: UserTags.self) {
-                        self.tags = userTags.tags
-                    } else {
-                        self.tags = [:]
+                snapshot.documents.forEach {
+                    guard let count = $0.data()["count"] as? Int else {
+                        return
                     }
-                } catch {
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.tags[$0.documentID] = count
                 }
             }
             .store(in: &listeners)
@@ -61,19 +58,22 @@ final class TagService: ObservableObject {
         guard let cacheReference = cache else {
             return
         }
-        let newTags = tags.filter { !cacheContains(tag: $0) }
-        guard newTags.count > 0 else {
-            return
+        
+        // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
+        let batch = Firestore.firestore().batch()
+        tags.forEach { tag in
+            let documentReference = cacheReference.document(tag)
+            if let count = self.tags[tag] {
+                batch.setData(["count": count + 1], forDocument: documentReference)
+            } else {
+                batch.setData(["count": 1], forDocument: documentReference)
+            }
         }
         
-        var tags = self.tags
-        newTags.forEach { tags[$0] = $0 }
-        let userTags = UserTags(tags: tags)
-        
-        do {
-            try cacheReference.setData(from: userTags)
-        } catch {
-            AlertService.shared.present(message: error.localizedDescription)
+        batch.commit() { error in
+            if let error = error {
+                AlertService.shared.present(message: error.localizedDescription)
+            }
         }
     }
     
@@ -91,18 +91,27 @@ final class TagService: ObservableObject {
             return
         }
         
-        var tags = self.tags
-        tagsToRemove.forEach { tags[$0] = nil }
-        let userTags = UserTags(tags: tags)
+        // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
+        let batch = Firestore.firestore().batch()
+        tagsToRemove.forEach { tag in
+            let documentReference = cacheReference.document(tag)
+            guard let count = self.tags[tag], count > 0 else {
+                return
+            }
+            batch.setData(["count": count - 1], forDocument: documentReference)
+        }
         
-        do {
-            try cacheReference.setData(from: userTags)
-        } catch {
-            AlertService.shared.present(message: error.localizedDescription)
+        batch.commit() { error in
+            if let error = error {
+                AlertService.shared.present(message: error.localizedDescription)
+            }
         }
     }
     
     private func cacheContains(tag: Tag) -> Bool {
-        tags[tag] != nil
+        guard let count = tags[tag] else {
+            return false
+        }
+        return count > 0
     }
 }
