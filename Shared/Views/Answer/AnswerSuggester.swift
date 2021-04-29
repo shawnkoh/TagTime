@@ -11,22 +11,22 @@ import Fuse
 struct AnswerSuggester: View {
     @EnvironmentObject var answerService: AnswerService
 
-    @Binding var search: String
+    @Binding var keyword: String
     @State private var filteredTags = [String]()
 
     var body: some View {
-        if search == "", let latestAnswer = answerService.latestAnswer {
+        if keyword == "", let latestAnswer = answerService.latestAnswer {
             button(
                 text: latestAnswer.tagDescription,
                 action: { replaceKeyword(with: latestAnswer.tagDescription) }
             )
-        } else if search != "" {
+        } else if keyword != "" {
             VStack {
                 ForEach(filteredTags, id: \.self) { tag in
                     button(text: tag, action: { replaceKeyword(with: tag) })
                 }
             }
-            .onChange(of: search) { search in
+            .onChange(of: keyword) { search in
                 guard let keyword = search.split(separator: " ").last else {
                     filteredTags = []
                     return
@@ -44,9 +44,9 @@ struct AnswerSuggester: View {
     }
 
     private func replaceKeyword(with suggestion: String) {
-        var result = search.split(separator: " ").dropLast().joined(separator: " ")
+        var result = keyword.split(separator: " ").dropLast().joined(separator: " ")
         result += " \(suggestion)"
-        search = result
+        keyword = result
     }
 
     @ViewBuilder
@@ -67,7 +67,7 @@ struct AnswerSuggester: View {
 
 struct AnswerSuggester_Previews: PreviewProvider {
     static var previews: some View {
-        AnswerSuggester(search: .constant(""))
+        AnswerSuggester(keyword: .constant(""))
             .environmentObject(AnswerService.shared)
     }
 }

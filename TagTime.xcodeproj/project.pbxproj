@@ -287,8 +287,8 @@
 				868E97B2261736A7000A41FF /* Ping.swift */,
 				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
-				86A5914F261DBCBD00A25D1F /* User.swift */,
 				868D83F1263A6356000211A6 /* TagCache.swift */,
+				86A5914F261DBCBD00A25D1F /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
