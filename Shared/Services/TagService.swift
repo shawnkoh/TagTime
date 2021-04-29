@@ -13,7 +13,7 @@ import FirebaseFirestoreSwift
 final class TagService: ObservableObject {
     static let shared = TagService()
     
-    @Published var tags: [Tag: Int] = [:]
+    @Published var tags: [Tag: TagCache] = [:]
     private var userSubscriber: AnyCancellable = .init({})
     
     private var subscribers = Set<AnyCancellable>()
@@ -45,10 +45,14 @@ final class TagService: ObservableObject {
                     return
                 }
                 snapshot.documents.forEach {
-                    guard let count = $0.data()["count"] as? Int else {
-                        return
+                    do {
+                        guard let tagCache = try $0.data(as: TagCache.self) else {
+                            return
+                        }
+                        self.tags[$0.documentID] = tagCache
+                    } catch {
+                        AlertService.shared.present(message: error.localizedDescription)
                     }
-                    self.tags[$0.documentID] = count
                 }
             }
             .store(in: &listeners)
@@ -63,11 +67,13 @@ final class TagService: ObservableObject {
         let batch = Firestore.firestore().batch()
         tags.forEach { tag in
             let documentReference = cacheReference.document(tag)
-            if let count = self.tags[tag] {
-                batch.setData(["count": count + 1], forDocument: documentReference)
+            let tagCache: TagCache
+            if let localTagCache = self.tags[tag] {
+                tagCache = TagCache(count: localTagCache.count + 1, updatedDate: Date())
             } else {
-                batch.setData(["count": 1], forDocument: documentReference)
+                tagCache = TagCache(count: 1, updatedDate: Date())
             }
+            try! batch.setData(from: tagCache, forDocument: documentReference)
         }
         
         batch.commit() { error in
@@ -95,10 +101,11 @@ final class TagService: ObservableObject {
         let batch = Firestore.firestore().batch()
         tagsToRemove.forEach { tag in
             let documentReference = cacheReference.document(tag)
-            guard let count = self.tags[tag], count > 0 else {
+            guard let localTagCache = self.tags[tag], localTagCache.count > 0 else {
                 return
             }
-            batch.setData(["count": count - 1], forDocument: documentReference)
+            let tagCache = TagCache(count: localTagCache.count - 1, updatedDate: Date())
+            try! batch.setData(from: tagCache, forDocument: documentReference)
         }
         
         batch.commit() { error in
@@ -109,9 +116,9 @@ final class TagService: ObservableObject {
     }
     
     private func cacheContains(tag: Tag) -> Bool {
-        guard let count = tags[tag] else {
+        guard let tagCache = tags[tag] else {
             return false
         }
-        return count > 0
+        return tagCache.count > 0
     }
 }
