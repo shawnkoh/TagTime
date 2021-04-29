@@ -57,14 +57,19 @@ final class TagService: ObservableObject {
             }
             .store(in: &listeners)
     }
-    
-    func registerTags(_ tags: [Tag]) {
+
+    // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
+    func batchTags(register: [Tag], deregister: [Tag], with batch: WriteBatch = Firestore.firestore().batch()) {
+        registerTags(register, with: batch)
+        deregisterTags(deregister, with: batch)
+    }
+
+    // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
+    func registerTags(_ tags: [Tag], with batch: WriteBatch = Firestore.firestore().batch()) {
         guard let cacheReference = cache else {
             return
         }
         
-        // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-        let batch = Firestore.firestore().batch()
         tags.forEach { tag in
             let documentReference = cacheReference.document(tag)
             let tagCache: TagCache
@@ -83,7 +88,8 @@ final class TagService: ObservableObject {
         }
     }
     
-    func deregisterTags(_ tags: [Tag]) {
+    // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
+    func deregisterTags(_ tags: [Tag], with batch: WriteBatch = Firestore.firestore().batch()) {
         guard let cacheReference = cache else {
             return
         }
@@ -97,8 +103,6 @@ final class TagService: ObservableObject {
             return
         }
         
-        // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-        let batch = Firestore.firestore().batch()
         tagsToRemove.forEach { tag in
             let documentReference = cacheReference.document(tag)
             guard let localTagCache = self.tags[tag], localTagCache.count > 0 else {

@@ -122,9 +122,6 @@ final class AnswerService: ObservableObject {
                         result = .failure(error)
                     } else {
                         result = .success(answer)
-                        // TODO: This should be in a single batch write
-                        // Maybe we can pass the batch to TagService
-                        TagService.shared.registerTags(answer.tags)
                     }
                     semaphore.signal()
                 }

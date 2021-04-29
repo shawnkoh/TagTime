@@ -83,6 +83,17 @@ struct AnswerCreator: View {
         guard tags.count > 0 else {
             return
         }
+        if let editingAnswer = config.editingAnswer {
+            let oldTags = Set(editingAnswer.tags)
+            let newTags = Set(tags)
+            let removedTags = Array(oldTags.subtracting(newTags))
+            let addedTags = Array(newTags.subtracting(oldTags))
+            TagService.shared.batchTags(register: addedTags, deregister: removedTags)
+        } else {
+            TagService.shared.registerTags(tags)
+        }
+        
+        // TOOD: it would be ideal if the calls in TagService and AnswerService were batched
         let answer = Answer(ping: config.pingDate, tags: tags)
         DispatchQueue.global(qos: .utility).async {
             let result = answerService.addAnswer(answer)
