@@ -45,6 +45,8 @@ final class PingService: ObservableObject {
         changeStartDate(to: user.startDate)
     }
 
+    // TODO: This needs to be based on the users' recent answers instead.
+    // in order to support dynamic ping frequency.
     func changeStartDate(to startDate: Date) {
         let now = Date()
 
@@ -102,6 +104,6 @@ final class PingService: ObservableObject {
 
 extension PingService {
     // tagTimeBirth seed and unixtime must be paired in order for the universal schedule to work
-    static let tagTimeBirth = Ping(seed: 11193462, unixtime: 1184097393)
+    static let tagTimeBirth = Ping(seed: 11193462, unixtime: 1184097393, sourcePingInterval: 45 * 60)
     static let defaultAveragePingInterval = 45 * 60
 }

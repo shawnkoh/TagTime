@@ -10,6 +10,7 @@ import Foundation
 struct Ping: Hashable {
     let seed: Int
     let unixtime: Int
+    let sourcePingInterval: Int
 
     var date: Date {
         Date(timeIntervalSince1970: TimeInterval(unixtime))
@@ -20,9 +21,10 @@ struct Ping: Hashable {
     // =2^31-1: Modulus used for the RNG
     private let im = 2147483647
 
-    init(seed: Int, unixtime: Int) {
+    init(seed: Int, unixtime: Int, sourcePingInterval: Int) {
         self.seed = seed
         self.unixtime = unixtime
+        self.sourcePingInterval = sourcePingInterval
     }
 
     /// Returns the next ping.
@@ -41,6 +43,6 @@ struct Ping: Hashable {
         let gap = Int(max(1, round(exprand)))
         let unixtime = self.unixtime + gap
 
-        return Ping(seed: seed, unixtime: unixtime)
+        return Ping(seed: seed, unixtime: unixtime, sourcePingInterval: averagePingInterval)
     }
 }
