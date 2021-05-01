@@ -29,6 +29,7 @@ final class AnswerService: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
+    // TODO: Find a better way to handle this
     var answerCollection: CollectionReference? {
         AuthenticationService.shared.user?.answerCollection
     }
@@ -107,30 +108,14 @@ final class AnswerService: ObservableObject {
         case notAuthenticated
     }
 
-    func addAnswer(_ answer: Answer) -> Result<Answer, Error> {
-        guard let answerCollection = answerCollection else {
-            return .failure(AnswerError.notAuthenticated)
+    func addAnswer(_ answer: Answer) -> Future<Void, Error> {
+        guard let answerCollection = self.answerCollection else {
+            return Future { promise in
+                promise(.failure(AuthError.notAuthenticated))
+            }
         }
 
-        var result: Result<Answer, Error>!
-        let semaphore = DispatchSemaphore(value: 0)
-        do {
-            try answerCollection
-                .document(answer.documentId)
-                .setData(from: answer) { error in
-                    if let error = error {
-                        result = .failure(error)
-                    } else {
-                        result = .success(answer)
-                    }
-                    semaphore.signal()
-                }
-        } catch {
-            return .failure(error)
-        }
-        _ = semaphore.wait(wallTimeout: .distantFuture)
-
-        return result
+        return answerCollection.document(answer.documentId).setData(from: answer)
     }
 
     func batchAnswers(_ answers: [Answer]) {
