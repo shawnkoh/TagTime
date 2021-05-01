@@ -14,7 +14,7 @@ struct MissedPingList: View {
     @State private var batchAnswerConfig = BatchAnswerConfig()
 
     private var unansweredPings: [Date] {
-        answerService.unansweredPings
+        answerService.unansweredPings.sorted { $0 > $1 }
     }
 
     private var pingsToday: [Date] {
