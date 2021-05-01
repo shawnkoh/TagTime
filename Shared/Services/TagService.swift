@@ -62,13 +62,21 @@ final class TagService: ObservableObject {
     func batchTags(register: [Tag], deregister: [Tag], with batch: WriteBatch = Firestore.firestore().batch()) {
         registerTags(register, with: batch)
         deregisterTags(deregister, with: batch)
+        batch.commit() { error in
+            if let error = error {
+                AlertService.shared.present(message: error.localizedDescription)
+            }
+        }
     }
 
     // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-    func registerTags(_ tags: [Tag], with batch: WriteBatch = Firestore.firestore().batch()) {
+    func registerTags(_ tags: [Tag], with batch: WriteBatch? = nil) {
         guard let cacheReference = cache else {
             return
         }
+
+        let willCommit = batch == nil
+        let batch = batch ?? Firestore.firestore().batch()
         
         tags.forEach { tag in
             let documentReference = cacheReference.document(tag)
@@ -80,7 +88,11 @@ final class TagService: ObservableObject {
             }
             try! batch.setData(from: tagCache, forDocument: documentReference)
         }
-        
+
+        guard willCommit else {
+            return
+        }
+
         batch.commit() { error in
             if let error = error {
                 AlertService.shared.present(message: error.localizedDescription)
@@ -89,10 +101,14 @@ final class TagService: ObservableObject {
     }
     
     // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-    func deregisterTags(_ tags: [Tag], with batch: WriteBatch = Firestore.firestore().batch()) {
+    func deregisterTags(_ tags: [Tag], with batch: WriteBatch? = nil) {
         guard let cacheReference = cache else {
             return
         }
+
+        let willCommit = batch == nil
+        let batch = batch ?? Firestore.firestore().batch()
+
         // you can't deregister tags like this
         // because we need to check how many are pointing to it in firestore, not just locally
         // the problem is, that requires multiple reads to retrieve those a tag that contains
@@ -110,6 +126,10 @@ final class TagService: ObservableObject {
             }
             let tagCache = TagCache(count: localTagCache.count - 1, updatedDate: Date())
             try! batch.setData(from: tagCache, forDocument: documentReference)
+        }
+
+        guard willCommit else {
+            return
         }
         
         batch.commit() { error in
