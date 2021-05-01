@@ -95,18 +95,18 @@ struct AnswerCreator: View {
         
         // TOOD: it would be ideal if the calls in TagService and AnswerService were batched
         let answer = Answer(ping: config.pingDate, tags: tags)
-        DispatchQueue.global(qos: .utility).async {
-            let result = answerService.addAnswer(answer)
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    // TODO: Not sure what to do here
-                    ()
+        // TODO: Check if this needs to run in async
+        // TODO: If the subscriber (sink) is not stored, it will never be called
+        _ = answerService.addAnswer(answer)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
                 case let .failure(error):
                     alertService.present(message: error.localizedDescription)
+                case .finished:
+                    alertService.present(message: "Finished adding answer")
                 }
-            }
-        }
+            }, receiveValue: {})
         config.dismiss()
     }
 }
