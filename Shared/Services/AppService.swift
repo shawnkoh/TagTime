@@ -33,4 +33,15 @@ final class AppService: ObservableObject {
             }
             .store(in: &subscribers)
     }
+
+    func signIn() {
+        // TODO: I'm not sure if Futures should be called in async thread
+        // TODO: Display error in receiveCompletion
+        DispatchQueue.global(qos: .utility).async {
+            AuthenticationService.shared.signIn()
+                .setUser(service: AuthenticationService.shared)
+                .sink(receiveCompletion: { _ in }, receiveValue: { _ in })
+                .store(in: &self.subscribers)
+        }
+    }
 }

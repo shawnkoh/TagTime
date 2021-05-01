@@ -250,27 +250,26 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         let tags = text.split(separator: " ").map { Tag($0) }
         let answer = Answer(ping: ping, tags: tags)
 
-        DispatchQueue.global(qos: .utility).async {
-            let result: Result<Answer, Error>
-            if AuthenticationService.shared.user == nil {
-                result = AuthenticationService.shared
-                    .signIn()
-                    .flatMap { _ in AnswerService.shared.addAnswer(answer) }
-            } else {
-                result = AnswerService.shared.addAnswer(answer)
-            }
-
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    ()
-                case let .failure(error):
-                    // TODO: Figure out how to handle this situation. Maybe re-route the notification?
-                    ()
-                }
-                completionHandler()
-            }
-        }
+//        DispatchQueue.global(qos: .utility).async {
+//            let result: Result<Answer, Error>
+//            if AuthenticationService.shared.user == nil {
+//                result = AuthenticationService.shared.signIn()
+//                    .flatMap { _ in AnswerService.shared.addAnswer(answer) }
+//            } else {
+//                result = AnswerService.shared.addAnswer(answer)
+//            }
+//
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .success:
+//                    ()
+//                case let .failure(error):
+//                    // TODO: Figure out how to handle this situation. Maybe re-route the notification?
+//                    ()
+//                }
+//                completionHandler()
+//            }
+//        }
 
     }
 }

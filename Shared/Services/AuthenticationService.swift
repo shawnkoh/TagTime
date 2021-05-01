@@ -11,6 +11,13 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Combine
 
+enum AuthError: Error {
+    case noResult
+    case authError(Error, AuthErrorCode)
+    case notAuthenticated
+    case noSnapshot
+}
+
 // AuthenticationService is intentionally not an ObservableObject
 // Because it is not intended to be used directly by a View.
 // Rather, it is a supporting service that helps the other services
@@ -21,129 +28,97 @@ final class AuthenticationService {
 
     static let shared = AuthenticationService()
 
-    @Published private(set) var user: User?
+    @Published fileprivate(set) var user: User?
 
     init() {}
 
-    func signIn() -> Result<User, Error> {
-        getUserIdOrMakeOne()
-            .flatMap(getUserDocumentOrMakeOne)
-            .map { user in
-                self.user = user
-                return user
-            }
-    }
-
-    func signIn(with credential: AuthCredential) {
-        guard let user = Auth.auth().currentUser else {
-            return
-        }
-        user.link(with: credential) { result, error in
-            if let error = error as NSError?, let code = AuthErrorCode(rawValue: error.code) {
-                switch code {
-                case .credentialAlreadyInUse:
-                    Auth.auth().signIn(with: credential) { result, error in
-                        if let error = error {
-                            AlertService.shared.present(message: error.localizedDescription)
-                        }
-                        guard let result = result else {
-                            return
-                        }
-                        self.user = User(id: result.user.uid)
-                    }
-                default:
-                    AlertService.shared.present(message: error.localizedDescription)
-                }
-            }
-        }
-    }
-
-    private func getUserId() -> String? {
-        Auth.auth().currentUser?.uid
-    }
-
-    private func getUserIdOrMakeOne() -> Result<String, Error> {
-        if let uid = getUserId() {
-            return .success(uid)
-        }
-
-        var result: Result<String, Error>!
-        let semaphore = DispatchSemaphore(value: 0)
-        Auth.auth().signInAnonymously() { (data, error) in
-            if let uid = data?.user.uid {
-                result = .success(uid)
-            } else {
-                result = .failure(AuthenticationError.couldNotSignInAnonymously)
-            }
-            semaphore.signal()
-        }
-        _ = semaphore.wait(wallTimeout: .distantFuture)
-
-        return result
-    }
-
-    private func getUserDocument(id: String) -> Result<User?, Error> {
-        var result: Result<User?, Error>!
-
-        let semaphore = DispatchSemaphore(value: 0)
-
-        Firestore.firestore()
-            .collection("users")
-            .document(id)
-            .getDocument() { (snapshot, error) in
-                if let error = error {
-                    result = .failure(error)
-                    return
-                }
-
-                do {
-                    result = .success(try snapshot?.data(as: User.self))
-                } catch {
-                    result = .failure(error)
-                }
-
-                semaphore.signal()
-            }
-
-        _ = semaphore.wait(wallTimeout: .distantFuture)
-
-        return result
-    }
-
-    private func createUser(id: String) -> Result<User, Error> {
-        let user = User(id: id)
-
-        var result: Result<User, Error>!
-        let semaphore = DispatchSemaphore(value: 0)
-        do {
-            try Firestore.firestore()
-                .collection("users")
-                .document(id)
-                .setData(from: user) { error in
-                    if let error = error {
-                        result = .failure(error)
+    func signIn() -> AnyPublisher<User, Error> {
+        if let currentUser = Auth.auth().currentUser {
+            return getUser(id: currentUser.uid)
+                .flatMap { user -> AnyPublisher<User, Error> in
+                    if let user = user {
+                        return Just(user).setFailureType(to: Error.self).eraseToAnyPublisher()
                     } else {
-                        result = .success(user)
+                        return self.makeUser(id: currentUser.uid)
                     }
-                    semaphore.signal()
                 }
-        } catch {
-            result = .failure(error)
-            semaphore.signal()
+                .eraseToAnyPublisher()
+        } else {
+            return Auth.auth().signInAnonymously()
+                .flatMap { result -> AnyPublisher<User, Error> in
+                    self.makeUser(id: result.user.uid)
+                }
+                .eraseToAnyPublisher()
         }
-        _ = semaphore.wait(wallTimeout: .distantFuture)
-        return result
     }
 
-    private func getUserDocumentOrMakeOne(id: String) -> Result<User, Error> {
-        getUserDocument(id: id)
-            .flatMap { user in
-                if let user = user {
-                    return .success(user)
-                } else {
-                    return createUser(id: id)
-                }
+    func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error> {
+        Auth.auth().signIn(with: credential)
+            .flatMap { result -> AnyPublisher<User, Error> in
+                self.getUser(id: result.user.uid)
+                    .flatMap { user -> AnyPublisher<User, Error> in
+                        if let user = user {
+                            return Just(user).setFailureType(to: Error.self).eraseToAnyPublisher()
+                        } else {
+                            return self.makeUser(id: result.user.uid).eraseToAnyPublisher()
+                        }
+                    }
+                    .eraseToAnyPublisher()
             }
+            .eraseToAnyPublisher()
+    }
+
+    func link(with credential: AuthCredential) -> AnyPublisher<Void, Error> {
+        guard let currentUser = Auth.auth().currentUser else {
+            return Fail(error: AuthError.notAuthenticated).eraseToAnyPublisher()
+        }
+
+        return currentUser.link(with: credential)
+            // TODO: flatMap to update User document e.g. to get email address
+            .map { _ in }
+            .eraseToAnyPublisher()
+    }
+
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+            user = nil
+        } catch {
+            AlertService.shared.present(message: error.localizedDescription)
+        }
+    }
+
+    private func makeUser(id: String) -> AnyPublisher<User, Error> {
+        let user = User(id: id, startDate: Date())
+        return Firestore.firestore().collection("users").document(user.id).setData(from: user)
+            .map { user }
+            .eraseToAnyPublisher()
+    }
+
+
+    private func getUser(id: String) -> Future<User?, Error> {
+        Future { promise in
+            Firestore.firestore().collection("users").document(id)
+                .getDocument() { snapshot, error in
+                    if let error = error {
+                        promise(.failure(error))
+                    } else if let snapshot = snapshot, snapshot.exists {
+                        promise(.success(try? snapshot.data(as: User.self)))
+                    } else {
+                        promise(.failure(AuthError.noSnapshot))
+                    }
+                }
+        }
+    }
+}
+
+extension AnyPublisher where Output == User, Failure == Error {
+    func setUser(service: AuthenticationService) -> AnyPublisher<User, Error> {
+        self.map { user -> User in
+            service.user = user
+            return user
+        }
+        .eraseToAnyPublisher()
     }
 }
 
