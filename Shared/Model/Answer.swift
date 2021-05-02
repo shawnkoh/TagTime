@@ -8,18 +8,15 @@
 import Foundation
 
 public struct Answer: Identifiable, Codable {
-    // TODO: Why do I need an ID for? Isn't the documentId already the ID?
-    public let id: UUID
     public let updatedDate: Date
     public let ping: Date
     public var tags: [Tag]
 
-    var documentId: String {
+    public var id: String {
         ping.timeIntervalSince1970.description
     }
 
-    init(id: UUID = UUID(), updatedDate: Date = Date(), ping: Date, tags: [Tag]) {
-        self.id = id
+    init(updatedDate: Date = Date(), ping: Date, tags: [Tag]) {
         self.updatedDate = updatedDate
         self.ping = ping
         self.tags = tags

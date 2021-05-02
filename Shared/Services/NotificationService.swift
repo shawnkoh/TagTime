@@ -257,7 +257,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 
     private func addAnswer(answer: Answer, completionHandler: @escaping () -> Void) {
         if let user = AuthenticationService.shared.user {
-            AnswerService.shared.addAnswer(answer, user: user)
+            AnswerService.shared.createAnswer(answer, user: user)
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case let .failure(error):
@@ -274,7 +274,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 // TODO: This should be manually done instead. Most probably when we implement dynamic ping schedule
                 .setUser(service: AuthenticationService.shared)
                 .flatMap { user -> Future<Void, Error> in
-                    AnswerService.shared.addAnswer(answer, user: user)
+                    AnswerService.shared.createAnswer(answer, user: user)
                 }
                 .sink(receiveCompletion: { completion in
                     switch completion {

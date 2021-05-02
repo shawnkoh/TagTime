@@ -7,12 +7,15 @@
 
 import Foundation
 import os
+import Combine
 
 final class AlertService: ObservableObject {
     @Published var isPresented = false
     @Published private(set) var message = ""
 
     static let shared = AlertService()
+
+    var subscribers = Set<AnyCancellable>()
 
     // TODO: This should connect to somewhere like Sentry
     // TODO: Explore Apple's Logger mechanism
@@ -26,5 +29,19 @@ final class AlertService: ObservableObject {
     func dismiss() {
         isPresented = false
         message = ""
+    }
+}
+
+extension Publisher where Failure: Error {
+    func errorHandled(by service: AlertService) {
+        self.sink(receiveCompletion: { completion in
+            switch completion {
+            case let .failure(error):
+                service.present(message: error.localizedDescription)
+            case .finished:
+                ()
+            }
+        }, receiveValue: { _ in })
+        .store(in: &service.subscribers)
     }
 }

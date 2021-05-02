@@ -59,9 +59,17 @@ final class TagService: ObservableObject {
     }
 
     // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-    func batchTags(register: [Tag], deregister: [Tag], with batch: WriteBatch = Firestore.firestore().batch()) {
+    func batchTags(register: [Tag], deregister: [Tag], with batch: WriteBatch? = nil) {
+        let willCommit = batch == nil
+        let batch = batch ?? Firestore.firestore().batch()
+
         registerTags(register, with: batch)
         deregisterTags(deregister, with: batch)
+
+        guard willCommit else {
+            return
+        }
+
         batch.commit() { error in
             if let error = error {
                 AlertService.shared.present(message: error.localizedDescription)
