@@ -108,14 +108,17 @@ final class AnswerService: ObservableObject {
         case notAuthenticated
     }
 
+    func addAnswer(_ answer: Answer, user: User) -> Future<Void, Error> {
+        user.answerCollection.document(answer.documentId).setData(from: answer)
+    }
+
     func addAnswer(_ answer: Answer) -> Future<Void, Error> {
-        guard let answerCollection = self.answerCollection else {
+        guard let user = AuthenticationService.shared.user else {
             return Future { promise in
                 promise(.failure(AuthError.notAuthenticated))
             }
         }
-
-        return answerCollection.document(answer.documentId).setData(from: answer)
+        return addAnswer(answer, user: user)
     }
 
     func batchAnswers(_ answers: [Answer]) {
