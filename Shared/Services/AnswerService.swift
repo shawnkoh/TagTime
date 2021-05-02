@@ -175,7 +175,7 @@ final class AnswerService: ObservableObject {
 
 private extension WriteBatch {
     func createAnswer(_ answer: Answer, user: User) {
-        try! self.setData(from: answer, forDocument: user.answerCollection.document(answer.documentId))
+        try! self.setData(from: answer, forDocument: user.answerCollection.document(answer.id))
         TagService.shared.registerTags(answer.tags, with: self)
     }
 
@@ -184,8 +184,8 @@ private extension WriteBatch {
         let oldTags = Set(answer.tags)
         let removedTags = Array(oldTags.subtracting(newTags))
         let addedTags = Array(newTags.subtracting(oldTags))
-        let newAnswer = Answer(id: answer.id, updatedDate: Date(), ping: answer.ping, tags: tags)
-        try! self.setData(from: newAnswer, forDocument: user.answerCollection.document(newAnswer.documentId))
+        let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
+        try! self.setData(from: newAnswer, forDocument: user.answerCollection.document(newAnswer.id))
         TagService.shared.batchTags(register: Array(addedTags), deregister: Array(removedTags), with: self)
     }
 }
