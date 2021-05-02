@@ -108,19 +108,62 @@ final class AnswerService: ObservableObject {
         case notAuthenticated
     }
 
-    func addAnswer(_ answer: Answer, user: User) -> Future<Void, Error> {
-        user.answerCollection.document(answer.documentId).setData(from: answer)
+    func createAnswer(_ answer: Answer, user: User) -> Future<Void, Error> {
+        Future { promise in
+            let batch = Firestore.firestore().batch()
+            try! batch.setData(from: answer, forDocument: user.answerCollection.document(answer.documentId))
+            TagService.shared.registerTags(answer.tags, with: batch)
+
+            batch.commit() { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
     }
 
-    func addAnswer(_ answer: Answer) -> Future<Void, Error> {
+    func createAnswer(_ answer: Answer) -> Future<Void, Error> {
         guard let user = AuthenticationService.shared.user else {
             return Future { promise in
                 promise(.failure(AuthError.notAuthenticated))
             }
         }
-        return addAnswer(answer, user: user)
+        return createAnswer(answer, user: user)
     }
 
+    func updateAnswer(_ answer: Answer, tags: [Tag], user: User) -> Future<Void, Error> {
+        Future { promise in
+            let newTags = Set(tags)
+            let oldTags = Set(answer.tags)
+            let removedTags = Array(oldTags.subtracting(newTags))
+            let addedTags = Array(newTags.subtracting(oldTags))
+
+            let batch = Firestore.firestore().batch()
+            try! batch.setData(from: answer, forDocument: user.answerCollection.document(answer.documentId))
+            TagService.shared.batchTags(register: Array(addedTags), deregister: Array(removedTags), with: batch)
+
+            batch.commit() { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
+    }
+
+    func updateAnswer(_ answer: Answer, tags: [Tag]) -> Future<Void, Error> {
+        guard let user = AuthenticationService.shared.user else {
+            return Future { promise in
+                promise(.failure(AuthError.notAuthenticated))
+            }
+        }
+        return updateAnswer(answer, tags: tags, user: user)
+    }
+
+    // TODO: Deprecated. Need to implement using new createAnswer
     func batchAnswers(_ answers: [Answer]) {
         guard let answerCollection = answerCollection else {
             return
@@ -145,6 +188,7 @@ final class AnswerService: ObservableObject {
 
 #if DEBUG
 extension AnswerService {
+    // TODO: Deprecated. Need to implement using new removeAnswer
     func deleteAllAnswers() {
         guard let answerCollection = answerCollection else {
             return

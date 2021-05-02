@@ -84,29 +84,13 @@ struct AnswerCreator: View {
             return
         }
         if let editingAnswer = config.editingAnswer {
-            let oldTags = Set(editingAnswer.tags)
-            let newTags = Set(tags)
-            let removedTags = Array(oldTags.subtracting(newTags))
-            let addedTags = Array(newTags.subtracting(oldTags))
-            TagService.shared.batchTags(register: addedTags, deregister: removedTags)
+            answerService.updateAnswer(editingAnswer, tags: tags)
+                .errorHandled(by: alertService)
         } else {
-            TagService.shared.registerTags(tags)
+            let answer = Answer(ping: config.pingDate, tags: tags)
+            answerService.createAnswer(answer)
+                .errorHandled(by: alertService)
         }
-        
-        // TOOD: it would be ideal if the calls in TagService and AnswerService were batched
-        let answer = Answer(ping: config.pingDate, tags: tags)
-        // TODO: Check if this needs to run in async
-        // TODO: If the subscriber (sink) is not stored, it will never be called
-        _ = answerService.addAnswer(answer)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case let .failure(error):
-                    alertService.present(message: error.localizedDescription)
-                case .finished:
-                    alertService.present(message: "Finished adding answer")
-                }
-            }, receiveValue: {})
         config.dismiss()
     }
 }
