@@ -154,3 +154,29 @@ final class TagService: ObservableObject {
         return tagCache.count > 0
     }
 }
+
+#if DEBUG
+extension TagService {
+    func resetTagCache() {
+        guard let cache = cache else {
+            return
+        }
+
+        cache.getDocuments() { snapshot, error in
+            if let error = error {
+                AlertService.shared.present(message: error.localizedDescription)
+            }
+            guard let snapshot = snapshot else {
+                return
+            }
+            let batch = Firestore.firestore().batch()
+            snapshot.documents.forEach { batch.deleteDocument($0.reference) }
+            batch.commit() { error in
+                if let error = error {
+                    AlertService.shared.present(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+}
+#endif

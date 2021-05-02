@@ -47,6 +47,10 @@ struct DebugMenu: View {
             button("Reset User Start Date") {
                 AuthenticationService.shared.resetUserStartDate()
             }
+
+            button("Reset Tag Cache") {
+                TagService.shared.resetTagCache()
+            }
         }
     }
 }
