@@ -184,7 +184,8 @@ private extension WriteBatch {
         let oldTags = Set(answer.tags)
         let removedTags = Array(oldTags.subtracting(newTags))
         let addedTags = Array(newTags.subtracting(oldTags))
-        try! self.setData(from: answer, forDocument: user.answerCollection.document(answer.documentId))
+        let newAnswer = Answer(id: answer.id, updatedDate: Date(), ping: answer.ping, tags: tags)
+        try! self.setData(from: newAnswer, forDocument: user.answerCollection.document(newAnswer.documentId))
         TagService.shared.batchTags(register: Array(addedTags), deregister: Array(removedTags), with: self)
     }
 }
