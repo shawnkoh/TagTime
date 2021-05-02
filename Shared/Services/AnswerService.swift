@@ -103,16 +103,31 @@ final class AnswerService: ObservableObject {
             .store(in: &subscribers)
     }
 
-
-    enum AnswerError: Error {
-        case notAuthenticated
+    func batchCreateAnswers(_ answers: [Answer]) -> Future<Void, Error> {
+        Future { promise in
+            guard let user = AuthenticationService.shared.user else {
+                promise(.failure(AuthError.notAuthenticated))
+                return
+            }
+            let batch = Firestore.firestore().batch()
+            // TODO: This needs to be split into chunks of maximum 500 / 3
+            answers.forEach { answer in
+                batch.createAnswer(answer, user: user)
+            }
+            batch.commit() { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
     }
 
     func createAnswer(_ answer: Answer, user: User) -> Future<Void, Error> {
         Future { promise in
             let batch = Firestore.firestore().batch()
-            try! batch.setData(from: answer, forDocument: user.answerCollection.document(answer.documentId))
-            TagService.shared.registerTags(answer.tags, with: batch)
+            batch.createAnswer(answer, user: user)
 
             batch.commit() { error in
                 if let error = error {
@@ -135,14 +150,8 @@ final class AnswerService: ObservableObject {
 
     func updateAnswer(_ answer: Answer, tags: [Tag], user: User) -> Future<Void, Error> {
         Future { promise in
-            let newTags = Set(tags)
-            let oldTags = Set(answer.tags)
-            let removedTags = Array(oldTags.subtracting(newTags))
-            let addedTags = Array(newTags.subtracting(oldTags))
-
             let batch = Firestore.firestore().batch()
-            try! batch.setData(from: answer, forDocument: user.answerCollection.document(answer.documentId))
-            TagService.shared.batchTags(register: Array(addedTags), deregister: Array(removedTags), with: batch)
+            batch.updateAnswer(answer, tags: tags, user: user)
 
             batch.commit() { error in
                 if let error = error {
@@ -162,29 +171,24 @@ final class AnswerService: ObservableObject {
         }
         return updateAnswer(answer, tags: tags, user: user)
     }
+}
 
-    // TODO: Deprecated. Need to implement using new createAnswer
-    func batchAnswers(_ answers: [Answer]) {
-        guard let answerCollection = answerCollection else {
-            return
-        }
-        // TODO: This has a limit of 500 writes, we should ideally split into multiple chunks of 500
-        let writeBatch = Firestore.firestore().batch()
-        do {
-            try answers.forEach { answer in
-                try writeBatch.setData(from: answer, forDocument: answerCollection.document(answer.documentId))
-            }
-            writeBatch.commit() { error in
-                if let error = error {
-                    AlertService.shared.present(message: "answerAllUnansweredPings \(error)")
-                }
-            }
-        } catch {
-            AlertService.shared.present(message: "answerAllUnansweredPings \(error)")
-        }
+private extension WriteBatch {
+    func createAnswer(_ answer: Answer, user: User) {
+        try! self.setData(from: answer, forDocument: user.answerCollection.document(answer.documentId))
+        TagService.shared.registerTags(answer.tags, with: self)
     }
 
+    func updateAnswer(_ answer: Answer, tags: [Tag], user: User) {
+        let newTags = Set(tags)
+        let oldTags = Set(answer.tags)
+        let removedTags = Array(oldTags.subtracting(newTags))
+        let addedTags = Array(newTags.subtracting(oldTags))
+        try! self.setData(from: answer, forDocument: user.answerCollection.document(answer.documentId))
+        TagService.shared.batchTags(register: Array(addedTags), deregister: Array(removedTags), with: self)
+    }
 }
+
 
 #if DEBUG
 extension AnswerService {

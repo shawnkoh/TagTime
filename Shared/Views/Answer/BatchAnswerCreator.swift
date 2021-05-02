@@ -52,7 +52,10 @@ struct BatchAnswerCreator: View {
             return
         }
         let answers = answerService.unansweredPings.map { Answer(ping: $0, tags: tags) }
-        answerService.batchAnswers(answers)
+        DispatchQueue.global(qos: .utility).async {
+            answerService.batchCreateAnswers(answers)
+                .errorHandled(by: AlertService.shared)
+        }
         config.dismiss()
     }
 }
