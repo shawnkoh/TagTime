@@ -8,6 +8,7 @@
 import Foundation
 import FBSDKLoginKit
 import FirebaseAuth
+import Combine
 
 final class FacebookLoginService {
     static let shared = FacebookLoginService()
@@ -26,7 +27,21 @@ final class FacebookLoginService {
                 return
             }
             let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
-            AuthenticationService.shared.signIn(with: credential)
+            // This is a future, immediately executed.
+            _ = AuthenticationService.shared.link(with: credential)
+                .tryCatch { error -> AnyPublisher<Void, Error> in
+                    switch error {
+                    case let AuthError.authError(error, code):
+                        if code == .credentialAlreadyInUse {
+                            return AuthenticationService.shared.signIn(with: credential).map { _ in }.eraseToAnyPublisher()
+                        } else {
+                            throw error
+                        }
+                    default:
+                        throw error
+                    }
+                }
+            // TODO: Need to display error
         }
     }
 }

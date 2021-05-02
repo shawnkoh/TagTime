@@ -227,7 +227,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                     completionHandler()
                     return
                 }
-                answerPing(pingDate, with: previousAnswer, completionHandler: completionHandler)
+                signInAndAnswerPing(pingDate, with: previousAnswer, completionHandler: completionHandler)
 
             case Self.ActionIdentifier.reply:
                 guard let response = response as? UNTextInputNotificationResponse else {
@@ -235,7 +235,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                     completionHandler()
                     return
                 }
-                answerPing(pingDate, with: response.userText, completionHandler: completionHandler)
+                signInAndAnswerPing(pingDate, with: response.userText, completionHandler: completionHandler)
 
             case UNNotificationDefaultActionIdentifier:
                 self.openedPing = pingDate
@@ -246,31 +246,46 @@ extension NotificationService: UNUserNotificationCenterDelegate {
         }
     }
 
-    private func answerPing(_ ping: Date, with text: String, completionHandler: @escaping () -> Void) {
-        let tags = text.split(separator: " ").map { Tag($0) }
-        let answer = Answer(ping: ping, tags: tags)
-
+    private func signInAndAnswerPing(_ ping: Date, with text: String, completionHandler: @escaping () -> Void) {
+        // For some reason, this doesn't work if its not wrapped in an async call.
         DispatchQueue.global(qos: .utility).async {
-            let result: Result<Answer, Error>
-            if AuthenticationService.shared.user == nil {
-                result = AuthenticationService.shared
-                    .signIn()
-                    .flatMap { _ in AnswerService.shared.addAnswer(answer) }
-            } else {
-                result = AnswerService.shared.addAnswer(answer)
-            }
-
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    ()
-                case let .failure(error):
-                    // TODO: Figure out how to handle this situation. Maybe re-route the notification?
-                    ()
-                }
-                completionHandler()
-            }
+            let tags = text.split(separator: " ").map { Tag($0) }
+            let answer = Answer(ping: ping, tags: tags)
+            self.addAnswer(answer: answer, completionHandler: completionHandler)
         }
+    }
 
+    private func addAnswer(answer: Answer, completionHandler: @escaping () -> Void) {
+        if let user = AuthenticationService.shared.user {
+            AnswerService.shared.addAnswer(answer, user: user)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case let .failure(error):
+                        AlertService.shared.present(message: error.localizedDescription)
+                    case .finished:
+                        ()
+                    }
+                    completionHandler()
+                }, receiveValue: {})
+                .store(in: &subscribers)
+        } else {
+            AuthenticationService.shared.signIn()
+                // Setting user updates the notification
+                // TODO: This should be manually done instead. Most probably when we implement dynamic ping schedule
+                .setUser(service: AuthenticationService.shared)
+                .flatMap { user -> Future<Void, Error> in
+                    AnswerService.shared.addAnswer(answer, user: user)
+                }
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case let .failure(error):
+                        AlertService.shared.present(message: error.localizedDescription)
+                    case .finished:
+                        ()
+                    }
+                    completionHandler()
+                }, receiveValue: {})
+                .store(in: &subscribers)
+        }
     }
 }

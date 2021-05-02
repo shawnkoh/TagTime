@@ -64,6 +64,9 @@
 		86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C4C0C3262A09C90023C2A0 /* AppService.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86C6C7402636A19700A24EBA /* Tappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C6C73F2636A19700A24EBA /* Tappable.swift */; };
+		86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F142263D76D9002062E2 /* Auth+Combine.swift */; };
+		86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */; };
+		86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
@@ -131,6 +134,9 @@
 		86C4C0C3262A09C90023C2A0 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
 		86C6C73F2636A19700A24EBA /* Tappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tappable.swift; sourceTree = "<group>"; };
+		86D2F142263D76D9002062E2 /* Auth+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+Combine.swift"; sourceTree = "<group>"; };
+		86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseUser+Combine.swift"; sourceTree = "<group>"; };
+		86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentReference+Combine.swift"; sourceTree = "<group>"; };
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
@@ -274,7 +280,10 @@
 		868E97CE26174A4C000A41FF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				86D2F142263D76D9002062E2 /* Auth+Combine.swift */,
 				868E97CF26174A56000A41FF /* Color+Figma.swift */,
+				86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */,
+				86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */,
 				86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */,
 			);
 			path = Helpers;
@@ -557,13 +566,16 @@
 				867858D926370F3F009370F6 /* AnswerSuggester.swift in Sources */,
 				8672E70526181B01004081FC /* SettingService.swift in Sources */,
 				86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */,
+				86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */,
 				86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */,
 				86C6C7402636A19700A24EBA /* Tappable.swift in Sources */,
 				868D83F2263A6356000211A6 /* TagCache.swift in Sources */,
+				86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
 				865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */,
 				868D83EE26396B49000211A6 /* TagService.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,
+				86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */,
 				862914E52634A1D6006BF198 /* DebugMenu.swift in Sources */,
 				868E97C926173AAD000A41FF /* Answer.swift in Sources */,
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,

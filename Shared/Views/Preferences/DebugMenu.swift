@@ -30,8 +30,8 @@ struct DebugMenu: View {
                 .font(.title)
                 .bold()
 
-            button("Schedule notification in 7 seconds") {
-                let timeInterval = Date(timeIntervalSinceNow: 7).timeIntervalSince1970.rounded()
+            button("Schedule notification in 5 seconds") {
+                let timeInterval = Date(timeIntervalSinceNow: 5).timeIntervalSince1970.rounded()
                 let pingDate = Date(timeIntervalSince1970: timeInterval)
                 NotificationService.shared.scheduleNotification(
                     ping: pingDate,
