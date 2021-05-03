@@ -22,8 +22,4 @@ extension User {
     var userDocument: DocumentReference {
         Firestore.firestore().collection("users").document(id)
     }
-
-    var answerCollection: CollectionReference {
-        userDocument.collection("answers")
-    }
 }

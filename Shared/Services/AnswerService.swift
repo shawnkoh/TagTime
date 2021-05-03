@@ -173,6 +173,12 @@ final class AnswerService: ObservableObject {
     }
 }
 
+private extension User {
+    var answerCollection: CollectionReference {
+        userDocument.collection("answers")
+    }
+}
+
 private extension WriteBatch {
     func createAnswer(_ answer: Answer, user: User) {
         try! self.setData(from: answer, forDocument: user.answerCollection.document(answer.id))

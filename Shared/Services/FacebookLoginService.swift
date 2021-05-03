@@ -27,13 +27,14 @@ final class FacebookLoginService {
                 return
             }
             let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
-            // This is a future, immediately executed.
-            _ = AuthenticationService.shared.link(with: credential)
+            AuthenticationService.shared.link(with: credential)
                 .tryCatch { error -> AnyPublisher<Void, Error> in
                     switch error {
                     case let AuthError.authError(error, code):
                         if code == .credentialAlreadyInUse {
-                            return AuthenticationService.shared.signIn(with: credential).map { _ in }.eraseToAnyPublisher()
+                            return AuthenticationService.shared.signIn(with: credential)
+                                .map { _ in }
+                                .eraseToAnyPublisher()
                         } else {
                             throw error
                         }
@@ -41,7 +42,7 @@ final class FacebookLoginService {
                         throw error
                     }
                 }
-            // TODO: Need to display error
+                .errorHandled(by: AlertService.shared)
         }
     }
 }

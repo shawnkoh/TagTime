@@ -38,6 +38,10 @@
 		868E97C3261738C5000A41FF /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C2261738C5000A41FF /* Stub.swift */; };
 		868E97C926173AAD000A41FF /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C826173AAD000A41FF /* Answer.swift */; };
 		868E97D026174A56000A41FF /* Color+Figma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97CF26174A56000A41FF /* Color+Figma.swift */; };
+		869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 869291E8263F09B800F6AA3D /* BetterSafariView */; };
+		869291EB263F9DCF00F6AA3D /* BeeminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EA263F9DCF00F6AA3D /* BeeminderService.swift */; };
+		869291ED263F9DDD00F6AA3D /* BeeminderCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */; };
+		869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */; };
 		86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59126261DB71600A25D1F /* FirebaseAuth */; };
 		86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59128261DB71600A25D1F /* FirebaseFirestore */; };
 		86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 86A5912A261DB71600A25D1F /* FirebaseFirestoreSwift-Beta */; };
@@ -123,6 +127,9 @@
 		868E97C2261738C5000A41FF /* Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
 		868E97C826173AAD000A41FF /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
 		868E97CF26174A56000A41FF /* Color+Figma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Figma.swift"; sourceTree = "<group>"; };
+		869291EA263F9DCF00F6AA3D /* BeeminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderService.swift; sourceTree = "<group>"; };
+		869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderCredential.swift; sourceTree = "<group>"; };
+		869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderLoginButton.swift; sourceTree = "<group>"; };
 		86A5913D261DBB9600A25D1F /* AuthenticatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedView.swift; sourceTree = "<group>"; };
 		86A59146261DBB9E00A25D1F /* UnauthenticatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthenticatedView.swift; sourceTree = "<group>"; };
 		86A5914F261DBCBD00A25D1F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -151,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8658964326382F2D009D9299 /* SwiftUIX in Frameworks */,
+				869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */,
 				86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */,
 				86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */,
@@ -293,6 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				868E97C826173AAD000A41FF /* Answer.swift */,
+				869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */,
 				868E97B2261736A7000A41FF /* Ping.swift */,
 				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
@@ -349,6 +358,7 @@
 			children = (
 				86ADBB802617330B003CBA6B /* Preferences.swift */,
 				862914E42634A1D6006BF198 /* DebugMenu.swift */,
+				869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -360,6 +370,7 @@
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
+				869291EA263F9DCF00F6AA3D /* BeeminderService.swift */,
 				864203B02632710700668EC1 /* FacebookLoginService.swift */,
 				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
 				86C5A701261E2104001451E9 /* PingService.swift */,
@@ -394,6 +405,7 @@
 				86C04D3226318D040046C0E3 /* FacebookShare */,
 				8658964226382F2D009D9299 /* SwiftUIX */,
 				86589645263840E7009D9299 /* Fuse */,
+				869291E8263F09B800F6AA3D /* BetterSafariView */,
 			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
@@ -491,6 +503,7 @@
 				86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 				8658964126382F2D009D9299 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
 				86589644263840E6009D9299 /* XCRemoteSwiftPackageReference "fuse-swift" */,
+				869291E7263F09B800F6AA3D /* XCRemoteSwiftPackageReference "BetterSafariView" */,
 			);
 			productRefGroup = 861256CF26139CAB00C2B81B /* Products */;
 			projectDirPath = "";
@@ -551,9 +564,11 @@
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
 				86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */,
 				86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */,
+				869291ED263F9DDD00F6AA3D /* BeeminderCredential.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
+				869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
@@ -576,6 +591,7 @@
 				868D83EE26396B49000211A6 /* TagService.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,
 				86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */,
+				869291EB263F9DCF00F6AA3D /* BeeminderService.swift in Sources */,
 				862914E52634A1D6006BF198 /* DebugMenu.swift in Sources */,
 				868E97C926173AAD000A41FF /* Answer.swift in Sources */,
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,
@@ -1006,6 +1022,14 @@
 				kind = branch;
 			};
 		};
+		869291E7263F09B800F6AA3D /* XCRemoteSwiftPackageReference "BetterSafariView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stleamist/BetterSafariView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.1;
+			};
+		};
 		86A59125261DB71600A25D1F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -1034,6 +1058,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 86589644263840E6009D9299 /* XCRemoteSwiftPackageReference "fuse-swift" */;
 			productName = Fuse;
+		};
+		869291E8263F09B800F6AA3D /* BetterSafariView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 869291E7263F09B800F6AA3D /* XCRemoteSwiftPackageReference "BetterSafariView" */;
+			productName = BetterSafariView;
 		};
 		86A59126261DB71600A25D1F /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;

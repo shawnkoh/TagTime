@@ -25,4 +25,16 @@ extension DocumentReference {
             }
         }
     }
+
+    func delete() -> Future<Void, Error> {
+        Future { promise in
+            self.delete() { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
+    }
 }
