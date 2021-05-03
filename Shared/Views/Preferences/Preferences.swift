@@ -12,8 +12,6 @@ struct Preferences: View {
 
     private var debugMode = true
 
-    @State private var isAuthenticatingBeeminder = false
-
     @ViewBuilder
     private func button(text: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
