@@ -8,27 +8,23 @@
 import SwiftUI
 
 struct GoalList: View {
-    @StateObject var beeminderService: BeeminderService
-
-    init(credential: BeeminderCredential) {
-        _beeminderService = StateObject(wrappedValue: BeeminderService(credential: credential))
-    }
+    @EnvironmentObject var goalService: GoalService
 
     var body: some View {
         VStack(alignment: .leading) {
             PageTitle(title: "Goal List", subtitle: "Don't let the bee sting!")
 
-            ForEach(beeminderService.goals) { goal in
+            ForEach(goalService.trackedGoals) { goal in
                 Text(goal.slug)
             }
         }
-        .environmentObject(beeminderService)
-        .onAppear() { beeminderService.getGoals() }
+        .environmentObject(goalService)
     }
 }
 
 struct GoalList_Previews: PreviewProvider {
     static var previews: some View {
-        GoalList(credential: .init(username: "shawnkoh", accessToken: "test"))
+        GoalList()
+            .environmentObject(GoalService.shared)
     }
 }

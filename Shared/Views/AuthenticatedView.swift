@@ -32,13 +32,13 @@ struct AuthenticatedView: View {
 
     var body: some View {
         VStack {
-            if let credential = beeminderCredentialService.credential {
+            if isLoggedIntoBeeminder {
                 TabView(selection: $appService.currentPage) {
                     MissedPingList()
                         .tag(AppService.Page.missedPingList)
                     Logbook()
                         .tag(AppService.Page.logbook)
-                    GoalList(credential: credential)
+                    TrackedGoalList()
                         .tag(AppService.Page.goalList)
                     Statistics()
                         .tag(AppService.Page.statistics)

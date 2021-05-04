@@ -23,8 +23,13 @@
 		863CA83B2635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864203B02632710700668EC1 /* FacebookLoginService.swift */; };
 		865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865391EB2633D4A700F202F7 /* AnswerCreator.swift */; };
+		86569A612641B111005C49C7 /* GoalDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86569A602641B111005C49C7 /* GoalDetail.swift */; };
 		8658964326382F2D009D9299 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 8658964226382F2D009D9299 /* SwiftUIX */; };
 		86589646263840E7009D9299 /* Fuse in Frameworks */ = {isa = PBXBuildFile; productRef = 86589645263840E7009D9299 /* Fuse */; };
+		8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29B2641427D003EB532 /* TrackedGoalList.swift */; };
+		8665E29F264142F1003EB532 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29E264142F1003EB532 /* GoalCard.swift */; };
+		8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A22641687B003EB532 /* GoalPicker.swift */; };
+		8665E2A52641752B003EB532 /* GoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A42641752B003EB532 /* GoalService.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
 		867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858C8263709D9009370F6 /* BatchAnswerCreator.swift */; };
@@ -42,7 +47,7 @@
 		8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8691A52B263FFD020020AEE6 /* GoalList.swift */; };
 		8691A52E264000C60020AEE6 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8691A52D264000C60020AEE6 /* Goal.swift */; };
 		869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 869291E8263F09B800F6AA3D /* BetterSafariView */; };
-		869291EB263F9DCF00F6AA3D /* BeeminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EA263F9DCF00F6AA3D /* BeeminderService.swift */; };
+		869291EB263F9DCF00F6AA3D /* BeeminderAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EA263F9DCF00F6AA3D /* BeeminderAPI.swift */; };
 		869291ED263F9DDD00F6AA3D /* BeeminderCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */; };
 		869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */; };
 		86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59126261DB71600A25D1F /* FirebaseAuth */; };
@@ -69,6 +74,7 @@
 		86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3026318D040046C0E3 /* FacebookLogin */; };
 		86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3226318D040046C0E3 /* FacebookShare */; };
 		86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C4C0C3262A09C90023C2A0 /* AppService.swift */; };
+		86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C577AD264190F3008AE4BC /* GoalTracker.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86C6C7402636A19700A24EBA /* Tappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C6C73F2636A19700A24EBA /* Tappable.swift */; };
 		86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F142263D76D9002062E2 /* Auth+Combine.swift */; };
@@ -120,6 +126,11 @@
 		863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TagTime.entitlements; sourceTree = "<group>"; };
 		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
 		865391EB2633D4A700F202F7 /* AnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCreator.swift; sourceTree = "<group>"; };
+		86569A602641B111005C49C7 /* GoalDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetail.swift; sourceTree = "<group>"; };
+		8665E29B2641427D003EB532 /* TrackedGoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalList.swift; sourceTree = "<group>"; };
+		8665E29E264142F1003EB532 /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
+		8665E2A22641687B003EB532 /* GoalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPicker.swift; sourceTree = "<group>"; };
+		8665E2A42641752B003EB532 /* GoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalService.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
 		867858C8263709D9009370F6 /* BatchAnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchAnswerCreator.swift; sourceTree = "<group>"; };
@@ -133,7 +144,7 @@
 		868E97CF26174A56000A41FF /* Color+Figma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Figma.swift"; sourceTree = "<group>"; };
 		8691A52B263FFD020020AEE6 /* GoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalList.swift; sourceTree = "<group>"; };
 		8691A52D264000C60020AEE6 /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
-		869291EA263F9DCF00F6AA3D /* BeeminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderService.swift; sourceTree = "<group>"; };
+		869291EA263F9DCF00F6AA3D /* BeeminderAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderAPI.swift; sourceTree = "<group>"; };
 		869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderCredential.swift; sourceTree = "<group>"; };
 		869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderLoginButton.swift; sourceTree = "<group>"; };
 		86A5913D261DBB9600A25D1F /* AuthenticatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedView.swift; sourceTree = "<group>"; };
@@ -145,6 +156,7 @@
 		86ADBB802617330B003CBA6B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
 		86C4C0C3262A09C90023C2A0 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
+		86C577AD264190F3008AE4BC /* GoalTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTracker.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
 		86C6C73F2636A19700A24EBA /* Tappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tappable.swift; sourceTree = "<group>"; };
 		86D2F142263D76D9002062E2 /* Auth+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+Combine.swift"; sourceTree = "<group>"; };
@@ -306,7 +318,11 @@
 		8691A52A263FFC6A0020AEE6 /* Beeminder */ = {
 			isa = PBXGroup;
 			children = (
+				8665E29E264142F1003EB532 /* GoalCard.swift */,
+				86569A602641B111005C49C7 /* GoalDetail.swift */,
 				8691A52B263FFD020020AEE6 /* GoalList.swift */,
+				8665E2A22641687B003EB532 /* GoalPicker.swift */,
+				8665E29B2641427D003EB532 /* TrackedGoalList.swift */,
 			);
 			path = Beeminder;
 			sourceTree = "<group>";
@@ -317,6 +333,7 @@
 				868E97C826173AAD000A41FF /* Answer.swift */,
 				869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */,
 				8691A52D264000C60020AEE6 /* Goal.swift */,
+				86C577AD264190F3008AE4BC /* GoalTracker.swift */,
 				868E97B2261736A7000A41FF /* Ping.swift */,
 				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
@@ -386,9 +403,10 @@
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
+				869291EA263F9DCF00F6AA3D /* BeeminderAPI.swift */,
 				8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */,
-				869291EA263F9DCF00F6AA3D /* BeeminderService.swift */,
 				864203B02632710700668EC1 /* FacebookLoginService.swift */,
+				8665E2A42641752B003EB532 /* GoalService.swift */,
 				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
 				86C5A701261E2104001451E9 /* PingService.swift */,
 				8672E70426181B01004081FC /* SettingService.swift */,
@@ -587,14 +605,18 @@
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
+				8665E29F264142F1003EB532 /* GoalCard.swift in Sources */,
 				869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
+				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
 				86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
+				8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */,
 				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
 				8691A52E264000C60020AEE6 /* Goal.swift in Sources */,
+				8665E2A52641752B003EB532 /* GoalService.swift in Sources */,
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
@@ -605,13 +627,15 @@
 				86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */,
 				86C6C7402636A19700A24EBA /* Tappable.swift in Sources */,
 				868D83F2263A6356000211A6 /* TagCache.swift in Sources */,
+				86569A612641B111005C49C7 /* GoalDetail.swift in Sources */,
 				86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
 				865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */,
 				868D83EE26396B49000211A6 /* TagService.swift in Sources */,
+				8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,
 				86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */,
-				869291EB263F9DCF00F6AA3D /* BeeminderService.swift in Sources */,
+				869291EB263F9DCF00F6AA3D /* BeeminderAPI.swift in Sources */,
 				862914E52634A1D6006BF198 /* DebugMenu.swift in Sources */,
 				868E97C926173AAD000A41FF /* Answer.swift in Sources */,
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,
