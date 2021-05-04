@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum GoalType: String, Codable {
     /// Do More
@@ -40,4 +41,45 @@ struct Goal: Codable, Identifiable, Hashable {
     /// URL for the goal's graph thumbnail image. E.g., "http://static.beeminder.com/alice/weight-thumb.png".
     let thumbUrl: String
     let goalType: GoalType
+    /// Unix timestamp of derailment. When you'll be off the road if nothing is reported.
+    let losedate: Int
+    /// The integer number of safe days. If it's a beemergency this will be zero.
+    // This looks to always be non-nil used nil for defensive coding purpose
+    let safebuf: Int?
+    /// Amount pledged (USD) on the goal.
+    let pledge: Double?
+    /// Seconds by which your deadline differs from midnight. Negative is before midnight, positive is after midnight.
+    /// Allowed range is -17*3600 to 6*3600 (7am to 6am).
+    let deadline: Int
+}
+
+extension Goal {
+    // Retrieved from https://api.beeminder.com/?ruby#attributes-2
+    var color: Color {
+        guard let safebuf = safebuf else {
+            return .gray
+        }
+        if safebuf < 1 {
+            return .red
+        } else if safebuf < 2 {
+            return .orange
+        } else if safebuf < 3 {
+            return .blue
+        } else if safebuf < 7 {
+            return .green
+        } else {
+            return .gray
+        }
+    }
+
+    var derailDate: Date {
+        .init(timeIntervalSince1970: Double(losedate))
+    }
+
+    func dueInDescription(currentTime: Date) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.day, .hour, .minute, .second]
+        formatter.unitsStyle = .abbreviated
+        return formatter.string(from: currentTime, to: derailDate)!
+    }
 }

@@ -29,4 +29,19 @@ enum Stub {
         }
 
     static let settingService = SettingService()
+
+    static let goal = Goal(
+        id: "ABC",
+        slug: "Tracked Goal",
+        updatedAt: Int(Date().timeIntervalSince1970),
+        title: "Tracked Goal!",
+        fineprint: "LALA",
+        autodata: nil,
+        thumbUrl: "",
+        goalType: .hustler,
+        losedate: Int(Date().advanced(by: 100).timeIntervalSince1970),
+        safebuf: 0,
+        pledge: 30.0,
+        deadline: 0
+    )
 }
