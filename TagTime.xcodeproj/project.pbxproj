@@ -26,8 +26,7 @@
 		8658964326382F2D009D9299 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 8658964226382F2D009D9299 /* SwiftUIX */; };
 		86589646263840E7009D9299 /* Fuse in Frameworks */ = {isa = PBXBuildFile; productRef = 86589645263840E7009D9299 /* Fuse */; };
 		8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29B2641427D003EB532 /* TrackedGoalList.swift */; };
-		8665E29F264142F1003EB532 /* TrackedGoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29E264142F1003EB532 /* TrackedGoalCard.swift */; };
-		8665E2A1264142FD003EB532 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A0264142FD003EB532 /* GoalCard.swift */; };
+		8665E29F264142F1003EB532 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29E264142F1003EB532 /* GoalCard.swift */; };
 		8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A22641687B003EB532 /* GoalPicker.swift */; };
 		8665E2A52641752B003EB532 /* GoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A42641752B003EB532 /* GoalService.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
@@ -126,8 +125,7 @@
 		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
 		865391EB2633D4A700F202F7 /* AnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCreator.swift; sourceTree = "<group>"; };
 		8665E29B2641427D003EB532 /* TrackedGoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalList.swift; sourceTree = "<group>"; };
-		8665E29E264142F1003EB532 /* TrackedGoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalCard.swift; sourceTree = "<group>"; };
-		8665E2A0264142FD003EB532 /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
+		8665E29E264142F1003EB532 /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
 		8665E2A22641687B003EB532 /* GoalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPicker.swift; sourceTree = "<group>"; };
 		8665E2A42641752B003EB532 /* GoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalService.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
@@ -316,10 +314,9 @@
 		8691A52A263FFC6A0020AEE6 /* Beeminder */ = {
 			isa = PBXGroup;
 			children = (
-				8665E2A0264142FD003EB532 /* GoalCard.swift */,
+				8665E29E264142F1003EB532 /* GoalCard.swift */,
 				8691A52B263FFD020020AEE6 /* GoalList.swift */,
 				8665E2A22641687B003EB532 /* GoalPicker.swift */,
-				8665E29E264142F1003EB532 /* TrackedGoalCard.swift */,
 				8665E29B2641427D003EB532 /* TrackedGoalList.swift */,
 			);
 			path = Beeminder;
@@ -602,9 +599,8 @@
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
-				8665E29F264142F1003EB532 /* TrackedGoalCard.swift in Sources */,
+				8665E29F264142F1003EB532 /* GoalCard.swift in Sources */,
 				869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */,
-				8665E2A1264142FD003EB532 /* GoalCard.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,

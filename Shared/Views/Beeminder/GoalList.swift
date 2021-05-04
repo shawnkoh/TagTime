@@ -14,7 +14,7 @@ struct GoalList: View {
         VStack(alignment: .leading) {
             PageTitle(title: "Goal List", subtitle: "Don't let the bee sting!")
 
-            ForEach(goalService.goals) { goal in
+            ForEach(goalService.trackedGoals) { goal in
                 Text(goal.slug)
             }
         }

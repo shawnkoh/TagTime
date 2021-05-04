@@ -9,9 +9,41 @@ import SwiftUI
 
 struct GoalCard: View {
     let goal: Goal
+    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var dueInDescription: String
+
+    init(goal: Goal) {
+        self.goal = goal
+        dueInDescription = goal.dueInDescription(currentTime: Date())
+    }
+
+    private var pledge: String {
+        guard let pledge = goal.pledge else {
+            return ""
+        }
+        return "or pay $\(Int(pledge))"
+    }
 
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            VStack(alignment: .leading) {
+                Text(goal.slug)
+                    .bold()
+                    .font(.title3)
+                    .padding([.top, .leading])
+                Text("Due in \(dueInDescription) \(pledge)")
+                    .foregroundColor(goal.color)
+                    .padding()
+                    .font(.body)
+                // TODO: Image
+            }
+            Spacer()
+        }
+        .foregroundColor(.white)
+        .background(Color.hsb(213, 24, 18))
+        .onReceive(timer) { time in
+            dueInDescription = goal.dueInDescription(currentTime: time)
+        }
     }
 }
 

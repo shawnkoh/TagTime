@@ -14,13 +14,12 @@ struct TrackedGoalList: View {
     var body: some View {
         VStack(alignment: .leading) {
             PageTitle(title: "Tracked Goals", subtitle: "Don't let the bee sting!")
-                .environmentObject(goalService)
 
             if goalService.trackedGoals.count > 0 {
                 ScrollView {
                     LazyVStack(alignment: .center, spacing: 2, pinnedViews: []) {
                         ForEach(goalService.trackedGoals) { goal in
-                            TrackedGoalCard(goal: goal)
+                            GoalCard(goal: goal)
                         }
                     }
                 }

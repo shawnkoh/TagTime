@@ -26,7 +26,7 @@ struct GoalPicker: View {
         ScrollView {
             LazyVStack(alignment: .leading) {
                 ForEach(goalService.untrackedGoals) { goal in
-                    TrackedGoalCard(goal: goal)
+                    GoalCard(goal: goal)
                 }
             }
         }
