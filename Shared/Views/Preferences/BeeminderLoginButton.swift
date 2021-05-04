@@ -10,7 +10,7 @@ import AuthenticationServices
 import BetterSafariView
 
 struct BeeminderLoginButton: View {
-    @EnvironmentObject var beeminderService: BeeminderService
+    @EnvironmentObject var beeminderCredentialService: BeeminderCredentialService
 
     @State private var isAuthenticatingBeeminder = false
 
@@ -39,7 +39,7 @@ struct BeeminderLoginButton: View {
     }
 
     var body: some View {
-        if beeminderService.credential == nil {
+        if beeminderCredentialService.credential == nil {
             button(text: "Login with Beeminder") {
                 isAuthenticatingBeeminder = true
             }
@@ -57,13 +57,13 @@ struct BeeminderLoginButton: View {
                         return
                     }
                     let credential = BeeminderCredential(username: username, accessToken: accessToken)
-                    beeminderService.saveCredential(credential)
+                    beeminderCredentialService.saveCredential(credential)
                 }
                 .prefersEphemeralWebBrowserSession(false)
             }
         } else {
             button(text: "Logout from Beeminder") {
-                beeminderService.removeCredential()
+                beeminderCredentialService.removeCredential()
             }
         }
     }
@@ -72,6 +72,6 @@ struct BeeminderLoginButton: View {
 struct BeeminderLoginButton_Previews: PreviewProvider {
     static var previews: some View {
         BeeminderLoginButton()
-            .environmentObject(BeeminderService.shared)
+            .environmentObject(BeeminderCredentialService.shared)
     }
 }

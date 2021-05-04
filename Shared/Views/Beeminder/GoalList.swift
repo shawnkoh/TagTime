@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct GoalList: View {
-    @EnvironmentObject var beeminderService: BeeminderService
+    @StateObject var beeminderService: BeeminderService
+
+    init(credential: BeeminderCredential) {
+        _beeminderService = StateObject(wrappedValue: BeeminderService(credential: credential))
+    }
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -18,15 +22,13 @@ struct GoalList: View {
                 Text(goal.slug)
             }
         }
-        .onAppear() {
-            beeminderService.getGoals(with: beeminderService.credential!)
-        }
+        .environmentObject(beeminderService)
+        .onAppear() { beeminderService.getGoals() }
     }
 }
 
 struct GoalList_Previews: PreviewProvider {
     static var previews: some View {
-        GoalList()
-            .environmentObject(BeeminderService.shared)
+        GoalList(credential: .init(username: "shawnkoh", accessToken: "test"))
     }
 }

@@ -42,7 +42,7 @@ final class AppService: ObservableObject {
             }
             .store(in: &subscribers)
 
-        BeeminderService.shared.$credential
+        BeeminderCredentialService.shared.$credential
             .receive(on: DispatchQueue.main)
             .sink { [self] credential in
                 if credential == nil, currentPage == .goalList {

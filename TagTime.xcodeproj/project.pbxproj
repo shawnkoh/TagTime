@@ -15,6 +15,7 @@
 		861256F326139CAB00C2B81B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C826139CAA00C2B81B /* ContentView.swift */; };
 		861256F426139CAB00C2B81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 861256C926139CAB00C2B81B /* Assets.xcassets */; };
 		861256F526139CAB00C2B81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 861256C926139CAB00C2B81B /* Assets.xcassets */; };
+		8614ED1C264110D700F543F2 /* BeeminderCredentialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */; };
 		862914E52634A1D6006BF198 /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862914E42634A1D6006BF198 /* DebugMenu.swift */; };
 		863CA8382635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		863CA8392635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
@@ -113,6 +114,7 @@
 		861256E926139CAB00C2B81B /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		861256ED26139CAB00C2B81B /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
 		861256EF26139CAB00C2B81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderCredentialService.swift; sourceTree = "<group>"; };
 		862914E42634A1D6006BF198 /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
 		863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TagTime.entitlements; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
+				8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */,
 				869291EA263F9DCF00F6AA3D /* BeeminderService.swift */,
 				864203B02632710700668EC1 /* FacebookLoginService.swift */,
 				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
@@ -573,6 +576,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8614ED1C264110D700F543F2 /* BeeminderCredentialService.swift in Sources */,
 				8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */,
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,

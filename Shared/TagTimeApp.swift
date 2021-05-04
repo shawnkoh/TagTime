@@ -16,7 +16,7 @@ struct TagTimeApp: App {
     @StateObject var alertService = AlertService.shared
     @StateObject var answerService = AnswerService.shared
     @StateObject var appService = AppService.shared
-    @StateObject var beeminderService = BeeminderService.shared
+    @StateObject var beeminderCredentialService = BeeminderCredentialService.shared
     @StateObject var notificationService = NotificationService.shared
     @StateObject var pingService = PingService.shared
     @StateObject var settingService = SettingService.shared
@@ -37,7 +37,7 @@ struct TagTimeApp: App {
                 }
                 .environmentObject(alertService)
                 .environmentObject(answerService)
-                .environmentObject(beeminderService)
+                .environmentObject(beeminderCredentialService)
                 .environmentObject(appService)
                 .environmentObject(notificationService)
                 .environmentObject(pingService)

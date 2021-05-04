@@ -11,11 +11,11 @@ struct AuthenticatedView: View {
     @EnvironmentObject var appService: AppService
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var alertService: AlertService
-    @EnvironmentObject var beeminderService: BeeminderService
+    @EnvironmentObject var beeminderCredentialService: BeeminderCredentialService
     @EnvironmentObject var tagService: TagService
 
     var isLoggedIntoBeeminder: Bool {
-        beeminderService.credential != nil
+        beeminderCredentialService.credential != nil
     }
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
@@ -32,13 +32,13 @@ struct AuthenticatedView: View {
 
     var body: some View {
         VStack {
-            if isLoggedIntoBeeminder {
+            if let credential = beeminderCredentialService.credential {
                 TabView(selection: $appService.currentPage) {
                     MissedPingList()
                         .tag(AppService.Page.missedPingList)
                     Logbook()
                         .tag(AppService.Page.logbook)
-                    GoalList()
+                    GoalList(credential: credential)
                         .tag(AppService.Page.goalList)
                     Statistics()
                         .tag(AppService.Page.statistics)
