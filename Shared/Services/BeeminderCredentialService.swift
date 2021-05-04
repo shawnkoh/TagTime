@@ -13,24 +13,11 @@ import FirebaseFirestore
 final class BeeminderCredentialService: ObservableObject {
     static let shared = BeeminderCredentialService()
 
-    let urlSession = URLSession(configuration: .default)
-    private lazy var baseURL: URLComponents = {
-        var url = URLComponents()
-        url.scheme = "https"
-        url.host = "www.beeminder.com"
-        return url
-    }()
-
     @Published private(set) var credential: BeeminderCredential?
 
     private var userSubscriber: AnyCancellable!
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
-    private lazy var decoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return decoder
-    }()
 
     init() {
         userSubscriber = AuthenticationService.shared.$user
