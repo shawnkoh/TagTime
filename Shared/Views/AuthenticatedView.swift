@@ -8,49 +8,65 @@
 import SwiftUI
 
 struct AuthenticatedView: View {
-    enum Page: Hashable {
-        case missedPingList
-        case logbook
-        case statistics
-        case preferences
-    }
-
     @EnvironmentObject var appService: AppService
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var alertService: AlertService
+    @EnvironmentObject var beeminderService: BeeminderService
     @EnvironmentObject var tagService: TagService
-    @State private var currentPage: Page = .missedPingList
+
+    var isLoggedIntoBeeminder: Bool {
+        beeminderService.credential != nil
+    }
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
     @ViewBuilder
-    func page(name: String, destination: Page) -> some View {
-        switch currentPage == destination {
+    func page(name: String, destination: AppService.Page) -> some View {
+        switch appService.currentPage == destination {
         case true:
             Image("\(name)-active")
         case false:
             Image(name)
-                .tappable { currentPage = destination }
+                .tappable { appService.currentPage = destination }
         }
     }
 
     var body: some View {
         VStack {
-            TabView(selection: $currentPage) {
-                MissedPingList()
-                    .tag(Page.missedPingList)
-                Logbook()
-                    .tag(Page.logbook)
-                Statistics()
-                    .tag(Page.statistics)
-                Preferences()
-                    .tag(Page.preferences)
+            if isLoggedIntoBeeminder {
+                TabView(selection: $appService.currentPage) {
+                    MissedPingList()
+                        .tag(AppService.Page.missedPingList)
+                    Logbook()
+                        .tag(AppService.Page.logbook)
+                    GoalList()
+                        .tag(AppService.Page.goalList)
+                    Statistics()
+                        .tag(AppService.Page.statistics)
+                    Preferences()
+                        .tag(AppService.Page.preferences)
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            } else {
+                TabView(selection: $appService.currentPage) {
+                    MissedPingList()
+                        .tag(AppService.Page.missedPingList)
+                    Logbook()
+                        .tag(AppService.Page.logbook)
+                    Statistics()
+                        .tag(AppService.Page.statistics)
+                    Preferences()
+                        .tag(AppService.Page.preferences)
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
 
             HStack {
                 Spacer()
                 page(name: "missed-ping-list", destination: .missedPingList)
                 page(name: "logbook", destination: .logbook)
+                if isLoggedIntoBeeminder {
+                    page(name: "goal-list", destination: .goalList)
+                }
                 page(name: "statistics", destination: .statistics)
                 Spacer()
                 page(name: "preferences", destination: .preferences)

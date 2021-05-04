@@ -9,10 +9,19 @@ import Foundation
 import Combine
 
 final class AppService: ObservableObject {
+    enum Page: Hashable {
+        case missedPingList
+        case logbook
+        case goalList
+        case statistics
+        case preferences
+    }
+
     static let shared = AppService()
 
     @Published var isAuthenticated = false
     @Published var pingNotification = AnswerCreatorConfig()
+    @Published var currentPage: Page = .missedPingList
 
     private var subscribers = Set<AnyCancellable>()
 
@@ -29,6 +38,15 @@ final class AppService: ObservableObject {
                     pingNotification.create(pingDate: pingDate)
                 } else {
                     pingNotification.dismiss()
+                }
+            }
+            .store(in: &subscribers)
+
+        BeeminderService.shared.$credential
+            .receive(on: DispatchQueue.main)
+            .sink { [self] credential in
+                if credential == nil, currentPage == .goalList {
+                    currentPage = .missedPingList
                 }
             }
             .store(in: &subscribers)

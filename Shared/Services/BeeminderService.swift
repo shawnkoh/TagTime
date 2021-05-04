@@ -13,11 +13,25 @@ import FirebaseFirestore
 final class BeeminderService: ObservableObject {
     static let shared = BeeminderService()
 
+    let urlSession = URLSession(configuration: .default)
+    private lazy var baseURL: URLComponents = {
+        var url = URLComponents()
+        url.scheme = "https"
+        url.host = "www.beeminder.com"
+        return url
+    }()
+
     @Published private(set) var credential: BeeminderCredential?
+    @Published private(set) var goals: [Goal] = []
 
     private var userSubscriber: AnyCancellable!
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
+    private lazy var decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
 
     init() {
         userSubscriber = AuthenticationService.shared.$user
@@ -37,7 +51,9 @@ final class BeeminderService: ObservableObject {
             if let error = error {
                 AlertService.shared.present(message: error.localizedDescription)
             }
-            self.credential = try? snapshot?.data(as: BeeminderCredential.self)
+            let credential = try? snapshot?.data(as: BeeminderCredential.self)
+            self.credential = credential
+//            self.urlSession.configuration.httpAdditionalHeaders?["access_token"] = credential?.accessToken
         }
         .store(in: &listeners)
     }
@@ -66,6 +82,32 @@ final class BeeminderService: ObservableObject {
             return
         }
         removeCredential(user: user)
+    }
+
+    func getGoals(with credential: BeeminderCredential) {
+        var url = baseURL
+        url.path = "/api/v1/users/\(credential.username)/goals.json"
+        url.queryItems = [.init(name: "access_token", value: credential.accessToken)]
+        var request = URLRequest(url: url.url!)
+        request.setValue(credential.accessToken, forHTTPHeaderField: "access_token")
+        urlSession.dataTaskPublisher(for: request)
+            .map { $0.data }
+            .decode(type: [Goal].self, decoder: decoder)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    switch completion {
+                    case let .failure(error):
+                        AlertService.shared.present(message: error.localizedDescription)
+                    case .finished:
+                        ()
+                    }
+                },
+                receiveValue: { goals in
+                    self.goals = goals
+                }
+            )
+            .store(in: &subscribers)
     }
 }
 

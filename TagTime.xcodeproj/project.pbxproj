@@ -38,6 +38,8 @@
 		868E97C3261738C5000A41FF /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C2261738C5000A41FF /* Stub.swift */; };
 		868E97C926173AAD000A41FF /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C826173AAD000A41FF /* Answer.swift */; };
 		868E97D026174A56000A41FF /* Color+Figma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97CF26174A56000A41FF /* Color+Figma.swift */; };
+		8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8691A52B263FFD020020AEE6 /* GoalList.swift */; };
+		8691A52E264000C60020AEE6 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8691A52D264000C60020AEE6 /* Goal.swift */; };
 		869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 869291E8263F09B800F6AA3D /* BetterSafariView */; };
 		869291EB263F9DCF00F6AA3D /* BeeminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EA263F9DCF00F6AA3D /* BeeminderService.swift */; };
 		869291ED263F9DDD00F6AA3D /* BeeminderCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */; };
@@ -127,6 +129,8 @@
 		868E97C2261738C5000A41FF /* Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
 		868E97C826173AAD000A41FF /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
 		868E97CF26174A56000A41FF /* Color+Figma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Figma.swift"; sourceTree = "<group>"; };
+		8691A52B263FFD020020AEE6 /* GoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalList.swift; sourceTree = "<group>"; };
+		8691A52D264000C60020AEE6 /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
 		869291EA263F9DCF00F6AA3D /* BeeminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderService.swift; sourceTree = "<group>"; };
 		869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderCredential.swift; sourceTree = "<group>"; };
 		869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderLoginButton.swift; sourceTree = "<group>"; };
@@ -297,11 +301,20 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		8691A52A263FFC6A0020AEE6 /* Beeminder */ = {
+			isa = PBXGroup;
+			children = (
+				8691A52B263FFD020020AEE6 /* GoalList.swift */,
+			);
+			path = Beeminder;
+			sourceTree = "<group>";
+		};
 		86ADBB64261730E5003CBA6B /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				868E97C826173AAD000A41FF /* Answer.swift */,
 				869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */,
+				8691A52D264000C60020AEE6 /* Goal.swift */,
 				868E97B2261736A7000A41FF /* Ping.swift */,
 				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
@@ -320,6 +333,7 @@
 				8672E71A26182207004081FC /* Common */,
 				865391DC2633D48300F202F7 /* Answer */,
 				86ADBB6A261732D2003CBA6B /* MissedPing */,
+				8691A52A263FFC6A0020AEE6 /* Beeminder */,
 				86ADBB6B261732DE003CBA6B /* Logbook */,
 				86ADBB6C261732E2003CBA6B /* Statistics */,
 				86ADBB6D261732E7003CBA6B /* Preferences */,
@@ -559,6 +573,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */,
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
@@ -575,6 +590,7 @@
 				86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
 				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
+				8691A52E264000C60020AEE6 /* Goal.swift in Sources */,
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
