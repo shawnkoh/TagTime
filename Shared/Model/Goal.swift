@@ -82,4 +82,9 @@ extension Goal {
         formatter.unitsStyle = .abbreviated
         return formatter.string(from: currentTime, to: derailDate)!
     }
+
+    var isTrackable: Bool {
+        // TODO: Implement this
+        true
+    }
 }

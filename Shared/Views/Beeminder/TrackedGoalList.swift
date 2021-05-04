@@ -10,6 +10,7 @@ import SwiftUI
 struct TrackedGoalList: View {
     @EnvironmentObject var goalService: GoalService
     @State var pickerConfig = GoalPickerConfig()
+    @State var isDetailPresented = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -20,6 +21,11 @@ struct TrackedGoalList: View {
                     LazyVStack(alignment: .center, spacing: 2, pinnedViews: []) {
                         ForEach(goalService.trackedGoals) { goal in
                             GoalCard(goal: goal)
+                                .onPress { isDetailPresented = true }
+                                .sheet(isPresented: $isDetailPresented) {
+                                    GoalDetail(goal: goal, isPresented: $isDetailPresented)
+                                        .environmentObject(self.goalService)
+                                }
                         }
                     }
                 }
@@ -40,7 +46,6 @@ struct TrackedGoalList: View {
                     .environmentObject(self.goalService)
             }
         }
-        .onAppear() { goalService.getGoals() }
     }
 }
 
