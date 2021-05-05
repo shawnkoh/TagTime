@@ -25,23 +25,15 @@ struct MissedPingCard: View {
     }()
 
     var body: some View {
-        Button(action: { config.create(pingDate: ping) }) {
-            HStack {
-                Spacer()
-                Text(dateFormatter.string(from: ping))
-                    .foregroundColor(.primary)
-                    .padding()
-                Spacer()
+        Text(dateFormatter.string(from: ping))
+            .onTap { config.create(pingDate: ping) }
+            .cardButtonStyle(.baseCard)
+            .sheet(isPresented: $config.isPresented) {
+                AnswerCreator(config: $config)
+                    .environmentObject(self.answerService)
+                    .environmentObject(self.alertService)
+                    .environmentObject(self.tagService)
             }
-            .background(Color.hsb(211, 26, 86))
-            .cornerRadius(10)
-        }
-        .sheet(isPresented: $config.isPresented) {
-            AnswerCreator(config: $config)
-                .environmentObject(self.answerService)
-                .environmentObject(self.alertService)
-                .environmentObject(self.tagService)
-        }
     }
 }
 

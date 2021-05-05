@@ -20,6 +20,7 @@ struct PageTitle: View {
                 .foregroundColor(.secondary)
                 .font(.subheadline)
         }
+        .padding(.bottom)
     }
 }
 

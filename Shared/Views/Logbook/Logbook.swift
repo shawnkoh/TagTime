@@ -55,15 +55,19 @@ struct Logbook: View {
             ForEach(answersToday) { answer in
                 HStack {
                     Spacer()
-                    VStack {
-                        Text(answer.tagDescription)
-                        Text(dateFormatter.string(from: answer.ping))
-                    }
+
                     .foregroundColor(.white)
+                    .padding()
                     Spacer()
                 }
-                .background(Color.hsb(211, 26, 86))
-                .cornerRadius(10)
+                .background(Color.baseCard)
+                .cornerRadius(8)
+                VStack {
+                    Text(answer.tagDescription)
+                    Text(dateFormatter.string(from: answer.ping))
+                }
+                .onTap { }
+                .cardButtonStyle(.baseCard)
             }
         }
     }

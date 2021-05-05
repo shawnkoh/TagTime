@@ -8,13 +8,6 @@
 import Foundation
 import SwiftUI
 
-// Credit: https://stackoverflow.com/questions/65047746/swiftui-unexpected-behaviour-using-ontapgesture-with-mouse-trackpad-on-ipados
-public struct UltraPlainButtonStyle: ButtonStyle {
-    public func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
-    }
-}
-
 struct Tappable: ViewModifier {
     let action: () -> ()
 
@@ -22,13 +15,11 @@ struct Tappable: ViewModifier {
         Button(action: self.action) {
             content
         }
-        .buttonStyle(UltraPlainButtonStyle())
     }
 }
 
 extension View {
-    /// Used in place of onTapGesture to avoid MacOS issues.
-    func tappable(do action: @escaping () -> ()) -> some View {
+    func onTap(perform action: @escaping () -> ()) -> some View {
         self.modifier(Tappable(action: action))
     }
 }

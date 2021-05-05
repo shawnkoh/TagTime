@@ -8,6 +8,7 @@
 import SwiftUI
 import Fuse
 
+// TODO: This should actually be renamed TagSuggester
 struct AnswerSuggester: View {
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var tagService: TagService
@@ -25,14 +26,15 @@ struct AnswerSuggester: View {
 
     var body: some View {
         if keyword == "", let latestAnswer = answerService.latestAnswer {
-            button(
-                text: latestAnswer.tagDescription,
-                action: { replaceKeyword(with: latestAnswer.tagDescription) }
-            )
+            Text(latestAnswer.tagDescription)
+                .onTap { replaceKeyword(with: latestAnswer.tagDescription) }
+                .cardButtonStyle(.modalCard)
         } else if keyword != "" {
             VStack {
                 ForEach(filteredTags, id: \.self) { tag in
-                    button(text: tag, action: { replaceKeyword(with: tag) })
+                    Text(tag)
+                        .onTap { replaceKeyword(with: tag) }
+                        .cardButtonStyle(.modalCard)
                 }
             }
             .onChange(of: keyword) { search in
@@ -54,21 +56,6 @@ struct AnswerSuggester: View {
         var result = keyword.split(separator: " ").dropLast().joined(separator: " ")
         result += " \(suggestion)"
         keyword = result
-    }
-
-    @ViewBuilder
-    private func button(text: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                Spacer()
-                Text(text)
-                    .foregroundColor(.primary)
-                    .padding()
-                Spacer()
-            }
-            .background(Color.hsb(223, 69, 90))
-            .cornerRadius(8)
-        }
     }
 }
 

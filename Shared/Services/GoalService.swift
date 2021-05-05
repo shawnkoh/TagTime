@@ -107,6 +107,13 @@ final class GoalService: ObservableObject {
         }
         return goalApi.untrackGoal(goal).eraseToAnyPublisher()
     }
+
+    func trackTags(_ tags: [Tag], for goal: Goal) -> AnyPublisher<Void, Error> {
+        guard let goalApi = goalApi else {
+            return Fail(error: Errors.notAuthenticated).eraseToAnyPublisher()
+        }
+        return goalApi.trackTags(tags, for: goal).eraseToAnyPublisher()
+    }
 }
 
 private extension User {
@@ -132,5 +139,11 @@ private final class GoalAPI {
         user.goalCollection
             .document(goal.id)
             .delete()
+    }
+
+    func trackTags(_ tags: [Tag], for goal: Goal) -> Future<Void, Error> {
+        user.goalCollection
+            .document(goal.id)
+            .setData(from: GoalTracker(tags: tags, updatedDate: Date()))
     }
 }

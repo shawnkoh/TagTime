@@ -10,22 +10,9 @@ import SwiftUI
 struct Preferences: View {
     @EnvironmentObject var settingService: SettingService
 
-    private var debugMode = true
-
-    @ViewBuilder
-    private func button(text: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                Spacer()
-                Text(text)
-                    .foregroundColor(.primary)
-                    .padding()
-                Spacer()
-            }
-            .background(Color.hsb(223, 69, 98))
-            .cornerRadius(8)
-        }
-    }
+    #if DEBUG
+    @State private var isDebugPresented = false
+    #endif
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -45,16 +32,20 @@ struct Preferences: View {
 
                 BeeminderLoginButton()
 
-                button(text: "Login with Facebook") { FacebookLoginService.shared.login() }
+                Text("Login with Facebook")
+                    .onTap { FacebookLoginService.shared.login() }
 
                 #if DEBUG
-                Divider()
-                DebugMenu()
+                Text("Open Debug Menu")
+                    .onTap { isDebugPresented = true }
+                    .sheet(isPresented: $isDebugPresented) {
+                        DebugMenu()
+                    }
                 #endif
             }
-
             Spacer()
         }
+        .cardButtonStyle(.baseCard)
     }
 }
 

@@ -7,62 +7,67 @@
 
 import SwiftUI
 
-struct GoalDetail: View {
-    @EnvironmentObject var goalService: GoalService
-    let goal: Goal
-    @Binding var isPresented: Bool
-    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State private var dueInDescription: String
+struct GoalDetailConfig {
+    var isPresented = false
+    var goal: Goal!
 
-    init(goal: Goal, isPresented: Binding<Bool>) {
+    mutating func present(goal: Goal) {
+        isPresented = true
         self.goal = goal
-        self._isPresented = isPresented
-        dueInDescription = goal.dueInDescription(currentTime: Date())
     }
 
-    private var pledge: String {
-        guard let pledge = goal.pledge else {
-            return ""
-        }
-        return "or pay $\(Int(pledge))"
+    mutating func dismiss() {
+        isPresented = false
+    }
+}
+
+struct GoalDetail: View {
+    @EnvironmentObject var goalService: GoalService
+    @EnvironmentObject var tagService: TagService
+    @Binding var config: GoalDetailConfig
+    @State var tagPickerConfig = TagPickerConfig()
+
+    init(config: Binding<GoalDetailConfig>) {
+        self._config = config
     }
 
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
-                Text(goal.slug)
+                Text(config.goal.slug)
                     .bold()
-                    .font(.title3)
-                    .padding([.top, .leading])
-                Text("Due in \(dueInDescription) \(pledge)")
-                    .foregroundColor(goal.color)
-                    .padding()
-                    .font(.body)
-                    .onReceive(timer) { time in
-                        dueInDescription = goal.dueInDescription(currentTime: time)
-                    }
-                // TODO: Image
+                    .font(.title)
+                GoalCountdown(goal: config.goal)
+                    .foregroundColor(.secondary)
+                    .font(.subheadline)
             }
+            .padding(.bottom)
+
+            TagPicker(config: $tagPickerConfig, goal: config.goal)
+
             Spacer()
+
             HStack {
-                Spacer()
-                Text("Delete")
-                    .foregroundColor(.red)
-                Spacer()
-            }
-            .onPress {
-                goalService.untrackGoal(goal)
-                isPresented = false
+                Text("Stop Tracking")
+                    .onDoubleTap("Tap again") {
+                        goalService.untrackGoal(config.goal)
+                        config.dismiss()
+                    }
+                    .cardButtonStyle(.modalCard)
+
+                Text("X")
+                    .onTap { config.dismiss() }
+                    .cardButtonStyle(.modalCard)
             }
         }
-        .foregroundColor(.white)
-        .background(Color.hsb(213, 24, 18))
+        .padding()
     }
 }
 
 struct GoalDetail_Previews: PreviewProvider {
     static var previews: some View {
-        GoalDetail(goal: Stub.goal, isPresented: .constant(true))
+        GoalDetail(config: .constant(.init(isPresented: true, goal: Stub.goal)))
             .environmentObject(GoalService.shared)
+            .environmentObject(TagService.shared)
     }
 }

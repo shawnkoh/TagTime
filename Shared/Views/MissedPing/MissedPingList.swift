@@ -86,22 +86,14 @@ struct MissedPingList: View {
             }
 
             if unansweredPings.count > 1 {
-                Button(action: { batchAnswerConfig.show() }) {
-                    HStack {
-                        Spacer()
-                        Text("ANSWER ALL")
-                            .foregroundColor(.primary)
-                            .padding()
-                        Spacer()
+                Text("ANSWER ALL")
+                    .onTap { batchAnswerConfig.show() }
+                    .cardButtonStyle(.modalCard)
+                    .sheet(isPresented: $batchAnswerConfig.isPresented) {
+                        BatchAnswerCreator(config: $batchAnswerConfig)
+                            .environmentObject(self.answerService)
+                            .environmentObject(self.tagService)
                     }
-                    .background(Color.hsb(223, 69, 90))
-                    .cornerRadius(8)
-                }
-                .sheet(isPresented: $batchAnswerConfig.isPresented) {
-                    BatchAnswerCreator(config: $batchAnswerConfig)
-                        .environmentObject(self.answerService)
-                        .environmentObject(self.tagService)
-                }
             }
         }
     }

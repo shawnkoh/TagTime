@@ -9,8 +9,9 @@ import SwiftUI
 
 struct TrackedGoalList: View {
     @EnvironmentObject var goalService: GoalService
+    @EnvironmentObject var tagService: TagService
     @State var pickerConfig = GoalPickerConfig()
-    @State var isDetailPresented = false
+    @State var detailConfig = GoalDetailConfig()
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -21,10 +22,13 @@ struct TrackedGoalList: View {
                     LazyVStack(alignment: .center, spacing: 2, pinnedViews: []) {
                         ForEach(goalService.trackedGoals) { goal in
                             GoalCard(goal: goal)
-                                .onPress { isDetailPresented = true }
-                                .sheet(isPresented: $isDetailPresented) {
-                                    GoalDetail(goal: goal, isPresented: $isDetailPresented)
+                                .onTap { detailConfig.present(goal: goal) }
+                                .cardButtonStyle(.baseCard)
+                                .fullScreenCover(isPresented: $detailConfig.isPresented) {
+                                    GoalDetail(config: $detailConfig)
+                                        .background(Color.modalBackground)
                                         .environmentObject(self.goalService)
+                                        .environmentObject(self.tagService)
                                 }
                         }
                     }
@@ -34,17 +38,15 @@ struct TrackedGoalList: View {
                 // TODO: Add some placeholder here. Refer to Bear / Actions / Spark
             }
 
-            Button(action: { pickerConfig.present() }) {
-                HStack {
-                    Spacer()
-                    Text("TRACK NEW GOAL")
-                    Spacer()
+            Text("TRACK NEW GOAL")
+                .onTap { pickerConfig.present() }
+                .cardButtonStyle(.modalCard)
+                .sheet(isPresented: $pickerConfig.isPresented) {
+                    GoalPicker()
+                        .environmentObject(self.goalService)
+                        .environmentObject(self.tagService)
+                        .background(Color.sheetBackground)
                 }
-            }
-            .sheet(isPresented: $pickerConfig.isPresented) {
-                GoalPicker()
-                    .environmentObject(self.goalService)
-            }
         }
     }
 }
