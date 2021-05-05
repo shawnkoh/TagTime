@@ -22,27 +22,11 @@ struct BeeminderLoginButton: View {
     var url: URL {
         .init(string: "\(beeminder)?client_id=\(clientId)&redirect_uri=\(redirectUri)&response_type=\(responseType)")!
     }
-    
-    @ViewBuilder
-    private func button(text: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                Spacer()
-                Text(text)
-                    .foregroundColor(.primary)
-                    .padding()
-                Spacer()
-            }
-            .background(Color.hsb(223, 69, 98))
-            .cornerRadius(8)
-        }
-    }
 
     var body: some View {
         if beeminderCredentialService.credential == nil {
-            button(text: "Login with Beeminder") {
-                isAuthenticatingBeeminder = true
-            }
+            Card(text: "Login with Beeminder")
+                .onPress { isAuthenticatingBeeminder = true }
             .webAuthenticationSession(isPresented: $isAuthenticatingBeeminder) {
                 WebAuthenticationSession(url: url, callbackURLScheme: "tagtime") { callbackUrl, error in
                     if let error = error {
@@ -62,9 +46,8 @@ struct BeeminderLoginButton: View {
                 .prefersEphemeralWebBrowserSession(false)
             }
         } else {
-            button(text: "Logout from Beeminder") {
-                beeminderCredentialService.removeCredential()
-            }
+            Card(text: "Logout from Beeminder")
+                .onPress { beeminderCredentialService.removeCredential() }
         }
     }
 }

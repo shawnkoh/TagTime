@@ -26,14 +26,13 @@ struct AnswerSuggester: View {
 
     var body: some View {
         if keyword == "", let latestAnswer = answerService.latestAnswer {
-            button(
-                text: latestAnswer.tagDescription,
-                action: { replaceKeyword(with: latestAnswer.tagDescription) }
-            )
+            Card(text: latestAnswer.tagDescription)
+                .onPress { replaceKeyword(with: latestAnswer.tagDescription) }
         } else if keyword != "" {
             VStack {
                 ForEach(filteredTags, id: \.self) { tag in
-                    button(text: tag, action: { replaceKeyword(with: tag) })
+                    Card(text: tag)
+                        .onPress { replaceKeyword(with: tag) }
                 }
             }
             .onChange(of: keyword) { search in
@@ -55,21 +54,6 @@ struct AnswerSuggester: View {
         var result = keyword.split(separator: " ").dropLast().joined(separator: " ")
         result += " \(suggestion)"
         keyword = result
-    }
-
-    @ViewBuilder
-    private func button(text: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                Spacer()
-                Text(text)
-                    .foregroundColor(.primary)
-                    .padding()
-                Spacer()
-            }
-            .background(Color.hsb(223, 69, 90))
-            .cornerRadius(8)
-        }
     }
 }
 

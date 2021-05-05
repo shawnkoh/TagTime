@@ -12,21 +12,6 @@ struct Preferences: View {
 
     private var debugMode = true
 
-    @ViewBuilder
-    private func button(text: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                Spacer()
-                Text(text)
-                    .foregroundColor(.primary)
-                    .padding()
-                Spacer()
-            }
-            .background(Color.hsb(223, 69, 98))
-            .cornerRadius(8)
-        }
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             PageTitle(title: "Preferences", subtitle: "Suit yourself")
@@ -45,7 +30,8 @@ struct Preferences: View {
 
                 BeeminderLoginButton()
 
-                button(text: "Login with Facebook") { FacebookLoginService.shared.login() }
+                Card(text: "Login with Facebook")
+                    .onPress { FacebookLoginService.shared.login() }
 
                 #if DEBUG
                 Divider()

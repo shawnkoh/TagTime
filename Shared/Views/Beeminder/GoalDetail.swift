@@ -23,9 +23,11 @@ struct GoalDetailConfig {
 
 struct GoalDetail: View {
     @EnvironmentObject var goalService: GoalService
+    @EnvironmentObject var tagService: TagService
     @Binding var config: GoalDetailConfig
     @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var dueInDescription: String
+    @State var tagPickerConfig = TagPickerConfig()
 
     // Initialising with goal is a shitty workaround to init dueInDescription. Otherwise, the
     // interface opens with a blank description.
@@ -67,8 +69,16 @@ struct GoalDetail: View {
                         }
                         .onDelete(perform: delete)
                     }
-                    Text("+")
-                        .onPress { print("press") }
+                    Card(text: "+")
+                        .padding()
+                        .onPress {
+                            tagPickerConfig.present()
+                        }
+                        .sheet(isPresented: $tagPickerConfig.isPresented) {
+                            TagPicker(config: $tagPickerConfig, goal: config.goal)
+                                .environmentObject(self.tagService)
+                                .environmentObject(self.goalService)
+                        }
                 }
             }
 
@@ -95,5 +105,6 @@ struct GoalDetail_Previews: PreviewProvider {
     static var previews: some View {
         GoalDetail(config: .constant(.init()), goal: Stub.goal)
             .environmentObject(GoalService.shared)
+            .environmentObject(TagService.shared)
     }
 }

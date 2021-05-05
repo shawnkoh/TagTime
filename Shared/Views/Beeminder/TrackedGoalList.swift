@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TrackedGoalList: View {
     @EnvironmentObject var goalService: GoalService
+    @EnvironmentObject var tagService: TagService
     @State var pickerConfig = GoalPickerConfig()
     @State var detailConfig = GoalDetailConfig()
 
@@ -25,6 +26,7 @@ struct TrackedGoalList: View {
                                 .sheet(isPresented: $detailConfig.isPresented) {
                                     GoalDetail(config: $detailConfig, goal: goal)
                                         .environmentObject(self.goalService)
+                                        .environmentObject(self.tagService)
                                 }
                         }
                     }
@@ -34,16 +36,12 @@ struct TrackedGoalList: View {
                 // TODO: Add some placeholder here. Refer to Bear / Actions / Spark
             }
 
-            Button(action: { pickerConfig.present() }) {
-                HStack {
-                    Spacer()
-                    Text("TRACK NEW GOAL")
-                    Spacer()
-                }
-            }
+            Card(text: "TRACK NEW GOAL")
+                .onPress { pickerConfig.present() }
             .sheet(isPresented: $pickerConfig.isPresented) {
                 GoalPicker()
                     .environmentObject(self.goalService)
+                    .environmentObject(self.tagService)
             }
         }
     }

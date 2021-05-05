@@ -107,6 +107,36 @@ final class GoalService: ObservableObject {
         }
         return goalApi.untrackGoal(goal).eraseToAnyPublisher()
     }
+
+    func trackTags(_ tags: [Tag], for goal: Goal) -> AnyPublisher<Void, Error> {
+        guard let goalApi = goalApi else {
+            return Fail(error: Errors.notAuthenticated).eraseToAnyPublisher()
+        }
+
+        guard let tracker = goalTrackers[goal.id] else {
+            return goalApi.trackTags(tags, for: goal).eraseToAnyPublisher()
+        }
+
+        let oldTags = Set(tracker.tags)
+        let appendTags = tags.filter { !oldTags.contains($0) }
+        var newTags = tracker.tags
+        newTags.append(contentsOf: appendTags)
+        return goalApi.trackTags(newTags, for: goal).eraseToAnyPublisher()
+    }
+
+    func untrackTags(_ tags: [Tag], for goal: Goal) -> AnyPublisher<Void, Error> {
+        guard let goalApi = goalApi else {
+            return Fail(error: Errors.notAuthenticated).eraseToAnyPublisher()
+        }
+
+        guard let tracker = goalTrackers[goal.id] else {
+            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+
+        let tagsToRemove = Set(tags)
+        let keepTags = tracker.tags.filter { !tagsToRemove.contains($0) }
+        return goalApi.trackTags(keepTags, for: goal).eraseToAnyPublisher()
+    }
 }
 
 private extension User {
@@ -132,5 +162,11 @@ private final class GoalAPI {
         user.goalCollection
             .document(goal.id)
             .delete()
+    }
+
+    func trackTags(_ tags: [Tag], for goal: Goal) -> Future<Void, Error> {
+        user.goalCollection
+            .document(goal.id)
+            .setData(from: GoalTracker(tags: tags, updatedDate: Date()))
     }
 }
