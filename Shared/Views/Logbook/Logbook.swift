@@ -55,16 +55,19 @@ struct Logbook: View {
             ForEach(answersToday) { answer in
                 HStack {
                     Spacer()
-                    VStack {
-                        Text(answer.tagDescription)
-                        Text(dateFormatter.string(from: answer.ping))
-                    }
+
                     .foregroundColor(.white)
                     .padding()
                     Spacer()
                 }
                 .background(Color.baseCard)
                 .cornerRadius(8)
+                VStack {
+                    Text(answer.tagDescription)
+                    Text(dateFormatter.string(from: answer.ping))
+                }
+                .onTap { }
+                .cardButtonStyle(.baseCard)
             }
         }
     }
@@ -86,8 +89,6 @@ struct Logbook: View {
                     Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
                         ForEach(answersToday) { answer in
                             LogbookCard(answer: answer)
-                                .background(Color.baseCard)
-                                .cornerRadius(8)
                         }
                     }
                 }
@@ -96,8 +97,6 @@ struct Logbook: View {
                     Section(header: sectionHeader(title: "Yesterday", subtitle: "Sat, 27 March")) {
                         ForEach(answersYesterday) { answer in
                             LogbookCard(answer: answer)
-                                .background(Color.baseCard)
-                                .cornerRadius(8)
                         }
                     }
                 }

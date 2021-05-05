@@ -33,7 +33,10 @@ struct GoalDetail: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            GoalTitle(goal: config.goal)
+            Text(config.goal.slug)
+                .bold()
+
+            GoalCountdown(goal: config.goal)
 
             if let tracker = goalService.goalTrackers[config.goal.id] {
                 VStack {

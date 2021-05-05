@@ -21,7 +21,7 @@ struct TrackedGoalList: View {
                 ScrollView {
                     LazyVStack(alignment: .center, spacing: 2, pinnedViews: []) {
                         ForEach(goalService.trackedGoals) { goal in
-                            GoalTitle(goal: goal)
+                            GoalCard(goal: goal)
                                 .onTap { detailConfig.present(goal: goal) }
                                 .cardButtonStyle(.baseCard)
                                 .sheet(isPresented: $detailConfig.isPresented) {
@@ -39,7 +39,7 @@ struct TrackedGoalList: View {
 
             Text("TRACK NEW GOAL")
                 .onTap { pickerConfig.present() }
-                .cardButtonStyle(.baseCard)
+                .cardButtonStyle(.modalCard)
                 .sheet(isPresented: $pickerConfig.isPresented) {
                     GoalPicker()
                         .environmentObject(self.goalService)

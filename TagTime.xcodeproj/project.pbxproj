@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860144132642B70A00AA5DB6 /* GoalCard.swift */; };
 		861256E326139CAB00C2B81B /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256E226139CAB00C2B81B /* Tests_iOS.swift */; };
 		861256EE26139CAB00C2B81B /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256ED26139CAB00C2B81B /* Tests_macOS.swift */; };
 		861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C726139CAA00C2B81B /* TagTimeApp.swift */; };
@@ -30,7 +31,7 @@
 		8658964326382F2D009D9299 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 8658964226382F2D009D9299 /* SwiftUIX */; };
 		86589646263840E7009D9299 /* Fuse in Frameworks */ = {isa = PBXBuildFile; productRef = 86589645263840E7009D9299 /* Fuse */; };
 		8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29B2641427D003EB532 /* TrackedGoalList.swift */; };
-		8665E29F264142F1003EB532 /* GoalTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29E264142F1003EB532 /* GoalTitle.swift */; };
+		8665E29F264142F1003EB532 /* GoalCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29E264142F1003EB532 /* GoalCountdown.swift */; };
 		8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A22641687B003EB532 /* GoalPicker.swift */; };
 		8665E2A52641752B003EB532 /* GoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A42641752B003EB532 /* GoalService.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
@@ -109,6 +110,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		860144132642B70A00AA5DB6 /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
 		861256C726139CAA00C2B81B /* TagTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTimeApp.swift; sourceTree = "<group>"; };
 		861256C826139CAA00C2B81B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		861256C926139CAB00C2B81B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -134,7 +136,7 @@
 		865391EB2633D4A700F202F7 /* AnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCreator.swift; sourceTree = "<group>"; };
 		86569A602641B111005C49C7 /* GoalDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetail.swift; sourceTree = "<group>"; };
 		8665E29B2641427D003EB532 /* TrackedGoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalList.swift; sourceTree = "<group>"; };
-		8665E29E264142F1003EB532 /* GoalTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTitle.swift; sourceTree = "<group>"; };
+		8665E29E264142F1003EB532 /* GoalCountdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCountdown.swift; sourceTree = "<group>"; };
 		8665E2A22641687B003EB532 /* GoalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPicker.swift; sourceTree = "<group>"; };
 		8665E2A42641752B003EB532 /* GoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalService.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
@@ -326,10 +328,11 @@
 		8691A52A263FFC6A0020AEE6 /* Beeminder */ = {
 			isa = PBXGroup;
 			children = (
+				860144132642B70A00AA5DB6 /* GoalCard.swift */,
+				8665E29E264142F1003EB532 /* GoalCountdown.swift */,
 				86569A602641B111005C49C7 /* GoalDetail.swift */,
 				8691A52B263FFD020020AEE6 /* GoalList.swift */,
 				8665E2A22641687B003EB532 /* GoalPicker.swift */,
-				8665E29E264142F1003EB532 /* GoalTitle.swift */,
 				86338F48264242F800112BBC /* TagPicker.swift */,
 				8665E29B2641427D003EB532 /* TrackedGoalList.swift */,
 			);
@@ -613,8 +616,9 @@
 				869291ED263F9DDD00F6AA3D /* BeeminderCredential.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
+				860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
-				8665E29F264142F1003EB532 /* GoalTitle.swift in Sources */,
+				8665E29F264142F1003EB532 /* GoalCountdown.swift in Sources */,
 				869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,

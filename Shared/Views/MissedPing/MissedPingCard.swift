@@ -27,7 +27,7 @@ struct MissedPingCard: View {
     var body: some View {
         Text(dateFormatter.string(from: ping))
             .onTap { config.create(pingDate: ping) }
-            .cardButtonStyle(.modalCard)
+            .cardButtonStyle(.baseCard)
             .sheet(isPresented: $config.isPresented) {
                 AnswerCreator(config: $config)
                     .environmentObject(self.answerService)
