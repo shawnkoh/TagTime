@@ -31,13 +31,6 @@ struct GoalDetail: View {
         self._config = config
     }
 
-    private var pledge: String {
-        guard let pledge = config.goal.pledge else {
-            return ""
-        }
-        return "or pay $\(Int(pledge))"
-    }
-
     var body: some View {
         VStack(alignment: .leading) {
             GoalTitle(goal: config.goal)
@@ -77,7 +70,7 @@ struct GoalDetail: View {
 
 struct GoalDetail_Previews: PreviewProvider {
     static var previews: some View {
-        GoalDetail(config: .constant(.init()))
+        GoalDetail(config: .constant(.init(isPresented: true, goal: Stub.goal)))
             .environmentObject(GoalService.shared)
             .environmentObject(TagService.shared)
     }
