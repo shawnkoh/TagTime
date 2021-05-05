@@ -32,30 +32,40 @@ struct AuthenticatedView: View {
 
     var body: some View {
         VStack {
+            // Paddings are placed within TabView in order to allow swiping on the edges
             if isLoggedIntoBeeminder {
                 TabView(selection: $appService.currentPage) {
                     MissedPingList()
                         .tag(AppService.Page.missedPingList)
+                        .padding([.top, .leading, .trailing])
                     Logbook()
                         .tag(AppService.Page.logbook)
+                        .padding([.top, .leading, .trailing])
                     TrackedGoalList()
                         .tag(AppService.Page.goalList)
+                        .padding([.top, .leading, .trailing])
                     Statistics()
                         .tag(AppService.Page.statistics)
+                        .padding([.top, .leading, .trailing])
                     Preferences()
                         .tag(AppService.Page.preferences)
+                        .padding([.top, .leading, .trailing])
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             } else {
                 TabView(selection: $appService.currentPage) {
                     MissedPingList()
                         .tag(AppService.Page.missedPingList)
+                        .padding([.top, .leading, .trailing])
                     Logbook()
                         .tag(AppService.Page.logbook)
+                        .padding([.top, .leading, .trailing])
                     Statistics()
                         .tag(AppService.Page.statistics)
+                        .padding([.top, .leading, .trailing])
                     Preferences()
                         .tag(AppService.Page.preferences)
+                        .padding([.top, .leading, .trailing])
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             }
@@ -71,6 +81,7 @@ struct AuthenticatedView: View {
                 Spacer()
                 page(name: "preferences", destination: .preferences)
             }
+            .padding()
         }
         .sheet(isPresented: $appService.pingNotification.isPresented) {
             AnswerCreator(config: $appService.pingNotification)
