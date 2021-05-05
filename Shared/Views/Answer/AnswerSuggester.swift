@@ -8,6 +8,7 @@
 import SwiftUI
 import Fuse
 
+// TODO: This should actually be renamed TagSuggester
 struct AnswerSuggester: View {
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var tagService: TagService
