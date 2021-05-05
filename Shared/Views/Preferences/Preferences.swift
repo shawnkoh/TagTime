@@ -10,7 +10,9 @@ import SwiftUI
 struct Preferences: View {
     @EnvironmentObject var settingService: SettingService
 
-    private var debugMode = true
+    #if DEBUG
+    @State private var isDebugPresented = false
+    #endif
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -32,16 +34,18 @@ struct Preferences: View {
 
                 Text("Login with Facebook")
                     .onTap { FacebookLoginService.shared.login() }
-                    .cardButtonStyle(.baseCard)
 
                 #if DEBUG
-                Divider()
-                DebugMenu()
+                Text("Open Debug Menu")
+                    .onTap { isDebugPresented = true }
+                    .sheet(isPresented: $isDebugPresented) {
+                        DebugMenu()
+                    }
                 #endif
             }
-
             Spacer()
         }
+        .cardButtonStyle(.baseCard)
     }
 }
 

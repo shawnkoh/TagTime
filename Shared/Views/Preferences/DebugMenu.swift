@@ -14,6 +14,7 @@ struct DebugMenu: View {
             Text("Debug Mode")
                 .font(.title)
                 .bold()
+                .padding()
 
             Text("Schedule notification in 5 seconds")
                 .onTap {
@@ -34,8 +35,11 @@ struct DebugMenu: View {
 
             Text("Reset Tag Cache")
                 .onTap { TagService.shared.resetTagCache() }
+
+            Spacer()
         }
-        .cardButtonStyle(.baseCard)
+        .background(.modalBackground)
+        .cardButtonStyle(.modalCard)
     }
 }
 
