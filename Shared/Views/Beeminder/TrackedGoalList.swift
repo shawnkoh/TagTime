@@ -21,11 +21,11 @@ struct TrackedGoalList: View {
                 ScrollView {
                     LazyVStack(alignment: .center, spacing: 2, pinnedViews: []) {
                         ForEach(goalService.trackedGoals) { goal in
-                            GoalCard(goal: goal)
+                            GoalTitle(goal: goal)
                                 .onTap { detailConfig.present(goal: goal) }
                                 .cardButtonStyle(.baseCard)
                                 .sheet(isPresented: $detailConfig.isPresented) {
-                                    GoalDetail(config: $detailConfig, goal: goal)
+                                    GoalDetail(config: $detailConfig)
                                         .environmentObject(self.goalService)
                                         .environmentObject(self.tagService)
                                 }

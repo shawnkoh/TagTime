@@ -1,5 +1,5 @@
 //
-//  GoalCard.swift
+//  GoalTitle.swift
 //  TagTime (iOS)
 //
 //  Created by Shawn Koh on 4/5/21.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 // TODO: This needs a better name. Maybe just GoalTitle?
-struct GoalCard: View {
+struct GoalTitle: View {
     let goal: Goal
     @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var dueInDescription: String
@@ -47,8 +47,8 @@ struct GoalCard: View {
     }
 }
 
-struct GoalCard_Previews: PreviewProvider {
+struct GoalTitle_Previews: PreviewProvider {
     static var previews: some View {
-        GoalCard(goal: Stub.goal)
+        GoalTitle(goal: Stub.goal)
     }
 }
