@@ -22,7 +22,8 @@ struct TrackedGoalList: View {
                     LazyVStack(alignment: .center, spacing: 2, pinnedViews: []) {
                         ForEach(goalService.trackedGoals) { goal in
                             GoalCard(goal: goal)
-                                .onPress { detailConfig.present(goal: goal) }
+                                .onTap { detailConfig.present(goal: goal) }
+                                .cardButtonStyle(.baseCard)
                                 .sheet(isPresented: $detailConfig.isPresented) {
                                     GoalDetail(config: $detailConfig, goal: goal)
                                         .environmentObject(self.goalService)
@@ -36,13 +37,15 @@ struct TrackedGoalList: View {
                 // TODO: Add some placeholder here. Refer to Bear / Actions / Spark
             }
 
-            Card(text: "TRACK NEW GOAL")
-                .onPress { pickerConfig.present() }
-            .sheet(isPresented: $pickerConfig.isPresented) {
-                GoalPicker()
-                    .environmentObject(self.goalService)
-                    .environmentObject(self.tagService)
-            }
+            Text("TRACK NEW GOAL")
+                .onTap { pickerConfig.present() }
+                .cardButtonStyle(.baseCard)
+                .sheet(isPresented: $pickerConfig.isPresented) {
+                    GoalPicker()
+                        .environmentObject(self.goalService)
+                        .environmentObject(self.tagService)
+                        .background(Color.sheetBackground)
+                }
         }
     }
 }

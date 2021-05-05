@@ -69,11 +69,8 @@ struct GoalDetail: View {
                         }
                         .onDelete(perform: delete)
                     }
-                    Card(text: "+")
-                        .padding()
-                        .onPress {
-                            tagPickerConfig.present()
-                        }
+                    Text("+")
+                        .onTap { tagPickerConfig.present() }
                         .sheet(isPresented: $tagPickerConfig.isPresented) {
                             TagPicker(config: $tagPickerConfig, goal: config.goal)
                                 .environmentObject(self.tagService)
@@ -83,19 +80,14 @@ struct GoalDetail: View {
             }
 
             Spacer()
-            HStack {
-                Spacer()
-                Text("Stop Tracking")
-                    .foregroundColor(.red)
-                Spacer()
-            }
-            .onPress {
+
+            Text("Stop Tracking")
+            .onTap {
                 goalService.untrackGoal(config.goal)
                 config.dismiss()
             }
+            .cardButtonStyle(.modalCard)
         }
-        .foregroundColor(.white)
-        .background(Color.hsb(213, 24, 18))
     }
 
     private func delete(at offset: IndexSet) {}

@@ -30,8 +30,9 @@ struct Preferences: View {
 
                 BeeminderLoginButton()
 
-                Card(text: "Login with Facebook")
-                    .onPress { FacebookLoginService.shared.login() }
+                Text("Login with Facebook")
+                    .onTap { FacebookLoginService.shared.login() }
+                    .cardButtonStyle(.baseCard)
 
                 #if DEBUG
                 Divider()

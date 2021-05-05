@@ -15,8 +15,8 @@ struct DebugMenu: View {
                 .font(.title)
                 .bold()
 
-            Card(text: "Schedule notification in 5 seconds")
-                .onPress {
+            Text("Schedule notification in 5 seconds")
+                .onTap {
                     let timeInterval = Date(timeIntervalSinceNow: 5).timeIntervalSince1970.rounded()
                     let pingDate = Date(timeIntervalSince1970: timeInterval)
                     NotificationService.shared.scheduleNotification(
@@ -26,15 +26,16 @@ struct DebugMenu: View {
                     )
                 }
 
-            Card(text: "Delete all answers")
-                .onPress { AnswerService.shared.deleteAllAnswers() }
+            Text("Delete all answers")
+                .onTap { AnswerService.shared.deleteAllAnswers() }
 
-            Card(text: "Reset User Start Date")
-                .onPress { AuthenticationService.shared.resetUserStartDate() }
+            Text("Reset User Start Date")
+                .onTap { AuthenticationService.shared.resetUserStartDate() }
 
-            Card(text: "Reset Tag Cache")
-                .onPress { TagService.shared.resetTagCache() }
+            Text("Reset Tag Cache")
+                .onTap { TagService.shared.resetTagCache() }
         }
+        .cardButtonStyle(.baseCard)
     }
 }
 

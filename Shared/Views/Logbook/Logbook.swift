@@ -60,10 +60,11 @@ struct Logbook: View {
                         Text(dateFormatter.string(from: answer.ping))
                     }
                     .foregroundColor(.white)
+                    .padding()
                     Spacer()
                 }
-                .background(Color.hsb(211, 26, 86))
-                .cornerRadius(10)
+                .background(Color.baseCard)
+                .cornerRadius(8)
             }
         }
     }
@@ -85,6 +86,8 @@ struct Logbook: View {
                     Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
                         ForEach(answersToday) { answer in
                             LogbookCard(answer: answer)
+                                .background(Color.baseCard)
+                                .cornerRadius(8)
                         }
                     }
                 }
@@ -93,6 +96,8 @@ struct Logbook: View {
                     Section(header: sectionHeader(title: "Yesterday", subtitle: "Sat, 27 March")) {
                         ForEach(answersYesterday) { answer in
                             LogbookCard(answer: answer)
+                                .background(Color.baseCard)
+                                .cornerRadius(8)
                         }
                     }
                 }

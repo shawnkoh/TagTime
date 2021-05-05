@@ -26,7 +26,8 @@ struct AuthenticatedView: View {
             Image("\(name)-active")
         case false:
             Image(name)
-                .tappable { appService.currentPage = destination }
+                .onTap { appService.currentPage = destination }
+                .buttonStyle(UltraPlainButtonStyle())
         }
     }
 
@@ -85,6 +86,7 @@ struct AuthenticatedView: View {
         }
         .sheet(isPresented: $appService.pingNotification.isPresented) {
             AnswerCreator(config: $appService.pingNotification)
+                .background(Color.modalBackground)
                 .environmentObject(self.answerService)
                 .environmentObject(self.alertService)
                 .environmentObject(self.tagService)

@@ -86,8 +86,9 @@ struct MissedPingList: View {
             }
 
             if unansweredPings.count > 1 {
-                Card(text: "ANSWER ALL")
-                    .onPress { batchAnswerConfig.show() }
+                Text("ANSWER ALL")
+                    .onTap { batchAnswerConfig.show() }
+                    .cardButtonStyle(.baseCard)
                     .sheet(isPresented: $batchAnswerConfig.isPresented) {
                         BatchAnswerCreator(config: $batchAnswerConfig)
                             .environmentObject(self.answerService)

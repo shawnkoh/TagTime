@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: This needs a better name. Maybe just GoalTitle?
 struct GoalCard: View {
     let goal: Goal
     @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -37,10 +38,9 @@ struct GoalCard: View {
                     .font(.body)
                 // TODO: Image
             }
+            .foregroundColor(.white)
             Spacer()
         }
-        .foregroundColor(.white)
-        .background(Color.hsb(213, 24, 18))
         .onReceive(timer) { time in
             dueInDescription = goal.dueInDescription(currentTime: time)
         }

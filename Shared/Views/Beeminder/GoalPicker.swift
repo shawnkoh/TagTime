@@ -26,14 +26,14 @@ struct GoalPicker: View {
         ScrollView {
             LazyVStack(alignment: .leading) {
                 ForEach(goalService.untrackedGoals) { goal in
-                    Button(action: { goalService.trackGoal(goal) }) {
-                        GoalCard(goal: goal)
-                    }
-                    .disabled(!goal.isTrackable)
+                    GoalCard(goal: goal)
+                        .onTap { goalService.trackGoal(goal) }
+                        .cardButtonStyle(.modalCard)
+//                        .background(Color.modalCard)
+                        .disabled(!goal.isTrackable)
                 }
             }
         }
-        .background(Color.hsb(210, 24, 13))
     }
 }
 

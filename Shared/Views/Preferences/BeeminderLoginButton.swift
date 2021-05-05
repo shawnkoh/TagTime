@@ -25,29 +25,31 @@ struct BeeminderLoginButton: View {
 
     var body: some View {
         if beeminderCredentialService.credential == nil {
-            Card(text: "Login with Beeminder")
-                .onPress { isAuthenticatingBeeminder = true }
-            .webAuthenticationSession(isPresented: $isAuthenticatingBeeminder) {
-                WebAuthenticationSession(url: url, callbackURLScheme: "tagtime") { callbackUrl, error in
-                    if let error = error {
-                        print(error)
+            Text("Login with Beeminder")
+                .onTap { isAuthenticatingBeeminder = true }
+                .cardButtonStyle(.baseCard)
+                .webAuthenticationSession(isPresented: $isAuthenticatingBeeminder) {
+                    WebAuthenticationSession(url: url, callbackURLScheme: "tagtime") { callbackUrl, error in
+                        if let error = error {
+                            print(error)
+                        }
+                        guard
+                            let callbackUrl = callbackUrl,
+                            let queryItems = URLComponents(string: callbackUrl.absoluteString)?.queryItems,
+                            let accessToken = queryItems.first(where: { $0.name == "access_token" })?.value,
+                            let username = queryItems.first(where: { $0.name == "username" })?.value
+                        else {
+                            return
+                        }
+                        let credential = BeeminderCredential(username: username, accessToken: accessToken)
+                        beeminderCredentialService.saveCredential(credential)
                     }
-                    guard
-                        let callbackUrl = callbackUrl,
-                        let queryItems = URLComponents(string: callbackUrl.absoluteString)?.queryItems,
-                        let accessToken = queryItems.first(where: { $0.name == "access_token" })?.value,
-                        let username = queryItems.first(where: { $0.name == "username" })?.value
-                    else {
-                        return
-                    }
-                    let credential = BeeminderCredential(username: username, accessToken: accessToken)
-                    beeminderCredentialService.saveCredential(credential)
+                    .prefersEphemeralWebBrowserSession(false)
                 }
-                .prefersEphemeralWebBrowserSession(false)
-            }
         } else {
-            Card(text: "Logout from Beeminder")
-                .onPress { beeminderCredentialService.removeCredential() }
+            Text("Logout from Beeminder")
+                .onTap { beeminderCredentialService.removeCredential() }
+                .cardButtonStyle(.baseCard)
         }
     }
 }

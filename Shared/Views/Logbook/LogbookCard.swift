@@ -27,19 +27,12 @@ struct LogbookCard: View {
     }()
     
     var body: some View {
-        Button(action: { config.edit(answer: answer) }) {
-            HStack {
-                Spacer()
-                VStack {
-                    Text(answer.tagDescription)
-                    Text(dateFormatter.string(from: answer.ping))
-                }
-                .foregroundColor(.white)
-                Spacer()
-            }
+        VStack {
+            Text(answer.tagDescription)
+            Text(dateFormatter.string(from: answer.ping))
         }
-        .background(Color.hsb(211, 26, 86))
-        .cornerRadius(10)
+        .onTap { config.edit(answer: answer) }
+        .cardButtonStyle(.baseCard)
         .sheet(isPresented: $config.isPresented) {
             AnswerCreator(config: $config)
                 .environmentObject(self.answerService)

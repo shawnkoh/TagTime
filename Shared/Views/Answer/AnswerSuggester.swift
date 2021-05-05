@@ -26,13 +26,15 @@ struct AnswerSuggester: View {
 
     var body: some View {
         if keyword == "", let latestAnswer = answerService.latestAnswer {
-            Card(text: latestAnswer.tagDescription)
-                .onPress { replaceKeyword(with: latestAnswer.tagDescription) }
+            Text(latestAnswer.tagDescription)
+                .onTap { replaceKeyword(with: latestAnswer.tagDescription) }
+                .cardButtonStyle(.modalCard)
         } else if keyword != "" {
             VStack {
                 ForEach(filteredTags, id: \.self) { tag in
-                    Card(text: tag)
-                        .onPress { replaceKeyword(with: tag) }
+                    Text(tag)
+                        .onTap { replaceKeyword(with: tag) }
+                        .cardButtonStyle(.modalCard)
                 }
             }
             .onChange(of: keyword) { search in
