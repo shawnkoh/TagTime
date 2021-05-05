@@ -24,8 +24,9 @@ struct TrackedGoalList: View {
                             GoalCard(goal: goal)
                                 .onTap { detailConfig.present(goal: goal) }
                                 .cardButtonStyle(.baseCard)
-                                .sheet(isPresented: $detailConfig.isPresented) {
+                                .fullScreenCover(isPresented: $detailConfig.isPresented) {
                                     GoalDetail(config: $detailConfig)
+                                        .background(Color.modalBackground)
                                         .environmentObject(self.goalService)
                                         .environmentObject(self.tagService)
                                 }

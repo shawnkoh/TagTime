@@ -33,42 +33,35 @@ struct GoalDetail: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text(config.goal.slug)
-                .bold()
-
-            GoalCountdown(goal: config.goal)
-
-            if let tracker = goalService.goalTrackers[config.goal.id] {
-                VStack {
-                    List {
-                        ForEach(tracker.tags, id: \.self) { tag in
-                            Text(tag)
-                        }
-                        .onDelete(perform: delete)
-                    }
-                    Text("Add Tag")
-                        .onTap { tagPickerConfig.present() }
-                        .cardButtonStyle(.modalCard)
-                        .sheet(isPresented: $tagPickerConfig.isPresented) {
-                            TagPicker(config: $tagPickerConfig, goal: config.goal)
-                                .environmentObject(self.tagService)
-                                .environmentObject(self.goalService)
-                        }
-                }
+            VStack(alignment: .leading) {
+                Text(config.goal.slug)
+                    .bold()
+                    .font(.title)
+                GoalCountdown(goal: config.goal)
+                    .foregroundColor(.secondary)
+                    .font(.subheadline)
             }
+            .padding(.bottom)
+
+            TagPicker(config: $tagPickerConfig, goal: config.goal)
 
             Spacer()
 
-            Text("Stop Tracking")
-                .onTap {
-                    goalService.untrackGoal(config.goal)
-                    config.dismiss()
-                }
-                .cardButtonStyle(.modalCard)
-        }
-    }
+            HStack {
+                Text("Stop Tracking")
+                    .onDoubleTap("Tap again") {
+                        goalService.untrackGoal(config.goal)
+                        config.dismiss()
+                    }
+                    .cardButtonStyle(.modalCard)
 
-    private func delete(at offset: IndexSet) {}
+                Text("X")
+                    .onTap { config.dismiss() }
+                    .cardButtonStyle(.modalCard)
+            }
+        }
+        .padding()
+    }
 }
 
 struct GoalDetail_Previews: PreviewProvider {

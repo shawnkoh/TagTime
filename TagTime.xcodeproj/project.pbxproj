@@ -27,6 +27,7 @@
 		863CA83B2635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864203B02632710700668EC1 /* FacebookLoginService.swift */; };
 		865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865391EB2633D4A700F202F7 /* AnswerCreator.swift */; };
+		86545E1D2642EB7A00897253 /* DoubleTappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86545E1C2642EB7A00897253 /* DoubleTappable.swift */; };
 		86569A612641B111005C49C7 /* GoalDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86569A602641B111005C49C7 /* GoalDetail.swift */; };
 		8658964326382F2D009D9299 /* SwiftUIX in Frameworks */ = {isa = PBXBuildFile; productRef = 8658964226382F2D009D9299 /* SwiftUIX */; };
 		86589646263840E7009D9299 /* Fuse in Frameworks */ = {isa = PBXBuildFile; productRef = 86589645263840E7009D9299 /* Fuse */; };
@@ -134,6 +135,7 @@
 		863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TagTime.entitlements; sourceTree = "<group>"; };
 		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
 		865391EB2633D4A700F202F7 /* AnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCreator.swift; sourceTree = "<group>"; };
+		86545E1C2642EB7A00897253 /* DoubleTappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTappable.swift; sourceTree = "<group>"; };
 		86569A602641B111005C49C7 /* GoalDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetail.swift; sourceTree = "<group>"; };
 		8665E29B2641427D003EB532 /* TrackedGoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalList.swift; sourceTree = "<group>"; };
 		8665E29E264142F1003EB532 /* GoalCountdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCountdown.swift; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 			isa = PBXGroup;
 			children = (
 				86338F4C26429F4C00112BBC /* CardButtonStyle.swift */,
+				86545E1C2642EB7A00897253 /* DoubleTappable.swift */,
 				8672E71426182204004081FC /* PageTitle.swift */,
 				86C6C73F2636A19700A24EBA /* Tappable.swift */,
 				86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */,
@@ -658,6 +661,7 @@
 				861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				86A59147261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
 				86A59150261DBCBD00A25D1F /* User.swift in Sources */,
+				86545E1D2642EB7A00897253 /* DoubleTappable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
