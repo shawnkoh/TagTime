@@ -42,6 +42,8 @@ enum Stub {
         losedate: Int(Date().advanced(by: 100).timeIntervalSince1970),
         safebuf: 0,
         pledge: 30.0,
-        deadline: 0
+        deadline: 0,
+        gunits: "units",
+        baremin: "+1"
     )
 }

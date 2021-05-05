@@ -51,6 +51,13 @@ struct Goal: Codable, Identifiable, Hashable {
     /// Seconds by which your deadline differs from midnight. Negative is before midnight, positive is after midnight.
     /// Allowed range is -17*3600 to 6*3600 (7am to 6am).
     let deadline: Int
+
+    /// Goal units, like "hours" or "pushups" or "pages".
+    let gunits: String
+
+    /// Not sure whether this is safe to use. Seems to be the bare minimum units required to finish before the losedate.
+    // TODO: Check with Daniel.
+    let baremin: String
 }
 
 extension Goal {

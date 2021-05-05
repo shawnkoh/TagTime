@@ -25,7 +25,7 @@ struct GoalCountdown: View {
     }
 
     var body: some View {
-        Text("Due in \(dueInDescription) \(pledge)")
+        Text("\(goal.goalType == .drinker ? "limit " : "")\(goal.baremin) \(goal.gunits) due in \(dueInDescription) \(pledge)")
             .foregroundColor(goal.color)
             .onReceive(timer) { time in
                 dueInDescription = goal.dueInDescription(currentTime: time)
