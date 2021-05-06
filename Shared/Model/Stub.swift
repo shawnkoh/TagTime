@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Beeminder
 
 enum Stub {
     static let user: User = .init(id: "preview")

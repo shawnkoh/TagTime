@@ -7,9 +7,10 @@
 
 import Foundation
 import Combine
+import Beeminder
 
 final class BeeminderAPI {
-    let credential: BeeminderCredential
+    let credential: Beeminder.Credential
     let urlSession = URLSession(configuration: .default)
     private lazy var baseURL: URLComponents = {
         var url = URLComponents()
@@ -33,7 +34,7 @@ final class BeeminderAPI {
         return decoder
     }()
 
-    init(credential: BeeminderCredential) {
+    init(credential: Beeminder.Credential) {
         self.credential = credential
     }
 

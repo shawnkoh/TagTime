@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Beeminder
 
 struct TagList: View {
     @EnvironmentObject var tagService: TagService

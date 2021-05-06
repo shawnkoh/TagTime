@@ -10,6 +10,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Combine
+import Beeminder
 
 final class GoalService: ObservableObject {
     enum Errors: Error {
@@ -28,7 +29,7 @@ final class GoalService: ObservableObject {
     }
 
     private var goalApi: GoalAPI?
-    private var beeminderApi: BeeminderAPI?
+    private var beeminderApi: Beeminder.API?
     private var serviceSubscribers = Set<AnyCancellable>()
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
@@ -145,7 +146,7 @@ final class GoalService: ObservableObject {
             guard let tracker = goalTrackers[goal.id] else {
                 return false
             }
-            let commonTags = Set(tracker.tags).union(answer.tags)
+            let commonTags = Set(tracker.tags).intersection(answer.tags)
             return commonTags.count > 0
         }
     }
