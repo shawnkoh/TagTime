@@ -25,7 +25,6 @@ struct TagPicker: View {
     @Binding var config: TagPickerConfig
     let goal: Goal
 
-    @State private var isEditing = false
     @State private var customTags = ""
 
     // TODO: This should only save upon clicking save, not upon each button.
@@ -52,55 +51,47 @@ struct TagPicker: View {
         return Array(selectableTags).sorted()
     }
 
-    var untrackedTags: [Tag] {
-        let trackedTags = Set(trackedTags)
-        return activeTags.filter { !trackedTags.contains($0) }
-    }
+    // TODO: This should be something like AnswerSuggester
 
     var body: some View {
         VStack {
-            VStack {
-                let trackedTagSet = Set(trackedTags)
-                ForEach(isEditing ? selectableTags : trackedTags, id: \.self) { tag in
-                    let isTracked = trackedTagSet.contains(tag)
-                    Text(tag)
-                        .foregroundColor(isTracked ? .black : .white)
-                        .onTap {
-                            var newTags = trackedTags
-                            if isTracked {
-                                guard let index = newTags.firstIndex(of: tag) else {
-                                    return
-                                }
-                                newTags.remove(at: index)
-                            } else {
-                                newTags.append(tag)
-                            }
-                            goalService
-                                .trackTags(newTags, for: goal)
-                                .errorHandled(by: AlertService.shared)
-                        }
-                        .disabled(!isEditing)
-                        .cardButtonStyle(isTracked ? .white : .black)
-                }
+            ScrollView {
+                TextField("sleeping", text: $customTags, onCommit: {
+                    guard customTags.count > 0 else {
+                        return
+                    }
+                    let newTags = trackedTags + customTags.split(separator: " ").map { Tag($0) }
+                    goalService.trackTags(newTags, for: goal)
+                        .errorHandled(by: AlertService.shared)
+                    customTags = ""
+                })
+                .multilineTextAlignment(.center)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
 
-                if isEditing {
-                    TextField("sleeping", text: $customTags, onCommit: {
-                        guard customTags.count > 0 else {
-                            return
-                        }
-                        let newTags = trackedTags + customTags.split(separator: " ").map { Tag($0) }
-                        goalService.trackTags(newTags, for: goal)
-                            .errorHandled(by: AlertService.shared)
-                        customTags = ""
-                    })
-                    .multilineTextAlignment(.center)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                LazyVStack {
+                    let trackedTagSet = Set(trackedTags)
+                    ForEach(selectableTags, id: \.self) { tag in
+                        let isTracked = trackedTagSet.contains(tag)
+                        Text(tag)
+                            .foregroundColor(isTracked ? .black : .white)
+                            .onTap {
+                                var newTags = trackedTags
+                                if isTracked {
+                                    guard let index = newTags.firstIndex(of: tag) else {
+                                        return
+                                    }
+                                    newTags.remove(at: index)
+                                } else {
+                                    newTags.append(tag)
+                                }
+                                goalService
+                                    .trackTags(newTags, for: goal)
+                                    .errorHandled(by: AlertService.shared)
+                            }
+                            .cardButtonStyle(isTracked ? .white : .black)
+                    }
                 }
             }
-
-            Text(isEditing ? "Save" : "Edit Tags")
-                .onTap { isEditing.toggle() }
-                .cardButtonStyle(.modalCard)
         }
     }
 }
