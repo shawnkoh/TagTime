@@ -43,6 +43,7 @@
 		867858DA26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		867858DB26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		867858DC26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
+		86821D6D2644794A001EF75D /* Beeminder in Frameworks */ = {isa = PBXBuildFile; productRef = 86821D6C2644794A001EF75D /* Beeminder */; };
 		868D83EE26396B49000211A6 /* TagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83ED26396B49000211A6 /* TagService.swift */; };
 		868D83F2263A6356000211A6 /* TagCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83F1263A6356000211A6 /* TagCache.swift */; };
 		868E97B3261736A7000A41FF /* Ping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B2261736A7000A41FF /* Ping.swift */; };
@@ -87,7 +88,6 @@
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
-		86E864FB2644539200B86BFB /* Beeminder in Frameworks */ = {isa = PBXBuildFile; productRef = 86E864FA2644539200B86BFB /* Beeminder */; };
 		86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */; };
 		86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD582D2629F52300B32B59 /* AnswerService.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
@@ -146,6 +146,7 @@
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
 		867858C8263709D9009370F6 /* BatchAnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchAnswerCreator.swift; sourceTree = "<group>"; };
 		867858D826370F3F009370F6 /* AnswerSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerSuggester.swift; sourceTree = "<group>"; };
+		86821D6B264478EA001EF75D /* Beeminder */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Beeminder; sourceTree = "<group>"; };
 		868D83ED26396B49000211A6 /* TagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagService.swift; sourceTree = "<group>"; };
 		868D83F1263A6356000211A6 /* TagCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCache.swift; sourceTree = "<group>"; };
 		868E97B2261736A7000A41FF /* Ping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ping.swift; sourceTree = "<group>"; };
@@ -174,7 +175,6 @@
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
-		86E864F82644534200B86BFB /* Beeminder */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Beeminder; path = ../../Beeminder; sourceTree = "<group>"; };
 		86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
 		86FD582D2629F52300B32B59 /* AnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerService.swift; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
@@ -187,7 +187,7 @@
 			files = (
 				8658964326382F2D009D9299 /* SwiftUIX in Frameworks */,
 				869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */,
-				86E864FB2644539200B86BFB /* Beeminder in Frameworks */,
+				86821D6D2644794A001EF75D /* Beeminder in Frameworks */,
 				86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */,
 				86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */,
@@ -240,8 +240,8 @@
 		861256C626139CAA00C2B81B /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				86821D6B264478EA001EF75D /* Beeminder */,
 				861256C926139CAB00C2B81B /* Assets.xcassets */,
-				86E864F82644534200B86BFB /* Beeminder */,
 				868E97CE26174A4C000A41FF /* Helpers */,
 				86ADBB64261730E5003CBA6B /* Model */,
 				86EF829E2626949A001EA3C5 /* Services */,
@@ -481,7 +481,7 @@
 				8658964226382F2D009D9299 /* SwiftUIX */,
 				86589645263840E7009D9299 /* Fuse */,
 				869291E8263F09B800F6AA3D /* BetterSafariView */,
-				86E864FA2644539200B86BFB /* Beeminder */,
+				86821D6C2644794A001EF75D /* Beeminder */,
 			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
@@ -1148,6 +1148,10 @@
 			package = 86589644263840E6009D9299 /* XCRemoteSwiftPackageReference "fuse-swift" */;
 			productName = Fuse;
 		};
+		86821D6C2644794A001EF75D /* Beeminder */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Beeminder;
+		};
 		869291E8263F09B800F6AA3D /* BetterSafariView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 869291E7263F09B800F6AA3D /* XCRemoteSwiftPackageReference "BetterSafariView" */;
@@ -1182,10 +1186,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
 			productName = FacebookShare;
-		};
-		86E864FA2644539200B86BFB /* Beeminder */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Beeminder;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
