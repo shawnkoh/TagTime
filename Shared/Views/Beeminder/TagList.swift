@@ -30,10 +30,8 @@ struct TagList: View {
             LazyVStack {
                 ForEach(trackedTags, id: \.self) { tag in
                     Text(tag)
-                        .foregroundColor(.black)
                         .onTap {}
-                        .disabled(true)
-                        .cardButtonStyle(.white)
+                        .cardStyle(.modalCard)
                 }
             }
         }
