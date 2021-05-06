@@ -1,5 +1,5 @@
 //
-//  CardButtonStyle.swift
+//  CardModifier.swift
 //  TagTime (iOS)
 //
 //  Created by Shawn Koh on 5/5/21.
@@ -7,29 +7,29 @@
 
 import SwiftUI
 
-struct CardButtonStyle: ButtonStyle {
+struct CardStyle: ViewModifier {
     let backgroundColor: Color
 
     init(_ backgroundColor: Color) {
         self.backgroundColor = backgroundColor
     }
 
-    func makeBody(configuration: Configuration) -> some View {
+    @ViewBuilder
+    func body(content: Content) -> some View {
         HStack {
             Spacer()
-            configuration.label
+            content
                 .padding()
                 .foregroundColor(.white)
             Spacer()
         }
         .background(backgroundColor)
         .cornerRadius(8)
-        .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
 }
 
 extension View {
-    func cardButtonStyle(_ backgroundColor: Color) -> some View {
-        self.buttonStyle(CardButtonStyle(backgroundColor))
+    func cardStyle(_ backgroundColor: Color) -> some View {
+        self.modifier(CardStyle(backgroundColor))
     }
 }

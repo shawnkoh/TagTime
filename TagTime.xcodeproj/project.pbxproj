@@ -86,6 +86,7 @@
 		86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F142263D76D9002062E2 /* Auth+Combine.swift */; };
 		86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */; };
 		86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */; };
+		86E34E142643FB4A00B3AA5E /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E34E132643FB4A00B3AA5E /* CardStyle.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
@@ -174,6 +175,7 @@
 		86D2F142263D76D9002062E2 /* Auth+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+Combine.swift"; sourceTree = "<group>"; };
 		86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseUser+Combine.swift"; sourceTree = "<group>"; };
 		86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentReference+Combine.swift"; sourceTree = "<group>"; };
+		86E34E132643FB4A00B3AA5E /* CardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStyle.swift; sourceTree = "<group>"; };
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
@@ -309,11 +311,9 @@
 		8672E71A26182207004081FC /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				86338F4C26429F4C00112BBC /* CardButtonStyle.swift */,
-				86545E1C2642EB7A00897253 /* DoubleTappable.swift */,
+				86E34E162643FC5D00B3AA5E /* ButtonStyle */,
+				86E34E152643FC5700B3AA5E /* ViewModifier */,
 				8672E71426182204004081FC /* PageTitle.swift */,
-				86C6C73F2636A19700A24EBA /* Tappable.swift */,
-				86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -412,6 +412,25 @@
 				869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */,
 			);
 			path = Preferences;
+			sourceTree = "<group>";
+		};
+		86E34E152643FC5700B3AA5E /* ViewModifier */ = {
+			isa = PBXGroup;
+			children = (
+				86E34E132643FB4A00B3AA5E /* CardStyle.swift */,
+				86545E1C2642EB7A00897253 /* DoubleTappable.swift */,
+				86C6C73F2636A19700A24EBA /* Tappable.swift */,
+			);
+			path = ViewModifier;
+			sourceTree = "<group>";
+		};
+		86E34E162643FC5D00B3AA5E /* ButtonStyle */ = {
+			isa = PBXGroup;
+			children = (
+				86338F4C26429F4C00112BBC /* CardButtonStyle.swift */,
+				86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */,
+			);
+			path = ButtonStyle;
 			sourceTree = "<group>";
 		};
 		86EF829E2626949A001EA3C5 /* Services */ = {
@@ -638,6 +657,7 @@
 				8665E2A52641752B003EB532 /* GoalService.swift in Sources */,
 				8606042B2643E40800944617 /* TagList.swift in Sources */,
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
+				86E34E142643FB4A00B3AA5E /* CardStyle.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				86338F49264242F800112BBC /* TagPicker.swift in Sources */,
 				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
