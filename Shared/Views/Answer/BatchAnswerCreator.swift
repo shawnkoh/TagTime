@@ -51,9 +51,9 @@ struct BatchAnswerCreator: View {
         guard tags.count > 0 else {
             return
         }
-        let answers = answerService.unansweredPings.map { Answer(ping: $0, tags: tags) }
         DispatchQueue.global(qos: .utility).async {
-            answerService.batchCreateAnswers(answers)
+            answerService
+                .batchAnswerPings(pingDates: answerService.unansweredPings, tags: tags)
                 .errorHandled(by: AlertService.shared)
         }
         config.dismiss()

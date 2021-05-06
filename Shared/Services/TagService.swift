@@ -59,26 +59,7 @@ final class TagService: ObservableObject {
     }
 
     // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-    func batchTags(register: [Tag], deregister: [Tag], with batch: WriteBatch? = nil) {
-        let willCommit = batch == nil
-        let batch = batch ?? Firestore.firestore().batch()
-
-        registerTags(register, with: batch)
-        deregisterTags(deregister, with: batch)
-
-        guard willCommit else {
-            return
-        }
-
-        batch.commit() { error in
-            if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
-            }
-        }
-    }
-
-    // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-    func registerTags(_ tags: [Tag], with batch: WriteBatch? = nil) {
+    func registerTags(_ tags: [Tag], with batch: WriteBatch? = nil, increment: Int = 1) {
         guard let cacheReference = cache else {
             return
         }
@@ -90,9 +71,9 @@ final class TagService: ObservableObject {
             let documentReference = cacheReference.document(tag)
             let tagCache: TagCache
             if let localTagCache = self.tags[tag] {
-                tagCache = TagCache(count: localTagCache.count + 1, updatedDate: Date())
+                tagCache = TagCache(count: localTagCache.count + increment, updatedDate: Date())
             } else {
-                tagCache = TagCache(count: 1, updatedDate: Date())
+                tagCache = TagCache(count: increment, updatedDate: Date())
             }
             try! batch.setData(from: tagCache, forDocument: documentReference)
         }

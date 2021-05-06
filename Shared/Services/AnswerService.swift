@@ -103,6 +103,29 @@ final class AnswerService: ObservableObject {
             .store(in: &subscribers)
     }
 
+    // TODO: This needs to be split into chunks
+    func batchAnswerPings(pingDates: [Date], tags: [Tag]) -> Future<Void, Error> {
+        Future { promise in
+            guard let user = AuthenticationService.shared.user else {
+                promise(.failure(AuthError.notAuthenticated))
+                return
+            }
+            let batch = Firestore.firestore().batch()
+            let answers = pingDates.map { Answer(ping: $0, tags: tags) }
+            answers.forEach { batch.createAnswer($0, user: user) }
+            TagService.shared.registerTags(tags, with: batch, increment: answers.count)
+
+            batch.commit() { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
+    }
+
+    // Not used at the moment. But useful for import.
     func batchCreateAnswers(_ answers: [Answer]) -> Future<Void, Error> {
         Future { promise in
             guard let user = AuthenticationService.shared.user else {
@@ -113,6 +136,7 @@ final class AnswerService: ObservableObject {
             // TODO: This needs to be split into chunks of maximum 500 / 3
             answers.forEach { answer in
                 batch.createAnswer(answer, user: user)
+                TagService.shared.registerTags(answer.tags, with: batch)
             }
             batch.commit() { error in
                 if let error = error {
@@ -128,6 +152,7 @@ final class AnswerService: ObservableObject {
         Future { promise in
             let batch = Firestore.firestore().batch()
             batch.createAnswer(answer, user: user)
+            TagService.shared.registerTags(answer.tags, with: batch)
 
             batch.commit() { error in
                 if let error = error {
@@ -151,7 +176,14 @@ final class AnswerService: ObservableObject {
     func updateAnswer(_ answer: Answer, tags: [Tag], user: User) -> Future<Void, Error> {
         Future { promise in
             let batch = Firestore.firestore().batch()
-            batch.updateAnswer(answer, tags: tags, user: user)
+            let newTags = Set(tags)
+            let oldTags = Set(answer.tags)
+            let removedTags = Array(oldTags.subtracting(newTags))
+            let addedTags = Array(newTags.subtracting(oldTags))
+            let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
+            batch.createAnswer(newAnswer, user: user)
+            TagService.shared.registerTags(Array(addedTags), with: batch)
+            TagService.shared.deregisterTags(Array(removedTags), with: batch)
 
             batch.commit() { error in
                 if let error = error {
@@ -182,17 +214,6 @@ private extension User {
 private extension WriteBatch {
     func createAnswer(_ answer: Answer, user: User) {
         try! self.setData(from: answer, forDocument: user.answerCollection.document(answer.id))
-        TagService.shared.registerTags(answer.tags, with: self)
-    }
-
-    func updateAnswer(_ answer: Answer, tags: [Tag], user: User) {
-        let newTags = Set(tags)
-        let oldTags = Set(answer.tags)
-        let removedTags = Array(oldTags.subtracting(newTags))
-        let addedTags = Array(newTags.subtracting(oldTags))
-        let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
-        try! self.setData(from: newAnswer, forDocument: user.answerCollection.document(newAnswer.id))
-        TagService.shared.batchTags(register: Array(addedTags), deregister: Array(removedTags), with: self)
     }
 }
 
