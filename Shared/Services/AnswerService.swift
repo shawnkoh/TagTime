@@ -173,6 +173,14 @@ final class AnswerService: ObservableObject {
         return createAnswer(answer, user: user)
     }
 
+    func createAnswerAndUpdateTrackedGoals(_ answer: Answer) -> AnyPublisher<Void, Error> {
+        createAnswer(answer)
+            .flatMap { _ -> AnyPublisher<Void, Error> in
+                GoalService.shared.updateTrackedGoals(answer: answer)
+            }
+            .eraseToAnyPublisher()
+    }
+
     func updateAnswer(_ answer: Answer, tags: [Tag], user: User) -> Future<Void, Error> {
         Future { promise in
             let batch = Firestore.firestore().batch()

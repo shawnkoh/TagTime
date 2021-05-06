@@ -114,6 +114,41 @@ final class GoalService: ObservableObject {
         }
         return goalApi.trackTags(tags, for: goal).eraseToAnyPublisher()
     }
+
+    func updateTrackedGoals(answer: Answer) -> AnyPublisher<Void, Error> {
+        guard let beeminderApi = beeminderApi else {
+            return Fail(error: AuthError.notAuthenticated).eraseToAnyPublisher()
+        }
+
+        let publishers = getTrackedGoalsToUpdate(answer: answer).map { goal -> AnyPublisher<Void, Error> in
+            // TODO: This should be based on dynamic ping
+            let value = 45.0 / 60.0
+            // TODO: update comment
+            let comment = "pings: \(answer.tagDescription)"
+            // Because BeeminderAPI enforces unique requestid, it prevents the user from creating additional datapoints for the same goal.
+            // Because getTrackedGoalsToUpdate returns unique goals, we won't ever send multiple requests to create the same datapoint.
+            return beeminderApi
+                .createDatapoint(slug: goal.slug, value: value, timestamp: nil, daystamp: nil, comment: comment, requestid: answer.id)
+                .map { _ in }
+                .eraseToAnyPublisher()
+        }
+        return Publishers.MergeMany(publishers)
+            .collect()
+            .map { _ in }
+            .eraseToAnyPublisher()
+    }
+
+    private func getTrackedGoalsToUpdate(answer: Answer) -> [Goal] {
+        // any goal that contains answer.tags is a goal that needs to be tracked
+        // but the goal must also be tracked
+        goals.filter { goal in
+            guard let tracker = goalTrackers[goal.id] else {
+                return false
+            }
+            let commonTags = Set(tracker.tags).union(answer.tags)
+            return commonTags.count > 0
+        }
+    }
 }
 
 private extension User {
