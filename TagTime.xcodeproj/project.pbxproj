@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860144132642B70A00AA5DB6 /* GoalCard.swift */; };
+		8606042B2643E40800944617 /* TagList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8606042A2643E40800944617 /* TagList.swift */; };
 		861256E326139CAB00C2B81B /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256E226139CAB00C2B81B /* Tests_iOS.swift */; };
 		861256EE26139CAB00C2B81B /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256ED26139CAB00C2B81B /* Tests_macOS.swift */; };
 		861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C726139CAA00C2B81B /* TagTimeApp.swift */; };
@@ -112,6 +113,7 @@
 
 /* Begin PBXFileReference section */
 		860144132642B70A00AA5DB6 /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
+		8606042A2643E40800944617 /* TagList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagList.swift; sourceTree = "<group>"; };
 		861256C726139CAA00C2B81B /* TagTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTimeApp.swift; sourceTree = "<group>"; };
 		861256C826139CAA00C2B81B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		861256C926139CAB00C2B81B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 				86569A602641B111005C49C7 /* GoalDetail.swift */,
 				8691A52B263FFD020020AEE6 /* GoalList.swift */,
 				8665E2A22641687B003EB532 /* GoalPicker.swift */,
+				8606042A2643E40800944617 /* TagList.swift */,
 				86338F48264242F800112BBC /* TagPicker.swift */,
 				8665E29B2641427D003EB532 /* TrackedGoalList.swift */,
 			);
@@ -633,6 +636,7 @@
 				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
 				8691A52E264000C60020AEE6 /* Goal.swift in Sources */,
 				8665E2A52641752B003EB532 /* GoalService.swift in Sources */,
+				8606042B2643E40800944617 /* TagList.swift in Sources */,
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				86338F49264242F800112BBC /* TagPicker.swift in Sources */,

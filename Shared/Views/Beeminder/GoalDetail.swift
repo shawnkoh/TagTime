@@ -43,9 +43,13 @@ struct GoalDetail: View {
             }
             .padding(.bottom)
 
-            TagPicker(config: $tagPickerConfig, goal: config.goal)
+            TagList(goal: config.goal)
 
             Spacer()
+
+            Text("Edit Tags")
+                .onTap { tagPickerConfig.present() }
+                .cardButtonStyle(.modalCard)
 
             HStack {
                 Text("Stop Tracking")
@@ -61,6 +65,11 @@ struct GoalDetail: View {
             }
         }
         .padding()
+        .sheet(isPresented: $tagPickerConfig.isPresented) {
+            TagPicker(config: $tagPickerConfig, goal: config.goal)
+                .environmentObject(self.tagService)
+                .environmentObject(self.goalService)
+        }
     }
 }
 
