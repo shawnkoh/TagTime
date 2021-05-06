@@ -51,10 +51,7 @@
 		868E97C926173AAD000A41FF /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C826173AAD000A41FF /* Answer.swift */; };
 		868E97D026174A56000A41FF /* Color+Figma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97CF26174A56000A41FF /* Color+Figma.swift */; };
 		8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8691A52B263FFD020020AEE6 /* GoalList.swift */; };
-		8691A52E264000C60020AEE6 /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8691A52D264000C60020AEE6 /* Goal.swift */; };
 		869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 869291E8263F09B800F6AA3D /* BetterSafariView */; };
-		869291EB263F9DCF00F6AA3D /* BeeminderAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EA263F9DCF00F6AA3D /* BeeminderAPI.swift */; };
-		869291ED263F9DDD00F6AA3D /* BeeminderCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */; };
 		869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */; };
 		86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59126261DB71600A25D1F /* FirebaseAuth */; };
 		86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59128261DB71600A25D1F /* FirebaseFirestore */; };
@@ -90,6 +87,7 @@
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
+		86E864FB2644539200B86BFB /* Beeminder in Frameworks */ = {isa = PBXBuildFile; productRef = 86E864FA2644539200B86BFB /* Beeminder */; };
 		86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */; };
 		86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD582D2629F52300B32B59 /* AnswerService.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
@@ -156,9 +154,6 @@
 		868E97C826173AAD000A41FF /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
 		868E97CF26174A56000A41FF /* Color+Figma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Figma.swift"; sourceTree = "<group>"; };
 		8691A52B263FFD020020AEE6 /* GoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalList.swift; sourceTree = "<group>"; };
-		8691A52D264000C60020AEE6 /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
-		869291EA263F9DCF00F6AA3D /* BeeminderAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderAPI.swift; sourceTree = "<group>"; };
-		869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderCredential.swift; sourceTree = "<group>"; };
 		869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderLoginButton.swift; sourceTree = "<group>"; };
 		86A5913D261DBB9600A25D1F /* AuthenticatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedView.swift; sourceTree = "<group>"; };
 		86A59146261DBB9E00A25D1F /* UnauthenticatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthenticatedView.swift; sourceTree = "<group>"; };
@@ -179,6 +174,7 @@
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
+		86E864F82644534200B86BFB /* Beeminder */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Beeminder; path = ../../Beeminder; sourceTree = "<group>"; };
 		86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
 		86FD582D2629F52300B32B59 /* AnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerService.swift; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
@@ -191,6 +187,7 @@
 			files = (
 				8658964326382F2D009D9299 /* SwiftUIX in Frameworks */,
 				869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */,
+				86E864FB2644539200B86BFB /* Beeminder in Frameworks */,
 				86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */,
 				86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */,
@@ -236,18 +233,20 @@
 				861256E126139CAB00C2B81B /* Tests iOS */,
 				861256EC26139CAB00C2B81B /* Tests macOS */,
 				861256CF26139CAB00C2B81B /* Products */,
+				86E864F92644539200B86BFB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		861256C626139CAA00C2B81B /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				861256C926139CAB00C2B81B /* Assets.xcassets */,
+				86E864F82644534200B86BFB /* Beeminder */,
+				868E97CE26174A4C000A41FF /* Helpers */,
 				86ADBB64261730E5003CBA6B /* Model */,
 				86EF829E2626949A001EA3C5 /* Services */,
-				868E97CE26174A4C000A41FF /* Helpers */,
-				86ADBB65261730F4003CBA6B /* Views */,
 				861256C726139CAA00C2B81B /* TagTimeApp.swift */,
-				861256C926139CAB00C2B81B /* Assets.xcassets */,
+				86ADBB65261730F4003CBA6B /* Views */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -349,8 +348,6 @@
 			isa = PBXGroup;
 			children = (
 				868E97C826173AAD000A41FF /* Answer.swift */,
-				869291EC263F9DDD00F6AA3D /* BeeminderCredential.swift */,
-				8691A52D264000C60020AEE6 /* Goal.swift */,
 				86C577AD264190F3008AE4BC /* GoalTracker.swift */,
 				868E97B2261736A7000A41FF /* Ping.swift */,
 				868E97C2261738C5000A41FF /* Stub.swift */,
@@ -433,6 +430,13 @@
 			path = ButtonStyle;
 			sourceTree = "<group>";
 		};
+		86E864F92644539200B86BFB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		86EF829E2626949A001EA3C5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -440,7 +444,6 @@
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
-				869291EA263F9DCF00F6AA3D /* BeeminderAPI.swift */,
 				8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */,
 				864203B02632710700668EC1 /* FacebookLoginService.swift */,
 				8665E2A42641752B003EB532 /* GoalService.swift */,
@@ -478,6 +481,7 @@
 				8658964226382F2D009D9299 /* SwiftUIX */,
 				86589645263840E7009D9299 /* Fuse */,
 				869291E8263F09B800F6AA3D /* BetterSafariView */,
+				86E864FA2644539200B86BFB /* Beeminder */,
 			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
@@ -638,7 +642,6 @@
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
 				86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */,
 				86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */,
-				869291ED263F9DDD00F6AA3D /* BeeminderCredential.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */,
@@ -653,7 +656,6 @@
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
 				8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */,
 				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
-				8691A52E264000C60020AEE6 /* Goal.swift in Sources */,
 				8665E2A52641752B003EB532 /* GoalService.swift in Sources */,
 				8606042B2643E40800944617 /* TagList.swift in Sources */,
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
@@ -678,7 +680,6 @@
 				8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,
 				86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */,
-				869291EB263F9DCF00F6AA3D /* BeeminderAPI.swift in Sources */,
 				862914E52634A1D6006BF198 /* DebugMenu.swift in Sources */,
 				868E97C926173AAD000A41FF /* Answer.swift in Sources */,
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,
@@ -1181,6 +1182,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
 			productName = FacebookShare;
+		};
+		86E864FA2644539200B86BFB /* Beeminder */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Beeminder;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

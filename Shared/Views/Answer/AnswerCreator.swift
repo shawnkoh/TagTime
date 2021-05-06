@@ -88,7 +88,7 @@ struct AnswerCreator: View {
                 .errorHandled(by: alertService)
         } else {
             let answer = Answer(ping: config.pingDate, tags: tags)
-            answerService.createAnswer(answer)
+            answerService.createAnswerAndUpdateTrackedGoals(answer)
                 .errorHandled(by: alertService)
         }
         config.dismiss()

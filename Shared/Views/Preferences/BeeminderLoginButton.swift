@@ -8,6 +8,7 @@
 import SwiftUI
 import AuthenticationServices
 import BetterSafariView
+import Beeminder
 
 struct BeeminderLoginButton: View {
     @EnvironmentObject var beeminderCredentialService: BeeminderCredentialService
@@ -41,7 +42,7 @@ struct BeeminderLoginButton: View {
                         else {
                             return
                         }
-                        let credential = BeeminderCredential(username: username, accessToken: accessToken)
+                        let credential = Beeminder.Credential(username: username, accessToken: accessToken)
                         beeminderCredentialService.saveCredential(credential)
                     }
                     .prefersEphemeralWebBrowserSession(false)

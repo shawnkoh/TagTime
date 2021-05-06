@@ -9,11 +9,12 @@ import Foundation
 import Combine
 import FirebaseFirestoreSwift
 import FirebaseFirestore
+import Beeminder
 
 final class BeeminderCredentialService: ObservableObject {
     static let shared = BeeminderCredentialService()
 
-    @Published private(set) var credential: BeeminderCredential?
+    @Published private(set) var credential: Beeminder.Credential?
 
     private var userSubscriber: AnyCancellable!
     private var subscribers = Set<AnyCancellable>()
@@ -37,19 +38,19 @@ final class BeeminderCredentialService: ObservableObject {
             if let error = error {
                 AlertService.shared.present(message: error.localizedDescription)
             }
-            let credential = try? snapshot?.data(as: BeeminderCredential.self)
+            let credential = try? snapshot?.data(as: Beeminder.Credential.self)
             self.credential = credential
         }
         .store(in: &listeners)
     }
 
-    func saveCredential(_ credential: BeeminderCredential, user: User) {
+    func saveCredential(_ credential: Beeminder.Credential, user: User) {
         user.credentialDocument
             .setData(from: credential)
             .errorHandled(by: AlertService.shared)
     }
 
-    func saveCredential(_ credential: BeeminderCredential) {
+    func saveCredential(_ credential: Beeminder.Credential) {
         guard let user = AuthenticationService.shared.user else {
             return
         }

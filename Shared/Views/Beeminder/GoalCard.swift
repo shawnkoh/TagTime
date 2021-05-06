@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Beeminder
 
 struct GoalCard: View {
     let goal: Goal

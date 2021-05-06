@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Beeminder
 
 struct GoalCountdown: View {
     let goal: Goal
