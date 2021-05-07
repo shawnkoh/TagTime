@@ -58,6 +58,5 @@ struct BeeminderLoginButton: View {
 struct BeeminderLoginButton_Previews: PreviewProvider {
     static var previews: some View {
         BeeminderLoginButton()
-            .environmentObject(BeeminderCredentialService.shared)
     }
 }

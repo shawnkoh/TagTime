@@ -100,6 +100,5 @@ struct TagPicker: View {
 struct TagPicker_Previews: PreviewProvider {
     static var previews: some View {
         TagPicker(config: .constant(.init()), goal: Stub.goal)
-            .environmentObject(TagService.shared)
     }
 }

@@ -98,8 +98,5 @@ struct AuthenticatedView_Previews: PreviewProvider {
     static var previews: some View {
         AuthenticatedView()
             .preferredColorScheme(.dark)
-            .environmentObject(AppService.shared)
-            .environmentObject(AnswerService.shared)
-            .environmentObject(AlertService.shared)
     }
 }

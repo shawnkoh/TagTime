@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Preferences: View {
     @EnvironmentObject var settingService: SettingService
+    @EnvironmentObject var facebookLoginService: FacebookLoginService
 
     #if DEBUG
     @State private var isDebugPresented = false
@@ -33,7 +34,7 @@ struct Preferences: View {
                 BeeminderLoginButton()
 
                 Text("Login with Facebook")
-                    .onTap { FacebookLoginService.shared.login() }
+                    .onTap { facebookLoginService.login() }
 
                 #if DEBUG
                 Text("Open Debug Menu")

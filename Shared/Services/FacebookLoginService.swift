@@ -9,15 +9,10 @@ import Foundation
 import FBSDKLoginKit
 import FirebaseAuth
 import Combine
+import Resolver
 
-final class FacebookLoginService {
-    static let shared = FacebookLoginService(authenticationService: AuthenticationService.shared)
-
-    private let authenticationService: AuthenticationService
-
-    init(authenticationService: AuthenticationService) {
-        self.authenticationService = authenticationService
-    }
+final class FacebookLoginService: ObservableObject {
+    @Injected private var authenticationService: AuthenticationService
 
     let loginManager = LoginManager()
 

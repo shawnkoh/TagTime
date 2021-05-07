@@ -9,17 +9,16 @@ import Foundation
 import Combine
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import Resolver
 
 final class TagService: ObservableObject {
-    static let shared = TagService(authenticationService: AuthenticationService.shared)
-    
     @Published var tags: [Tag: TagCache] = [:]
     private var userSubscriber: AnyCancellable = .init({})
     
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    private let authenticationService: AuthenticationService
+    @Injected private var authenticationService: AuthenticationService
 
     private var user: User {
         authenticationService.user
@@ -29,8 +28,7 @@ final class TagService: ObservableObject {
         user.userDocument.collection("tags")
     }
     
-    init(authenticationService: AuthenticationService) {
-        self.authenticationService = authenticationService
+    init() {
         userSubscriber = authenticationService.$user
             .sink { self.setup(user: $0) }
     }

@@ -9,19 +9,21 @@ import SwiftUI
 import Firebase
 import UserNotifications
 import FBSDKCoreKit
+import Resolver
 
 @main
 struct TagTimeApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    @StateObject var alertService = AlertService.shared
-    @StateObject var answerService = AnswerService.shared
-    @StateObject var appService = AppService.shared
-    @StateObject var beeminderCredentialService = BeeminderCredentialService.shared
-    @StateObject var goalService = GoalService.shared
-    @StateObject var notificationService = NotificationService.shared
-    @StateObject var pingService = PingService.shared
-    @StateObject var settingService = SettingService.shared
-    @StateObject var tagService = TagService.shared
+    @StateObject var alertService: AlertService = Resolver.resolve()
+    @StateObject var answerService: AnswerService = Resolver.resolve()
+    @StateObject var appService: AppService = Resolver.resolve()
+    @StateObject var beeminderCredentialService: BeeminderCredentialService = Resolver.resolve()
+    @StateObject var facebookLoginService: FacebookLoginService = Resolver.resolve()
+    @StateObject var goalService: GoalService = Resolver.resolve()
+    @StateObject var notificationService: NotificationService = Resolver.resolve()
+    @StateObject var pingService: PingService = Resolver.resolve()
+    @StateObject var settingService: SettingService = Resolver.resolve()
+    @StateObject var tagService: TagService = Resolver.resolve()
 
     init() {
         FirebaseApp.configure()
@@ -40,6 +42,7 @@ struct TagTimeApp: App {
                 .environmentObject(answerService)
                 .environmentObject(appService)
                 .environmentObject(beeminderCredentialService)
+                .environmentObject(facebookLoginService)
                 .environmentObject(goalService)
                 .environmentObject(notificationService)
                 .environmentObject(pingService)
@@ -52,6 +55,8 @@ struct TagTimeApp: App {
 }
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
+    @Injected private var notificationService: NotificationService
+
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
@@ -62,7 +67,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             didFinishLaunchingWithOptions: launchOptions
         )
 
-        UNUserNotificationCenter.current().delegate = NotificationService.shared
+        UNUserNotificationCenter.current().delegate = notificationService
 
         return true
     }

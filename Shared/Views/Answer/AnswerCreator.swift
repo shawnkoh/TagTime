@@ -98,8 +98,5 @@ struct AnswerCreator: View {
 struct AnswerCreator_Previews: PreviewProvider {
     static var previews: some View {
         AnswerCreator(config: .constant(AnswerCreatorConfig()))
-            .environmentObject(AnswerService.shared)
-            .environmentObject(AlertService.shared)
-            .environmentObject(TagService.shared)
     }
 }

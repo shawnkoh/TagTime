@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Resolver
 
 final class AppService: ObservableObject {
     enum Page: Hashable {
@@ -17,24 +18,22 @@ final class AppService: ObservableObject {
         case preferences
     }
 
-    static let shared = AppService(authenticationService: AuthenticationService.shared)
-
     @Published var isAuthenticated = false
     @Published var pingNotification = AnswerCreatorConfig()
     @Published var currentPage: Page = .missedPingList
 
     private var subscribers = Set<AnyCancellable>()
-    private let authenticationService: AuthenticationService
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var notificationService: NotificationService
+    @Injected private var beeminderCredentialService: BeeminderCredentialService
 
-    init(authenticationService: AuthenticationService) {
-        self.authenticationService = authenticationService
-
+    init() {
         authenticationService.$user
             .receive(on: DispatchQueue.main)
             .sink { self.isAuthenticated = $0.id != "unauthenticated" }
             .store(in: &subscribers)
 
-        NotificationService.shared.$openedPing
+        notificationService.$openedPing
             .receive(on: DispatchQueue.main)
             .sink { [self] in
                 if let pingDate = $0 {
@@ -45,7 +44,7 @@ final class AppService: ObservableObject {
             }
             .store(in: &subscribers)
 
-        BeeminderCredentialService.shared.$credential
+        beeminderCredentialService.$credential
             .receive(on: DispatchQueue.main)
             .sink { [self] credential in
                 if credential == nil, currentPage == .goalList {

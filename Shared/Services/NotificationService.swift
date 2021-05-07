@@ -9,6 +9,7 @@ import Foundation
 import UserNotifications
 import Combine
 import UIKit
+import Resolver
 
 // NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
 public final class NotificationService: NSObject, ObservableObject {
@@ -21,8 +22,6 @@ public final class NotificationService: NSObject, ObservableObject {
         static let ping = "PING_CATEGORY"
     }
 
-    public static let shared = NotificationService(authenticationService: AuthenticationService.shared, pingService: PingService.shared)
-
     @Published public private(set) var openedPing: Date?
 
     private(set) var category: UNNotificationCategory
@@ -34,16 +33,15 @@ public final class NotificationService: NSObject, ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
 
-    private let authenticationService: AuthenticationService
-    private let pingService: PingService
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var pingService: PingService
+    @Injected private var answerService: AnswerService
 
     private var user: User {
         authenticationService.user
     }
 
-    public init(authenticationService: AuthenticationService, pingService: PingService) {
-        self.authenticationService = authenticationService
-        self.pingService = pingService
+    public override init() {
         self.category = UNNotificationCategory(
             identifier: CategoryIdentifier.ping,
             actions: [replyAction],
@@ -93,7 +91,7 @@ public final class NotificationService: NSObject, ObservableObject {
                 }
                 return nextPings.map { $0.date }
             }
-            .combineLatest(AnswerService.shared.$latestAnswer)
+            .combineLatest(answerService.$latestAnswer)
             .receive(on: DispatchQueue.main)
             .sink { [self] (nextPings, latestAnswer) in
                 tryToScheduleNotifications(pings: nextPings, previousAnswer: latestAnswer)
@@ -262,7 +260,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
 
     private func addAnswer(answer: Answer, completionHandler: @escaping () -> Void) {
         if authenticationService.user.id != "unauthenticated" {
-            AnswerService.shared.createAnswer(answer)
+            answerService.createAnswer(answer)
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case let .failure(error):
@@ -279,7 +277,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 // TODO: This should be manually done instead. Most probably when we implement dynamic ping schedule
                 .setUser(service: authenticationService)
                 .flatMap { user -> Future<Void, Error> in
-                    AnswerService.shared.createAnswer(answer)
+                    self.answerService.createAnswer(answer)
                 }
                 .sink(receiveCompletion: { completion in
                     switch completion {

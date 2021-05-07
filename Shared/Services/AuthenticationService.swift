@@ -18,12 +18,10 @@ enum AuthError: Error {
     case noSnapshot
 }
 
-public final class AuthenticationService {
+public final class AuthenticationService: ObservableObject {
     enum AuthenticationError: Error {
         case couldNotSignInAnonymously
     }
-
-    static let shared = AuthenticationService()
 
     @Published fileprivate(set) var user = User(id: "unauthenticated", startDate: Date())
 

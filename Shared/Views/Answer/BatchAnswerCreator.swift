@@ -64,6 +64,5 @@ struct BatchAnswerCreator: View {
 struct BatchAnswerCreator_Previews: PreviewProvider {
     static var previews: some View {
         BatchAnswerCreator(config: .constant(.init()))
-            .environmentObject(AnswerService.shared)
     }
 }

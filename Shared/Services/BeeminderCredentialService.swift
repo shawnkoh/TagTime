@@ -10,24 +10,22 @@ import Combine
 import FirebaseFirestoreSwift
 import FirebaseFirestore
 import Beeminder
+import Resolver
 
 final class BeeminderCredentialService: ObservableObject {
-    static let shared = BeeminderCredentialService(authenticationService: AuthenticationService.shared)
-
     @Published private(set) var credential: Beeminder.Credential?
 
     private var userSubscriber: AnyCancellable!
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    private let authenticationService: AuthenticationService
+    @Injected private var authenticationService: AuthenticationService
 
     private var user: User {
         authenticationService.user
     }
 
-    init(authenticationService: AuthenticationService) {
-        self.authenticationService = authenticationService
+    init() {
         userSubscriber = authenticationService.$user
             .sink { self.setup(user: $0) }
     }
