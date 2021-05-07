@@ -53,6 +53,5 @@ struct Preferences: View {
 struct Preferences_Previews: PreviewProvider {
     static var previews: some View {
         Preferences()
-            .environmentObject(SettingService.shared)
     }
 }
