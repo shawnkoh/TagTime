@@ -8,8 +8,10 @@
 import Foundation
 import Combine
 
-final class PingService: ObservableObject {
-    static let shared = PingService(authenticationService: AuthenticationService.shared)
+public final class PingService: ObservableObject {
+    static let shared = PingService(authenticationService: AuthenticationService.shared, answerService: AnswerService.shared)
+    // 2 days worth of pings = 2 * 24 * 60 / 45
+    static let answerablePingCount = 64
 
     var startPing: Ping
 
@@ -23,29 +25,53 @@ final class PingService: ObservableObject {
         }
     }
 
+    // Solely updated by publisher
+    @Published private(set) var unansweredPings: [Date] = []
+
     private var userSubscriber: AnyCancellable = .init({})
     private var subscribers = Set<AnyCancellable>()
 
     private let authenticationService: AuthenticationService
+    private let answerService: AnswerService
 
-    init(authenticationService: AuthenticationService, averagePingInterval: Int = defaultAveragePingInterval) {
+    init(authenticationService: AuthenticationService, answerService: AnswerService, averagePingInterval: Int = defaultAveragePingInterval) {
         self.authenticationService = authenticationService
+        self.answerService = answerService
         self.averagePingInterval = averagePingInterval
         self.startPing = Self.tagTimeBirth
         self.answerablePings = []
         self.userSubscriber = authenticationService.$user
             .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
+
+        setupSubscribers()
     }
 
-    private func setup(user: User?) {
-        guard let user = user else {
-            updateTimer?.invalidate()
-            answerablePings = []
-            return
-        }
-
+    private func setup(user: User) {
         changeStartDate(to: user.startDate)
+    }
+
+    private func setupSubscribers() {
+        // Update unansweredPings by comparing answerablePings with answers.
+        // answerablePings is maintained by PingService
+        // answers is maintained by observing Firestore's answers
+        // TODO: Consider adding pagination for this
+        $answerablePings
+            .map { $0.suffix(Self.answerablePingCount) }
+            .combineLatest(
+                answerService.$answers
+                    .map { $0.prefix(Self.answerablePingCount) }
+                    .map { $0.map { $0.ping }}
+                    .map { Set($0) }
+            )
+            .map { (answerablePings, answeredPings) -> [Date] in
+                answerablePings
+                    .filter { !answeredPings.contains($0.date) }
+                    .map { $0.date }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { self.unansweredPings = $0 }
+            .store(in: &subscribers)
     }
 
     // TODO: This needs to be based on the users' recent answers instead.

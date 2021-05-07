@@ -12,15 +12,11 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 final class AnswerService: ObservableObject {
-    static let shared = AnswerService(authenticationService: AuthenticationService.shared)
-    // 2 days worth of pings = 2 * 24 * 60 / 45
-    static let answerablePingCount = 64
+    static let shared = AnswerService(authenticationService: AuthenticationService.shared, goalService: GoalService.shared)
 
     // Solely updated by Firestore listener
     // Sorted in descending order
     @Published private(set) var answers: [Answer] = []
-    // Solely updated by publisher
-    @Published private(set) var unansweredPings: [Date] = []
     // Solely updated by Firestore listener
     @Published private(set) var latestAnswer: Answer?
 
@@ -30,6 +26,7 @@ final class AnswerService: ObservableObject {
     private var listeners = [ListenerRegistration]()
 
     private let authenticationService: AuthenticationService
+    private let goalService: GoalService
 
     private var user: User {
         authenticationService.user
@@ -39,8 +36,9 @@ final class AnswerService: ObservableObject {
         user.answerCollection
     }
 
-    init(authenticationService: AuthenticationService) {
+    init(authenticationService: AuthenticationService, goalService: GoalService) {
         self.authenticationService = authenticationService
+        self.goalService = goalService
 
         userSubscriber = authenticationService.$user
             .receive(on: DispatchQueue.main)
@@ -54,13 +52,12 @@ final class AnswerService: ObservableObject {
         subscribers = []
 
         setupFirestoreListeners(user: user)
-        setupSubscribers()
     }
 
     private func setupFirestoreListeners(user: User) {
         user.answerCollection
             .order(by: "ping", descending: true)
-            .limit(to: Self.answerablePingCount)
+            .limit(to: PingService.answerablePingCount)
             .addSnapshotListener() { [self] (snapshot, error) in
                 if let error = error {
                     AlertService.shared.present(message: "setupFirestoreListeners \(error.localizedDescription)")
@@ -80,30 +77,6 @@ final class AnswerService: ObservableObject {
                 }
             }
             .store(in: &listeners)
-    }
-
-    private func setupSubscribers() {
-        // Update unansweredPings by comparing answerablePings with answers.
-        // answerablePings is maintained by PingService
-        // answers is maintained by observing Firestore's answers
-        // TODO: Consider adding pagination for this
-        PingService.shared
-            .$answerablePings
-            .map { $0.suffix(Self.answerablePingCount) }
-            .combineLatest(
-                $answers
-                    .map { $0.prefix(Self.answerablePingCount) }
-                    .map { $0.map { $0.ping }}
-                    .map { Set($0) }
-            )
-            .map { (answerablePings, answeredPings) -> [Date] in
-                answerablePings
-                    .filter { !answeredPings.contains($0.date) }
-                    .map { $0.date }
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { self.unansweredPings = $0 }
-            .store(in: &subscribers)
     }
 
     // TODO: This needs to be split into chunks
@@ -162,7 +135,7 @@ final class AnswerService: ObservableObject {
     func createAnswerAndUpdateTrackedGoals(_ answer: Answer) -> AnyPublisher<Void, Error> {
         createAnswer(answer)
             .flatMap { _ -> AnyPublisher<Void, Error> in
-                GoalService.shared.updateTrackedGoals(answer: answer)
+                self.goalService.updateTrackedGoals(answer: answer)
             }
             .eraseToAnyPublisher()
     }
