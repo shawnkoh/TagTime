@@ -29,6 +29,7 @@ struct BatchAnswerConfig {
 struct BatchAnswerCreator: View {
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var pingService: PingService
+    @EnvironmentObject var alertService: AlertService
     @Binding var config: BatchAnswerConfig
 
     var body: some View {
@@ -55,7 +56,7 @@ struct BatchAnswerCreator: View {
         DispatchQueue.global(qos: .utility).async {
             answerService
                 .batchAnswerPings(pingDates: pingService.unansweredPings, tags: tags)
-                .errorHandled(by: AlertService.shared)
+                .errorHandled(by: alertService)
         }
         config.dismiss()
     }

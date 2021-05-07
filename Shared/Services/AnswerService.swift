@@ -27,6 +27,7 @@ final class AnswerService: ObservableObject {
     @Injected private var authenticationService: AuthenticationService
     @Injected private var goalService: GoalService
     @Injected private var tagService: TagService
+    @Injected private var alertService: AlertService
 
     private var user: User {
         authenticationService.user
@@ -58,11 +59,11 @@ final class AnswerService: ObservableObject {
             .limit(to: PingService.answerablePingCount)
             .addSnapshotListener() { [self] (snapshot, error) in
                 if let error = error {
-                    AlertService.shared.present(message: "setupFirestoreListeners \(error.localizedDescription)")
+                    alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")
                 }
 
                 guard let snapshot = snapshot else {
-                    AlertService.shared.present(message: "setupFirestoreListeners unable to get snapshot")
+                    alertService.present(message: "setupFirestoreListeners unable to get snapshot")
                     return
                 }
 
@@ -71,7 +72,7 @@ final class AnswerService: ObservableObject {
                     answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
                     latestAnswer = answers.first
                 } catch {
-                    AlertService.shared.present(message: "setupFirestoreListeners unable to decode latestAnswer")
+                    alertService.present(message: "setupFirestoreListeners unable to decode latestAnswer")
                 }
             }
             .store(in: &listeners)
@@ -182,7 +183,7 @@ extension AnswerService {
         let writeBatch = Firestore.firestore().batch()
         answerCollection.getDocuments() { result, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
             guard let result = result else {
                 return
@@ -190,7 +191,7 @@ extension AnswerService {
             result.documents.forEach { writeBatch.deleteDocument($0.reference) }
             writeBatch.commit() { error in
                 if let error = error {
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 }
             }
         }

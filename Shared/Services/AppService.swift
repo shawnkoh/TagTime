@@ -26,6 +26,7 @@ final class AppService: ObservableObject {
     @Injected private var authenticationService: AuthenticationService
     @Injected private var notificationService: NotificationService
     @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @Injected private var alertService: AlertService
 
     init() {
         authenticationService.$user
@@ -59,7 +60,7 @@ final class AppService: ObservableObject {
         DispatchQueue.global(qos: .utility).async { [self] in
             authenticationService.signIn()
                 .setUser(service: authenticationService)
-                .errorHandled(by: AlertService.shared)
+                .errorHandled(by: alertService)
         }
     }
 }

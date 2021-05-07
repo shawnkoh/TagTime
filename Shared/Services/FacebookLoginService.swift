@@ -13,6 +13,7 @@ import Resolver
 
 final class FacebookLoginService: ObservableObject {
     @Injected private var authenticationService: AuthenticationService
+    @Injected private var alertService: AlertService
 
     let loginManager = LoginManager()
 
@@ -20,7 +21,7 @@ final class FacebookLoginService: ObservableObject {
         // TODO: add extension to return publisher
         loginManager.logIn(permissions: ["public_profile", "email"], from: nil) { result, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
             guard
                 result != nil,
@@ -44,7 +45,7 @@ final class FacebookLoginService: ObservableObject {
                         throw error
                     }
                 }
-                .errorHandled(by: AlertService.shared)
+                .errorHandled(by: self.alertService)
         }
     }
 }

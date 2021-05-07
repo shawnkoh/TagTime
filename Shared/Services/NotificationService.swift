@@ -33,6 +33,7 @@ public final class NotificationService: NSObject, ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
 
+    @Injected private var alertService: AlertService
     @Injected private var authenticationService: AuthenticationService
     @Injected private var pingService: PingService
     @Injected private var answerService: AnswerService
@@ -62,11 +63,11 @@ public final class NotificationService: NSObject, ObservableObject {
 
         requestAuthorization() { (granted, error) in
             if let error = error {
-                AlertService.shared.present(message: "error while requesting authorisation \(error.localizedDescription)")
+                self.alertService.present(message: "error while requesting authorisation \(error.localizedDescription)")
             }
 
             guard granted else {
-                AlertService.shared.present(message: "Unable to schedule notifications, not granted permission")
+                self.alertService.present(message: "Unable to schedule notifications, not granted permission")
                 return
             }
 
@@ -182,7 +183,7 @@ public final class NotificationService: NSObject, ObservableObject {
 
         center.add(request) { error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
         }
     }
@@ -264,7 +265,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case let .failure(error):
-                        AlertService.shared.present(message: error.localizedDescription)
+                        self.alertService.present(message: error.localizedDescription)
                     case .finished:
                         ()
                     }
@@ -282,7 +283,7 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case let .failure(error):
-                        AlertService.shared.present(message: error.localizedDescription)
+                        self.alertService.present(message: error.localizedDescription)
                     case .finished:
                         ()
                     }

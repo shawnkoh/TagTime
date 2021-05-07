@@ -32,6 +32,7 @@ final class GoalService: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
+    @Injected private var alertService: AlertService
     @Injected private var authenticationService: AuthenticationService
     @Injected private var beeminderCredentialService: BeeminderCredentialService
 
@@ -64,7 +65,7 @@ final class GoalService: ObservableObject {
 
         user.goalCollection.addSnapshotListener { snapshot, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
 
             guard let snapshot = snapshot else {
@@ -85,7 +86,7 @@ final class GoalService: ObservableObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case let .failure(error):
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 case .finished:
                     ()
                 }

@@ -18,6 +18,7 @@ final class TagService: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
+    @Injected private var alertService: AlertService
     @Injected private var authenticationService: AuthenticationService
 
     private var user: User {
@@ -44,7 +45,7 @@ final class TagService: ObservableObject {
         user.userDocument.collection("tags")
             .addSnapshotListener() { snapshot, error in
                 if let error = error {
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 }
                 guard let snapshot = snapshot else {
                     return
@@ -56,7 +57,7 @@ final class TagService: ObservableObject {
                         }
                         self.tags[$0.documentID] = tagCache
                     } catch {
-                        AlertService.shared.present(message: error.localizedDescription)
+                        self.alertService.present(message: error.localizedDescription)
                     }
                 }
             }
@@ -85,7 +86,7 @@ final class TagService: ObservableObject {
 
         batch.commit() { error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
         }
     }
@@ -120,7 +121,7 @@ final class TagService: ObservableObject {
         
         batch.commit() { error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
         }
     }
@@ -138,7 +139,7 @@ extension TagService {
     func resetTagCache() {
         cache.getDocuments() { snapshot, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
             guard let snapshot = snapshot else {
                 return
@@ -147,7 +148,7 @@ extension TagService {
             snapshot.documents.forEach { batch.deleteDocument($0.reference) }
             batch.commit() { error in
                 if let error = error {
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 }
             }
         }

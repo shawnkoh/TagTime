@@ -20,6 +20,7 @@ final class BeeminderCredentialService: ObservableObject {
     private var listeners = [ListenerRegistration]()
 
     @Injected private var authenticationService: AuthenticationService
+    @Injected private var alertService: AlertService
 
     private var user: User {
         authenticationService.user
@@ -37,7 +38,7 @@ final class BeeminderCredentialService: ObservableObject {
         listeners = []
         user.credentialDocument.addSnapshotListener { snapshot, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
             let credential = try? snapshot?.data(as: Beeminder.Credential.self)
             self.credential = credential
@@ -48,7 +49,7 @@ final class BeeminderCredentialService: ObservableObject {
     func saveCredential(_ credential: Beeminder.Credential, user: User) {
         user.credentialDocument
             .setData(from: credential)
-            .errorHandled(by: AlertService.shared)
+            .errorHandled(by: alertService)
     }
 
     func saveCredential(_ credential: Beeminder.Credential) {
@@ -58,7 +59,7 @@ final class BeeminderCredentialService: ObservableObject {
     func removeCredential(user: User) {
         user.credentialDocument
             .delete()
-            .errorHandled(by: AlertService.shared)
+            .errorHandled(by: alertService)
     }
 
     func removeCredential() {
