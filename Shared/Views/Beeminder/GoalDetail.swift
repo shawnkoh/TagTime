@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Beeminder
+import Resolver
 
 struct GoalDetailConfig {
     var isPresented = false
@@ -75,7 +76,12 @@ struct GoalDetail: View {
 }
 
 struct GoalDetail_Previews: PreviewProvider {
+    @Injected static var goalService: GoalService
+    @Injected static var tagService: TagService
+
     static var previews: some View {
         GoalDetail(config: .constant(.init(isPresented: true, goal: Stub.goal)))
+            .environmentObject(goalService)
+            .environmentObject(tagService)
     }
 }

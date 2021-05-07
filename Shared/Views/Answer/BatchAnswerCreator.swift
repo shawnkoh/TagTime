@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftUIX
+import Resolver
 
 struct BatchAnswerConfig {
     var isPresented = false
@@ -63,7 +64,14 @@ struct BatchAnswerCreator: View {
 }
 
 struct BatchAnswerCreator_Previews: PreviewProvider {
+    @Injected static var answerService: AnswerService
+    @Injected static var pingService: PingService
+    @Injected static var alertService: AlertService
+
     static var previews: some View {
         BatchAnswerCreator(config: .constant(.init()))
+            .environmentObject(answerService)
+            .environmentObject(pingService)
+            .environmentObject(alertService)
     }
 }

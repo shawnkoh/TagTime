@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct MissedPingList: View {
     @EnvironmentObject var answerService: AnswerService
@@ -102,8 +103,15 @@ struct MissedPingList: View {
 }
 
 struct MissedPingList_Previews: PreviewProvider {
+    @Injected static var answerService: AnswerService
+    @Injected static var tagService: TagService
+    @Injected static var pingService: PingService
+
     static var previews: some View {
         MissedPingList()
             .preferredColorScheme(.dark)
+            .environmentObject(answerService)
+            .environmentObject(tagService)
+            .environmentObject(pingService)
     }
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Beeminder
+import Resolver
 
 struct TagList: View {
     @EnvironmentObject var tagService: TagService
@@ -40,7 +41,12 @@ struct TagList: View {
 }
 
 struct TagList_Previews: PreviewProvider {
+    @Injected static var tagService: TagService
+    @Injected static var goalService: GoalService
+
     static var previews: some View {
         TagList(goal: Stub.goal)
+            .environmentObject(tagService)
+            .environmentObject(goalService)
     }
 }

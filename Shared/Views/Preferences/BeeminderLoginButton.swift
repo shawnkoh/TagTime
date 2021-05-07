@@ -9,6 +9,7 @@ import SwiftUI
 import AuthenticationServices
 import BetterSafariView
 import Beeminder
+import Resolver
 
 struct BeeminderLoginButton: View {
     @EnvironmentObject var beeminderCredentialService: BeeminderCredentialService
@@ -56,7 +57,10 @@ struct BeeminderLoginButton: View {
 }
 
 struct BeeminderLoginButton_Previews: PreviewProvider {
+    @Injected static var beeminderCredentialService: BeeminderCredentialService
+
     static var previews: some View {
         BeeminderLoginButton()
+            .environmentObject(beeminderCredentialService)
     }
 }

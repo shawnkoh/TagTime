@@ -7,6 +7,7 @@
 
 #if DEBUG
 import SwiftUI
+import Resolver
 
 struct DebugMenu: View {
     @EnvironmentObject private var answerService: AnswerService
@@ -50,8 +51,19 @@ struct DebugMenu: View {
 }
 
 struct DebugMenu_Previews: PreviewProvider {
+    @Injected static var answerService: AnswerService
+    @Injected static var authenticationService: AuthenticationService
+    @Injected static var tagService: TagService
+    @Injected static var notificationService: NotificationService
+    @Injected static var pingService: PingService
+
     static var previews: some View {
         DebugMenu()
+            .environmentObject(answerService)
+            .environmentObject(authenticationService)
+            .environmentObject(tagService)
+            .environmentObject(notificationService)
+            .environmentObject(pingService)
     }
 }
 #endif

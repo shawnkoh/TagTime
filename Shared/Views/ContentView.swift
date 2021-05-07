@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Firebase
+import Resolver
 
 struct ContentView: View {
     @EnvironmentObject var appService: AppService
@@ -21,10 +22,11 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
-    private static let settings = SettingService()
+    @Injected static var appService: AppService
 
     static var previews: some View {
         ContentView()
             .preferredColorScheme(.dark)
+            .environmentObject(appService)
     }
 }

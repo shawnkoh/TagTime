@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftUIX
+import Resolver
 
 struct AnswerCreatorConfig {
     var isPresented = false
@@ -96,7 +97,12 @@ struct AnswerCreator: View {
 }
 
 struct AnswerCreator_Previews: PreviewProvider {
+    @Injected static var answerService: AnswerService
+    @Injected static var alertService: AlertService
+
     static var previews: some View {
         AnswerCreator(config: .constant(AnswerCreatorConfig()))
+            .environmentObject(answerService)
+            .environmentObject(alertService)
     }
 }

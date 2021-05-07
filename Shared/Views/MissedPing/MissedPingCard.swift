@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct MissedPingCard: View {
     // TODO: I'm not sure if we should use EnvironmentObject here, but I'm not sure how else
@@ -38,7 +39,14 @@ struct MissedPingCard: View {
 }
 
 struct MissedPingCard_Previews: PreviewProvider {
+    @Injected static var answerService: AnswerService
+    @Injected static var alertService: AlertService
+    @Injected static var tagService: TagService
+
     static var previews: some View {
         MissedPingCard(ping: Stub.pings.first!)
+            .environmentObject(answerService)
+            .environmentObject(alertService)
+            .environmentObject(tagService)
     }
 }

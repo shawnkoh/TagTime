@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct Logbook: View {
     @State private var showingSheet: Answer? = nil
@@ -106,7 +107,10 @@ struct Logbook: View {
 }
 
 struct Logbook_Previews: PreviewProvider {
+    @Injected static var answerService: AnswerService
+    
     static var previews: some View {
         Logbook()
+            .environmentObject(answerService)
     }
 }

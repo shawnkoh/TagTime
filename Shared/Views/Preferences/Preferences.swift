@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct Preferences: View {
     @EnvironmentObject var settingService: SettingService
@@ -51,7 +52,12 @@ struct Preferences: View {
 }
 
 struct Preferences_Previews: PreviewProvider {
+    @Injected static var settingService: SettingService
+    @Injected static var facebookLoginService: FacebookLoginService
+
     static var previews: some View {
         Preferences()
+            .environmentObject(settingService)
+            .environmentObject(facebookLoginService)
     }
 }

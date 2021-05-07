@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct AuthenticatedView: View {
     @EnvironmentObject var appService: AppService
@@ -95,8 +96,19 @@ struct AuthenticatedView: View {
 }
 
 struct AuthenticatedView_Previews: PreviewProvider {
+    @Injected static var appService: AppService
+    @Injected static var answerService: AnswerService
+    @Injected static var alertService: AlertService
+    @Injected static var beeminderCredentialService: BeeminderCredentialService
+    @Injected static var tagService: TagService
+
     static var previews: some View {
         AuthenticatedView()
             .preferredColorScheme(.dark)
+            .environmentObject(appService)
+            .environmentObject(answerService)
+            .environmentObject(alertService)
+            .environmentObject(beeminderCredentialService)
+            .environmentObject(tagService)
     }
 }

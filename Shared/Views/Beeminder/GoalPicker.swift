@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct GoalPickerConfig {
     var isPresented = false
@@ -37,7 +38,10 @@ struct GoalPicker: View {
 }
 
 struct GoalPicker_Previews: PreviewProvider {
+    @Injected static var goalService: GoalService
+
     static var previews: some View {
         GoalPicker()
+            .environmentObject(goalService)
     }
 }
