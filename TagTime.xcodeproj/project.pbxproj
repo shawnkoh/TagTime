@@ -88,6 +88,7 @@
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
+		86EB953F26455C8200C7A7A2 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 86EB953E26455C8200C7A7A2 /* Resolver */; };
 		86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */; };
 		86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD582D2629F52300B32B59 /* AnswerService.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
@@ -187,6 +188,7 @@
 			files = (
 				8658964326382F2D009D9299 /* SwiftUIX in Frameworks */,
 				869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */,
+				86EB953F26455C8200C7A7A2 /* Resolver in Frameworks */,
 				86821D6D2644794A001EF75D /* Beeminder in Frameworks */,
 				86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */,
 				86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */,
@@ -482,6 +484,7 @@
 				86589645263840E7009D9299 /* Fuse */,
 				869291E8263F09B800F6AA3D /* BetterSafariView */,
 				86821D6C2644794A001EF75D /* Beeminder */,
+				86EB953E26455C8200C7A7A2 /* Resolver */,
 			);
 			productName = "TagTime (iOS)";
 			productReference = 861256CE26139CAB00C2B81B /* TagTime.app */;
@@ -580,6 +583,7 @@
 				8658964126382F2D009D9299 /* XCRemoteSwiftPackageReference "SwiftUIX" */,
 				86589644263840E6009D9299 /* XCRemoteSwiftPackageReference "fuse-swift" */,
 				869291E7263F09B800F6AA3D /* XCRemoteSwiftPackageReference "BetterSafariView" */,
+				86EB953D26455C8100C7A7A2 /* XCRemoteSwiftPackageReference "Resolver" */,
 			);
 			productRefGroup = 861256CF26139CAB00C2B81B /* Products */;
 			projectDirPath = "";
@@ -1135,6 +1139,14 @@
 				minimumVersion = 9.2.0;
 			};
 		};
+		86EB953D26455C8100C7A7A2 /* XCRemoteSwiftPackageReference "Resolver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hmlongco/Resolver";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1186,6 +1198,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 86C04D2D26318D040046C0E3 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
 			productName = FacebookShare;
+		};
+		86EB953E26455C8200C7A7A2 /* Resolver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86EB953D26455C8100C7A7A2 /* XCRemoteSwiftPackageReference "Resolver" */;
+			productName = Resolver;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
