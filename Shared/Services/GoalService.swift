@@ -28,13 +28,16 @@ final class GoalService: ObservableObject {
         goals.filter { goalTrackers[$0.id] == nil }
     }
 
-    private var goalApi: GoalAPI?
     private var beeminderApi: Beeminder.API?
     private var serviceSubscribers = Set<AnyCancellable>()
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
     private let authenticationService: AuthenticationService
+
+    private var user: User {
+        authenticationService.user
+    }
     
     init(authenticationService: AuthenticationService) {
         self.authenticationService = authenticationService
@@ -54,16 +57,11 @@ final class GoalService: ObservableObject {
             .store(in: &serviceSubscribers)
     }
 
-    private func setup(user: User?) {
+    private func setup(user: User) {
         subscribers.forEach { $0.cancel() }
         subscribers = []
         listeners.forEach { $0.remove() }
         listeners = []
-        guard let user = user else {
-            self.goalApi = nil
-            return
-        }
-        self.goalApi = .init(user: user)
 
         user.goalCollection.addSnapshotListener { snapshot, error in
             if let error = error {
@@ -98,25 +96,22 @@ final class GoalService: ObservableObject {
             .store(in: &subscribers)
     }
 
-    func trackGoal(_ goal: Goal) -> AnyPublisher<Void, Error> {
-        guard let goalApi = goalApi else {
-            return Fail(error: Errors.notAuthenticated).eraseToAnyPublisher()
-        }
-        return goalApi.trackGoal(goal).eraseToAnyPublisher()
+    func trackGoal(_ goal: Goal) -> Future<Void, Error> {
+        user.goalCollection
+            .document(goal.id)
+            .setData(from: GoalTracker(tags: [], updatedDate: Date()))
     }
 
-    func untrackGoal(_ goal: Goal) -> AnyPublisher<Void, Error> {
-        guard let goalApi = goalApi else {
-            return Fail(error: Errors.notAuthenticated).eraseToAnyPublisher()
-        }
-        return goalApi.untrackGoal(goal).eraseToAnyPublisher()
+    func untrackGoal(_ goal: Goal) -> Future<Void, Error> {
+        user.goalCollection
+            .document(goal.id)
+            .delete()
     }
 
-    func trackTags(_ tags: [Tag], for goal: Goal) -> AnyPublisher<Void, Error> {
-        guard let goalApi = goalApi else {
-            return Fail(error: Errors.notAuthenticated).eraseToAnyPublisher()
-        }
-        return goalApi.trackTags(tags, for: goal).eraseToAnyPublisher()
+    func trackTags(_ tags: [Tag], for goal: Goal) -> Future<Void, Error> {
+        user.goalCollection
+            .document(goal.id)
+            .setData(from: GoalTracker(tags: tags, updatedDate: Date()))
     }
 
     func updateTrackedGoals(answer: Answer) -> AnyPublisher<Void, Error> {
@@ -158,31 +153,5 @@ final class GoalService: ObservableObject {
 private extension User {
     var goalCollection: CollectionReference {
         userDocument.collection("beeminder-goals")
-    }
-}
-
-private final class GoalAPI {
-    let user: User
-
-    init(user: User) {
-        self.user = user
-    }
-
-    func trackGoal(_ goal: Goal) -> Future<Void, Error> {
-        user.goalCollection
-            .document(goal.id)
-            .setData(from: GoalTracker(tags: [], updatedDate: Date()))
-    }
-
-    func untrackGoal(_ goal: Goal) -> Future<Void, Error> {
-        user.goalCollection
-            .document(goal.id)
-            .delete()
-    }
-
-    func trackTags(_ tags: [Tag], for goal: Goal) -> Future<Void, Error> {
-        user.goalCollection
-            .document(goal.id)
-            .setData(from: GoalTracker(tags: tags, updatedDate: Date()))
     }
 }
