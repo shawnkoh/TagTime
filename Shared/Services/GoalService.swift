@@ -17,7 +17,7 @@ final class GoalService: ObservableObject {
         case notAuthenticated
     }
 
-    static let shared = GoalService()
+    static let shared = GoalService(authenticationService: AuthenticationService.shared)
 
     @Published private(set) var goals: [Goal] = []
     @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
@@ -34,8 +34,11 @@ final class GoalService: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    init() {
-        AuthenticationService.shared.$user
+    private let authenticationService: AuthenticationService
+    
+    init(authenticationService: AuthenticationService) {
+        self.authenticationService = authenticationService
+        authenticationService.$user
             .sink { self.setup(user: $0) }
             .store(in: &serviceSubscribers)
 

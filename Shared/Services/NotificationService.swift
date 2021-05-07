@@ -21,7 +21,7 @@ public final class NotificationService: NSObject, ObservableObject {
         static let ping = "PING_CATEGORY"
     }
 
-    public static let shared = NotificationService()
+    public static let shared = NotificationService(authenticationService: AuthenticationService.shared, pingService: PingService.shared)
 
     @Published public private(set) var openedPing: Date?
 
@@ -34,7 +34,16 @@ public final class NotificationService: NSObject, ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
 
-    public override init() {
+    private let authenticationService: AuthenticationService
+    private let pingService: PingService
+
+    private var user: User {
+        authenticationService.user
+    }
+
+    public init(authenticationService: AuthenticationService, pingService: PingService) {
+        self.authenticationService = authenticationService
+        self.pingService = pingService
         self.category = UNNotificationCategory(
             identifier: CategoryIdentifier.ping,
             actions: [replyAction],
@@ -44,18 +53,14 @@ public final class NotificationService: NSObject, ObservableObject {
             options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
         )
         super.init()
-        userSubscriber = AuthenticationService.shared.$user
+        userSubscriber = authenticationService.$user
             .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
     }
 
-    private func setup(user: User?) {
+    private func setup(user: User) {
         subscribers.forEach { $0.cancel() }
         subscribers = []
-
-        guard let user = user else {
-            return
-        }
 
         requestAuthorization() { (granted, error) in
             if let error = error {
@@ -72,18 +77,18 @@ public final class NotificationService: NSObject, ObservableObject {
     }
 
     private func setupNotificationObserver() {
-        AnswerService.shared.$unansweredPings
+        pingService.$unansweredPings
             .map { $0.count }
             .receive(on: DispatchQueue.main)
             .sink { UIApplication.shared.applicationIconBadgeNumber = $0 }
             .store(in: &subscribers)
 
-        PingService.shared.$answerablePings
-            .compactMap { $0.last?.nextPing(averagePingInterval: PingService.shared.averagePingInterval) }
+        pingService.$answerablePings
+            .compactMap { $0.last?.nextPing(averagePingInterval: self.pingService.averagePingInterval) }
             .map { nextPing -> [Date] in
                 var nextPings = [nextPing]
                 while nextPings.count < 30 {
-                    let next = nextPings.last!.nextPing(averagePingInterval: PingService.shared.averagePingInterval)
+                    let next = nextPings.last!.nextPing(averagePingInterval: self.pingService.averagePingInterval)
                     nextPings.append(next)
                 }
                 return nextPings.map { $0.date }
@@ -142,7 +147,7 @@ public final class NotificationService: NSObject, ObservableObject {
         center.removeAllPendingNotificationRequests()
 
         pings.enumerated().forEach { index, ping in
-            scheduleNotification(ping: ping, badge: AnswerService.shared.unansweredPings.count + index + 1, previousAnswer: previousAnswer)
+            scheduleNotification(ping: ping, badge: pingService.unansweredPings.count + index + 1, previousAnswer: previousAnswer)
         }
     }
 
@@ -256,8 +261,8 @@ extension NotificationService: UNUserNotificationCenterDelegate {
     }
 
     private func addAnswer(answer: Answer, completionHandler: @escaping () -> Void) {
-        if let user = AuthenticationService.shared.user {
-            AnswerService.shared.createAnswer(answer, user: user)
+        if authenticationService.user.id != "unauthenticated" {
+            AnswerService.shared.createAnswer(answer)
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case let .failure(error):
@@ -269,12 +274,12 @@ extension NotificationService: UNUserNotificationCenterDelegate {
                 }, receiveValue: {})
                 .store(in: &subscribers)
         } else {
-            AuthenticationService.shared.signIn()
+            authenticationService.signIn()
                 // Setting user updates the notification
                 // TODO: This should be manually done instead. Most probably when we implement dynamic ping schedule
-                .setUser(service: AuthenticationService.shared)
+                .setUser(service: authenticationService)
                 .flatMap { user -> Future<Void, Error> in
-                    AnswerService.shared.createAnswer(answer, user: user)
+                    AnswerService.shared.createAnswer(answer)
                 }
                 .sink(receiveCompletion: { completion in
                     switch completion {

@@ -12,7 +12,7 @@ import FirebaseFirestore
 import Beeminder
 
 final class BeeminderCredentialService: ObservableObject {
-    static let shared = BeeminderCredentialService()
+    static let shared = BeeminderCredentialService(authenticationService: AuthenticationService.shared)
 
     @Published private(set) var credential: Beeminder.Credential?
 
@@ -20,20 +20,23 @@ final class BeeminderCredentialService: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    init() {
-        userSubscriber = AuthenticationService.shared.$user
+    private let authenticationService: AuthenticationService
+
+    private var user: User {
+        authenticationService.user
+    }
+
+    init(authenticationService: AuthenticationService) {
+        self.authenticationService = authenticationService
+        userSubscriber = authenticationService.$user
             .sink { self.setup(user: $0) }
     }
 
-    func setup(user: User?) {
+    func setup(user: User) {
         subscribers.forEach { $0.cancel() }
         subscribers = []
         listeners.forEach { $0.remove() }
         listeners = []
-        guard let user = user else {
-            self.credential = nil
-            return
-        }
         user.credentialDocument.addSnapshotListener { snapshot, error in
             if let error = error {
                 AlertService.shared.present(message: error.localizedDescription)
@@ -51,9 +54,6 @@ final class BeeminderCredentialService: ObservableObject {
     }
 
     func saveCredential(_ credential: Beeminder.Credential) {
-        guard let user = AuthenticationService.shared.user else {
-            return
-        }
         saveCredential(credential, user: user)
     }
 
@@ -64,9 +64,6 @@ final class BeeminderCredentialService: ObservableObject {
     }
 
     func removeCredential() {
-        guard let user = AuthenticationService.shared.user else {
-            return
-        }
         removeCredential(user: user)
     }
 }

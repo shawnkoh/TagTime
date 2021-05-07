@@ -10,11 +10,12 @@ import SwiftUI
 struct MissedPingList: View {
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var tagService: TagService
+    @EnvironmentObject var pingService: PingService
 
     @State private var batchAnswerConfig = BatchAnswerConfig()
 
     private var unansweredPings: [Date] {
-        answerService.unansweredPings.sorted { $0 > $1 }
+        pingService.unansweredPings.sorted { $0 > $1 }
     }
 
     private var pingsToday: [Date] {
@@ -93,6 +94,7 @@ struct MissedPingList: View {
                         BatchAnswerCreator(config: $batchAnswerConfig)
                             .environmentObject(self.answerService)
                             .environmentObject(self.tagService)
+                            .environmentObject(self.pingService)
                     }
             }
         }

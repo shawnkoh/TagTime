@@ -22,7 +22,7 @@ struct DebugMenu: View {
                     let pingDate = Date(timeIntervalSince1970: timeInterval)
                     NotificationService.shared.scheduleNotification(
                         ping: pingDate,
-                        badge: AnswerService.shared.unansweredPings.count,
+                        badge: PingService.shared.unansweredPings.count,
                         previousAnswer: AnswerService.shared.latestAnswer
                     )
                 }
