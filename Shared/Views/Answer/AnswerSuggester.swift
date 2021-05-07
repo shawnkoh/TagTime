@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Fuse
+import Resolver
 
 // TODO: This should actually be renamed TagSuggester
 struct AnswerSuggester: View {
@@ -60,7 +61,12 @@ struct AnswerSuggester: View {
 }
 
 struct AnswerSuggester_Previews: PreviewProvider {
+    @Injected static var answerService: AnswerService
+    @Injected static var tagService: TagService
+
     static var previews: some View {
         AnswerSuggester(keyword: .constant(""))
+            .environmentObject(answerService)
+            .environmentObject(tagService)
     }
 }

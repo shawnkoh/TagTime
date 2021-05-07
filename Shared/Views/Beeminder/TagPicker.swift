@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Beeminder
+import Resolver
 
 struct TagPickerConfig {
     var isPresented = false
@@ -99,7 +100,14 @@ struct TagPicker: View {
 }
 
 struct TagPicker_Previews: PreviewProvider {
+    @Injected static var tagService: TagService
+    @Injected static var goalService: GoalService
+    @Injected static var alertService: AlertService
+
     static var previews: some View {
         TagPicker(config: .constant(.init()), goal: Stub.goal)
+            .environmentObject(tagService)
+            .environmentObject(goalService)
+            .environmentObject(alertService)
     }
 }

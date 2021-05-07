@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct LogbookCard: View {
     var answer: Answer
@@ -43,7 +44,12 @@ struct LogbookCard: View {
 }
 
 struct LogbookCard_Previews: PreviewProvider {
+    @Injected static var answerService: AnswerService
+    @Injected static var alertService: AlertService
+
     static var previews: some View {
         LogbookCard(answer: Stub.answers.first!)
+            .environmentObject(answerService)
+            .environmentObject(alertService)
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct GoalList: View {
     @EnvironmentObject var goalService: GoalService
@@ -23,7 +24,10 @@ struct GoalList: View {
 }
 
 struct GoalList_Previews: PreviewProvider {
+    @Injected static var goalService: GoalService
+
     static var previews: some View {
         GoalList()
+            .environmentObject(goalService)
     }
 }
