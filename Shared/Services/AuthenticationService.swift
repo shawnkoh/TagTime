@@ -18,19 +18,16 @@ enum AuthError: Error {
     case noSnapshot
 }
 
-// AuthenticationService is intentionally not an ObservableObject
-// Because it is not intended to be used directly by a View.
-// Rather, it is a supporting service that helps the other services
-final class AuthenticationService {
+public final class AuthenticationService {
     enum AuthenticationError: Error {
         case couldNotSignInAnonymously
     }
 
     static let shared = AuthenticationService()
 
-    @Published fileprivate(set) var user: User?
+    @Published fileprivate(set) var user = User(id: "unauthenticated", startDate: Date())
 
-    init() {}
+    public init() {}
 
     func signIn() -> AnyPublisher<User, Error> {
         if let currentUser = Auth.auth().currentUser {
@@ -82,7 +79,7 @@ final class AuthenticationService {
     func signOut() {
         do {
             try Auth.auth().signOut()
-            user = nil
+            user = User(id: "unauthenticated", startDate: Date())
         } catch {
             AlertService.shared.present(message: error.localizedDescription)
         }
@@ -125,9 +122,6 @@ extension AnyPublisher where Output == User, Failure == Error {
 #if DEBUG
 extension AuthenticationService {
     func resetUserStartDate() {
-        guard let user = user else {
-            return
-        }
         let newUser = User(id: user.id, startDate: Date())
         do {
             try Firestore.firestore().collection("users").document(user.id).setData(from: newUser) { error in

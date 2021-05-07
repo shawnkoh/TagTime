@@ -17,18 +17,21 @@ final class AppService: ObservableObject {
         case preferences
     }
 
-    static let shared = AppService()
+    static let shared = AppService(authenticationService: AuthenticationService.shared)
 
     @Published var isAuthenticated = false
     @Published var pingNotification = AnswerCreatorConfig()
     @Published var currentPage: Page = .missedPingList
 
     private var subscribers = Set<AnyCancellable>()
+    private let authenticationService: AuthenticationService
 
-    init() {
-        AuthenticationService.shared.$user
+    init(authenticationService: AuthenticationService) {
+        self.authenticationService = authenticationService
+
+        authenticationService.$user
             .receive(on: DispatchQueue.main)
-            .sink { self.isAuthenticated = $0 != nil }
+            .sink { self.isAuthenticated = $0.id != "unauthenticated" }
             .store(in: &subscribers)
 
         NotificationService.shared.$openedPing
@@ -54,9 +57,9 @@ final class AppService: ObservableObject {
 
     func signIn() {
         // TODO: I'm not sure if Futures should be called in async thread
-        DispatchQueue.global(qos: .utility).async {
-            AuthenticationService.shared.signIn()
-                .setUser(service: AuthenticationService.shared)
+        DispatchQueue.global(qos: .utility).async { [self] in
+            authenticationService.signIn()
+                .setUser(service: authenticationService)
                 .errorHandled(by: AlertService.shared)
         }
     }

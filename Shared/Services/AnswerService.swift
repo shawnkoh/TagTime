@@ -12,7 +12,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 final class AnswerService: ObservableObject {
-    static let shared = AnswerService()
+    static let shared = AnswerService(authenticationService: AuthenticationService.shared)
     // 2 days worth of pings = 2 * 24 * 60 / 45
     static let answerablePingCount = 64
 
@@ -29,26 +29,29 @@ final class AnswerService: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    // TODO: Find a better way to handle this
-    var answerCollection: CollectionReference? {
-        AuthenticationService.shared.user?.answerCollection
+    private let authenticationService: AuthenticationService
+
+    private var user: User {
+        authenticationService.user
     }
 
-    init() {
-        userSubscriber = AuthenticationService.shared.$user
+    private var answerCollection: CollectionReference {
+        user.answerCollection
+    }
+
+    init(authenticationService: AuthenticationService) {
+        self.authenticationService = authenticationService
+
+        userSubscriber = authenticationService.$user
             .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
     }
 
-    private func setup(user: User?) {
+    private func setup(user: User) {
         listeners.forEach { $0.remove() }
         listeners = []
         subscribers.forEach { $0.cancel() }
         subscribers = []
-
-        guard let user = user else {
-            return
-        }
 
         setupFirestoreListeners(user: user)
         setupSubscribers()
@@ -106,13 +109,9 @@ final class AnswerService: ObservableObject {
     // TODO: This needs to be split into chunks
     func batchAnswerPings(pingDates: [Date], tags: [Tag]) -> Future<Void, Error> {
         Future { promise in
-            guard let user = AuthenticationService.shared.user else {
-                promise(.failure(AuthError.notAuthenticated))
-                return
-            }
             let batch = Firestore.firestore().batch()
             let answers = pingDates.map { Answer(ping: $0, tags: tags) }
-            answers.forEach { batch.createAnswer($0, user: user) }
+            answers.forEach { batch.createAnswer($0, user: self.user) }
             TagService.shared.registerTags(tags, with: batch, increment: answers.count)
 
             batch.commit() { error in
@@ -128,14 +127,10 @@ final class AnswerService: ObservableObject {
     // Not used at the moment. But useful for import.
     func batchCreateAnswers(_ answers: [Answer]) -> Future<Void, Error> {
         Future { promise in
-            guard let user = AuthenticationService.shared.user else {
-                promise(.failure(AuthError.notAuthenticated))
-                return
-            }
             let batch = Firestore.firestore().batch()
             // TODO: This needs to be split into chunks of maximum 500 / 3
             answers.forEach { answer in
-                batch.createAnswer(answer, user: user)
+                batch.createAnswer(answer, user: self.user)
                 TagService.shared.registerTags(answer.tags, with: batch)
             }
             batch.commit() { error in
@@ -148,10 +143,10 @@ final class AnswerService: ObservableObject {
         }
     }
 
-    func createAnswer(_ answer: Answer, user: User) -> Future<Void, Error> {
+    func createAnswer(_ answer: Answer) -> Future<Void, Error> {
         Future { promise in
             let batch = Firestore.firestore().batch()
-            batch.createAnswer(answer, user: user)
+            batch.createAnswer(answer, user: self.user)
             TagService.shared.registerTags(answer.tags, with: batch)
 
             batch.commit() { error in
@@ -164,15 +159,6 @@ final class AnswerService: ObservableObject {
         }
     }
 
-    func createAnswer(_ answer: Answer) -> Future<Void, Error> {
-        guard let user = AuthenticationService.shared.user else {
-            return Future { promise in
-                promise(.failure(AuthError.notAuthenticated))
-            }
-        }
-        return createAnswer(answer, user: user)
-    }
-
     func createAnswerAndUpdateTrackedGoals(_ answer: Answer) -> AnyPublisher<Void, Error> {
         createAnswer(answer)
             .flatMap { _ -> AnyPublisher<Void, Error> in
@@ -181,7 +167,7 @@ final class AnswerService: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-    func updateAnswer(_ answer: Answer, tags: [Tag], user: User) -> Future<Void, Error> {
+    func updateAnswer(_ answer: Answer, tags: [Tag]) -> Future<Void, Error> {
         Future { promise in
             let batch = Firestore.firestore().batch()
             let newTags = Set(tags)
@@ -189,7 +175,7 @@ final class AnswerService: ObservableObject {
             let removedTags = Array(oldTags.subtracting(newTags))
             let addedTags = Array(newTags.subtracting(oldTags))
             let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
-            batch.createAnswer(newAnswer, user: user)
+            batch.createAnswer(newAnswer, user: self.user)
             TagService.shared.registerTags(Array(addedTags), with: batch)
             TagService.shared.deregisterTags(Array(removedTags), with: batch)
 
@@ -201,15 +187,6 @@ final class AnswerService: ObservableObject {
                 }
             }
         }
-    }
-
-    func updateAnswer(_ answer: Answer, tags: [Tag]) -> Future<Void, Error> {
-        guard let user = AuthenticationService.shared.user else {
-            return Future { promise in
-                promise(.failure(AuthError.notAuthenticated))
-            }
-        }
-        return updateAnswer(answer, tags: tags, user: user)
     }
 }
 
@@ -230,9 +207,6 @@ private extension WriteBatch {
 extension AnswerService {
     // TODO: Deprecated. Need to implement using new removeAnswer
     func deleteAllAnswers() {
-        guard let answerCollection = answerCollection else {
-            return
-        }
         // TODO: This has a limit of 500 writes, we should ideally split tags into multiple chunks of 500
         let writeBatch = Firestore.firestore().batch()
         answerCollection.getDocuments() { result, error in

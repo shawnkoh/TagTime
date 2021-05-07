@@ -11,21 +11,28 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 final class TagService: ObservableObject {
-    static let shared = TagService()
+    static let shared = TagService(authenticationService: AuthenticationService.shared)
     
     @Published var tags: [Tag: TagCache] = [:]
     private var userSubscriber: AnyCancellable = .init({})
     
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
-    
-    init() {
-        userSubscriber = AuthenticationService.shared.$user
-            .sink { self.setup(user: $0) }
+
+    private let authenticationService: AuthenticationService
+
+    private var user: User {
+        authenticationService.user
+    }
+
+    private var cache: CollectionReference {
+        user.userDocument.collection("tags")
     }
     
-    var cache: CollectionReference? {
-        AuthenticationService.shared.user?.userDocument.collection("tags")
+    init(authenticationService: AuthenticationService) {
+        self.authenticationService = authenticationService
+        userSubscriber = authenticationService.$user
+            .sink { self.setup(user: $0) }
     }
     
     private func setup(user: User?) {
@@ -60,15 +67,11 @@ final class TagService: ObservableObject {
 
     // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
     func registerTags(_ tags: [Tag], with batch: WriteBatch? = nil, increment: Int = 1) {
-        guard let cacheReference = cache else {
-            return
-        }
-
         let willCommit = batch == nil
         let batch = batch ?? Firestore.firestore().batch()
         
         tags.forEach { tag in
-            let documentReference = cacheReference.document(tag)
+            let documentReference = cache.document(tag)
             let tagCache: TagCache
             if let localTagCache = self.tags[tag] {
                 tagCache = TagCache(count: localTagCache.count + increment, updatedDate: Date())
@@ -91,10 +94,6 @@ final class TagService: ObservableObject {
     
     // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
     func deregisterTags(_ tags: [Tag], with batch: WriteBatch? = nil) {
-        guard let cacheReference = cache else {
-            return
-        }
-
         let willCommit = batch == nil
         let batch = batch ?? Firestore.firestore().batch()
 
@@ -109,7 +108,7 @@ final class TagService: ObservableObject {
         }
         
         tagsToRemove.forEach { tag in
-            let documentReference = cacheReference.document(tag)
+            let documentReference = cache.document(tag)
             guard let localTagCache = self.tags[tag], localTagCache.count > 0 else {
                 return
             }
@@ -139,10 +138,6 @@ final class TagService: ObservableObject {
 #if DEBUG
 extension TagService {
     func resetTagCache() {
-        guard let cache = cache else {
-            return
-        }
-
         cache.getDocuments() { snapshot, error in
             if let error = error {
                 AlertService.shared.present(message: error.localizedDescription)

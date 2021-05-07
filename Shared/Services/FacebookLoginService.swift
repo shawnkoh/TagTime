@@ -11,11 +11,18 @@ import FirebaseAuth
 import Combine
 
 final class FacebookLoginService {
-    static let shared = FacebookLoginService()
+    static let shared = FacebookLoginService(authenticationService: AuthenticationService.shared)
+
+    private let authenticationService: AuthenticationService
+
+    init(authenticationService: AuthenticationService) {
+        self.authenticationService = authenticationService
+    }
 
     let loginManager = LoginManager()
 
     func login() {
+        // TODO: add extension to return publisher
         loginManager.logIn(permissions: ["public_profile", "email"], from: nil) { result, error in
             if let error = error {
                 AlertService.shared.present(message: error.localizedDescription)
@@ -27,12 +34,12 @@ final class FacebookLoginService {
                 return
             }
             let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
-            AuthenticationService.shared.link(with: credential)
+            self.authenticationService.link(with: credential)
                 .tryCatch { error -> AnyPublisher<Void, Error> in
                     switch error {
                     case let AuthError.authError(error, code):
                         if code == .credentialAlreadyInUse {
-                            return AuthenticationService.shared.signIn(with: credential)
+                            return self.authenticationService.signIn(with: credential)
                                 .map { _ in }
                                 .eraseToAnyPublisher()
                         } else {

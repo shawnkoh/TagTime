@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 final class PingService: ObservableObject {
-    static let shared = PingService()
+    static let shared = PingService(authenticationService: AuthenticationService.shared)
 
     var startPing: Ping
 
@@ -26,11 +26,14 @@ final class PingService: ObservableObject {
     private var userSubscriber: AnyCancellable = .init({})
     private var subscribers = Set<AnyCancellable>()
 
-    init(averagePingInterval: Int = defaultAveragePingInterval) {
+    private let authenticationService: AuthenticationService
+
+    init(authenticationService: AuthenticationService, averagePingInterval: Int = defaultAveragePingInterval) {
+        self.authenticationService = authenticationService
         self.averagePingInterval = averagePingInterval
         self.startPing = Self.tagTimeBirth
         self.answerablePings = []
-        self.userSubscriber = AuthenticationService.shared.$user
+        self.userSubscriber = authenticationService.$user
             .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
     }
