@@ -7,9 +7,9 @@
 
 import Foundation
 import Combine
+import Resolver
 
 public final class PingService: ObservableObject {
-    static let shared = PingService(authenticationService: AuthenticationService.shared, answerService: AnswerService.shared)
     // 2 days worth of pings = 2 * 24 * 60 / 45
     static let answerablePingCount = 64
 
@@ -31,12 +31,10 @@ public final class PingService: ObservableObject {
     private var userSubscriber: AnyCancellable = .init({})
     private var subscribers = Set<AnyCancellable>()
 
-    private let authenticationService: AuthenticationService
-    private let answerService: AnswerService
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var answerService: AnswerService
 
-    init(authenticationService: AuthenticationService, answerService: AnswerService, averagePingInterval: Int = defaultAveragePingInterval) {
-        self.authenticationService = authenticationService
-        self.answerService = answerService
+    init(averagePingInterval: Int = defaultAveragePingInterval) {
         self.averagePingInterval = averagePingInterval
         self.startPing = Self.tagTimeBirth
         self.answerablePings = []

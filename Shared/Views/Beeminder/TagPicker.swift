@@ -23,6 +23,7 @@ struct TagPickerConfig {
 struct TagPicker: View {
     @EnvironmentObject var tagService: TagService
     @EnvironmentObject var goalService: GoalService
+    @EnvironmentObject var alertService: AlertService
     @Binding var config: TagPickerConfig
     let goal: Goal
 
@@ -63,7 +64,7 @@ struct TagPicker: View {
                     }
                     let newTags = trackedTags + customTags.split(separator: " ").map { Tag($0) }
                     goalService.trackTags(newTags, for: goal)
-                        .errorHandled(by: AlertService.shared)
+                        .errorHandled(by: alertService)
                     customTags = ""
                 })
                 .multilineTextAlignment(.center)
@@ -87,7 +88,7 @@ struct TagPicker: View {
                                 }
                                 goalService
                                     .trackTags(newTags, for: goal)
-                                    .errorHandled(by: AlertService.shared)
+                                    .errorHandled(by: alertService)
                             }
                             .cardButtonStyle(isTracked ? .white : .black)
                     }
@@ -100,6 +101,5 @@ struct TagPicker: View {
 struct TagPicker_Previews: PreviewProvider {
     static var previews: some View {
         TagPicker(config: .constant(.init()), goal: Stub.goal)
-            .environmentObject(TagService.shared)
     }
 }

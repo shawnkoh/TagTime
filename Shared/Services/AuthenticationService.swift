@@ -10,6 +10,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Combine
+import Resolver
 
 enum AuthError: Error {
     case noResult
@@ -18,14 +19,14 @@ enum AuthError: Error {
     case noSnapshot
 }
 
-public final class AuthenticationService {
+public final class AuthenticationService: ObservableObject {
     enum AuthenticationError: Error {
         case couldNotSignInAnonymously
     }
 
-    static let shared = AuthenticationService()
-
     @Published fileprivate(set) var user = User(id: "unauthenticated", startDate: Date())
+
+    @Injected private var alertService: AlertService
 
     public init() {}
 
@@ -81,7 +82,7 @@ public final class AuthenticationService {
             try Auth.auth().signOut()
             user = User(id: "unauthenticated", startDate: Date())
         } catch {
-            AlertService.shared.present(message: error.localizedDescription)
+            alertService.present(message: error.localizedDescription)
         }
     }
 
@@ -126,13 +127,13 @@ extension AuthenticationService {
         do {
             try Firestore.firestore().collection("users").document(user.id).setData(from: newUser) { error in
                 if let error = error {
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 } else {
                     self.user = newUser
                 }
             }
         } catch {
-            AlertService.shared.present(message: error.localizedDescription)
+            alertService.present(message: error.localizedDescription)
         }
     }
 }

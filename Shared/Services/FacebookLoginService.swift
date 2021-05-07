@@ -9,15 +9,11 @@ import Foundation
 import FBSDKLoginKit
 import FirebaseAuth
 import Combine
+import Resolver
 
-final class FacebookLoginService {
-    static let shared = FacebookLoginService(authenticationService: AuthenticationService.shared)
-
-    private let authenticationService: AuthenticationService
-
-    init(authenticationService: AuthenticationService) {
-        self.authenticationService = authenticationService
-    }
+final class FacebookLoginService: ObservableObject {
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var alertService: AlertService
 
     let loginManager = LoginManager()
 
@@ -25,7 +21,7 @@ final class FacebookLoginService {
         // TODO: add extension to return publisher
         loginManager.logIn(permissions: ["public_profile", "email"], from: nil) { result, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
             guard
                 result != nil,
@@ -49,7 +45,7 @@ final class FacebookLoginService {
                         throw error
                     }
                 }
-                .errorHandled(by: AlertService.shared)
+                .errorHandled(by: self.alertService)
         }
     }
 }

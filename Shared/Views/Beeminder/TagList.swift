@@ -42,7 +42,5 @@ struct TagList: View {
 struct TagList_Previews: PreviewProvider {
     static var previews: some View {
         TagList(goal: Stub.goal)
-            .environmentObject(TagService.shared)
-            .environmentObject(GoalService.shared)
     }
 }

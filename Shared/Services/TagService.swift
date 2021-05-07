@@ -9,17 +9,17 @@ import Foundation
 import Combine
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import Resolver
 
 final class TagService: ObservableObject {
-    static let shared = TagService(authenticationService: AuthenticationService.shared)
-    
     @Published var tags: [Tag: TagCache] = [:]
     private var userSubscriber: AnyCancellable = .init({})
     
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    private let authenticationService: AuthenticationService
+    @Injected private var alertService: AlertService
+    @Injected private var authenticationService: AuthenticationService
 
     private var user: User {
         authenticationService.user
@@ -29,8 +29,7 @@ final class TagService: ObservableObject {
         user.userDocument.collection("tags")
     }
     
-    init(authenticationService: AuthenticationService) {
-        self.authenticationService = authenticationService
+    init() {
         userSubscriber = authenticationService.$user
             .sink { self.setup(user: $0) }
     }
@@ -46,7 +45,7 @@ final class TagService: ObservableObject {
         user.userDocument.collection("tags")
             .addSnapshotListener() { snapshot, error in
                 if let error = error {
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 }
                 guard let snapshot = snapshot else {
                     return
@@ -58,7 +57,7 @@ final class TagService: ObservableObject {
                         }
                         self.tags[$0.documentID] = tagCache
                     } catch {
-                        AlertService.shared.present(message: error.localizedDescription)
+                        self.alertService.present(message: error.localizedDescription)
                     }
                 }
             }
@@ -87,7 +86,7 @@ final class TagService: ObservableObject {
 
         batch.commit() { error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
         }
     }
@@ -122,7 +121,7 @@ final class TagService: ObservableObject {
         
         batch.commit() { error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
         }
     }
@@ -140,7 +139,7 @@ extension TagService {
     func resetTagCache() {
         cache.getDocuments() { snapshot, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
             guard let snapshot = snapshot else {
                 return
@@ -149,7 +148,7 @@ extension TagService {
             snapshot.documents.forEach { batch.deleteDocument($0.reference) }
             batch.commit() { error in
                 if let error = error {
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 }
             }
         }

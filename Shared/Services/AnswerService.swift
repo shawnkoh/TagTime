@@ -10,10 +10,9 @@ import Combine
 import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import Resolver
 
 final class AnswerService: ObservableObject {
-    static let shared = AnswerService(authenticationService: AuthenticationService.shared, goalService: GoalService.shared)
-
     // Solely updated by Firestore listener
     // Sorted in descending order
     @Published private(set) var answers: [Answer] = []
@@ -25,8 +24,10 @@ final class AnswerService: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    private let authenticationService: AuthenticationService
-    private let goalService: GoalService
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var goalService: GoalService
+    @Injected private var tagService: TagService
+    @Injected private var alertService: AlertService
 
     private var user: User {
         authenticationService.user
@@ -36,9 +37,7 @@ final class AnswerService: ObservableObject {
         user.answerCollection
     }
 
-    init(authenticationService: AuthenticationService, goalService: GoalService) {
-        self.authenticationService = authenticationService
-        self.goalService = goalService
+    init() {
 
         userSubscriber = authenticationService.$user
             .receive(on: DispatchQueue.main)
@@ -60,11 +59,11 @@ final class AnswerService: ObservableObject {
             .limit(to: PingService.answerablePingCount)
             .addSnapshotListener() { [self] (snapshot, error) in
                 if let error = error {
-                    AlertService.shared.present(message: "setupFirestoreListeners \(error.localizedDescription)")
+                    alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")
                 }
 
                 guard let snapshot = snapshot else {
-                    AlertService.shared.present(message: "setupFirestoreListeners unable to get snapshot")
+                    alertService.present(message: "setupFirestoreListeners unable to get snapshot")
                     return
                 }
 
@@ -73,7 +72,7 @@ final class AnswerService: ObservableObject {
                     answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
                     latestAnswer = answers.first
                 } catch {
-                    AlertService.shared.present(message: "setupFirestoreListeners unable to decode latestAnswer")
+                    alertService.present(message: "setupFirestoreListeners unable to decode latestAnswer")
                 }
             }
             .store(in: &listeners)
@@ -85,7 +84,7 @@ final class AnswerService: ObservableObject {
             let batch = Firestore.firestore().batch()
             let answers = pingDates.map { Answer(ping: $0, tags: tags) }
             answers.forEach { batch.createAnswer($0, user: self.user) }
-            TagService.shared.registerTags(tags, with: batch, increment: answers.count)
+            self.tagService.registerTags(tags, with: batch, increment: answers.count)
 
             batch.commit() { error in
                 if let error = error {
@@ -104,7 +103,7 @@ final class AnswerService: ObservableObject {
             // TODO: This needs to be split into chunks of maximum 500 / 3
             answers.forEach { answer in
                 batch.createAnswer(answer, user: self.user)
-                TagService.shared.registerTags(answer.tags, with: batch)
+                self.tagService.registerTags(answer.tags, with: batch)
             }
             batch.commit() { error in
                 if let error = error {
@@ -120,7 +119,7 @@ final class AnswerService: ObservableObject {
         Future { promise in
             let batch = Firestore.firestore().batch()
             batch.createAnswer(answer, user: self.user)
-            TagService.shared.registerTags(answer.tags, with: batch)
+            self.tagService.registerTags(answer.tags, with: batch)
 
             batch.commit() { error in
                 if let error = error {
@@ -149,8 +148,8 @@ final class AnswerService: ObservableObject {
             let addedTags = Array(newTags.subtracting(oldTags))
             let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
             batch.createAnswer(newAnswer, user: self.user)
-            TagService.shared.registerTags(Array(addedTags), with: batch)
-            TagService.shared.deregisterTags(Array(removedTags), with: batch)
+            self.tagService.registerTags(Array(addedTags), with: batch)
+            self.tagService.deregisterTags(Array(removedTags), with: batch)
 
             batch.commit() { error in
                 if let error = error {
@@ -184,7 +183,7 @@ extension AnswerService {
         let writeBatch = Firestore.firestore().batch()
         answerCollection.getDocuments() { result, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
             guard let result = result else {
                 return
@@ -192,7 +191,7 @@ extension AnswerService {
             result.documents.forEach { writeBatch.deleteDocument($0.reference) }
             writeBatch.commit() { error in
                 if let error = error {
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 }
             }
         }

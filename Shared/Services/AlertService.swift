@@ -13,8 +13,6 @@ final class AlertService: ObservableObject {
     @Published var isPresented = false
     @Published private(set) var message = ""
 
-    static let shared = AlertService()
-
     var subscribers = Set<AnyCancellable>()
 
     // TODO: This should connect to somewhere like Sentry

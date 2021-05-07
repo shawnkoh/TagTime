@@ -54,7 +54,5 @@ struct TrackedGoalList: View {
 struct TrackedGoalList_Previews: PreviewProvider {
     static var previews: some View {
         TrackedGoalList()
-            .environmentObject(GoalService.shared)
-            .environmentObject(TagService.shared)
     }
 }

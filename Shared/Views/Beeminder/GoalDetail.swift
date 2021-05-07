@@ -77,7 +77,5 @@ struct GoalDetail: View {
 struct GoalDetail_Previews: PreviewProvider {
     static var previews: some View {
         GoalDetail(config: .constant(.init(isPresented: true, goal: Stub.goal)))
-            .environmentObject(GoalService.shared)
-            .environmentObject(TagService.shared)
     }
 }

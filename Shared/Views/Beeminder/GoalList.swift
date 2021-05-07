@@ -25,6 +25,5 @@ struct GoalList: View {
 struct GoalList_Previews: PreviewProvider {
     static var previews: some View {
         GoalList()
-            .environmentObject(GoalService.shared)
     }
 }

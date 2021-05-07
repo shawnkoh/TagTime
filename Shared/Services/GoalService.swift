@@ -11,13 +11,12 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Combine
 import Beeminder
+import Resolver
 
 final class GoalService: ObservableObject {
     enum Errors: Error {
         case notAuthenticated
     }
-
-    static let shared = GoalService(authenticationService: AuthenticationService.shared)
 
     @Published private(set) var goals: [Goal] = []
     @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
@@ -33,19 +32,20 @@ final class GoalService: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
 
-    private let authenticationService: AuthenticationService
+    @Injected private var alertService: AlertService
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var beeminderCredentialService: BeeminderCredentialService
 
     private var user: User {
         authenticationService.user
     }
     
-    init(authenticationService: AuthenticationService) {
-        self.authenticationService = authenticationService
+    init() {
         authenticationService.$user
             .sink { self.setup(user: $0) }
             .store(in: &serviceSubscribers)
 
-        BeeminderCredentialService.shared.$credential
+        beeminderCredentialService.$credential
             .sink {
                 guard let credential = $0 else {
                     self.beeminderApi = nil
@@ -65,7 +65,7 @@ final class GoalService: ObservableObject {
 
         user.goalCollection.addSnapshotListener { snapshot, error in
             if let error = error {
-                AlertService.shared.present(message: error.localizedDescription)
+                self.alertService.present(message: error.localizedDescription)
             }
 
             guard let snapshot = snapshot else {
@@ -86,7 +86,7 @@ final class GoalService: ObservableObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case let .failure(error):
-                    AlertService.shared.present(message: error.localizedDescription)
+                    self.alertService.present(message: error.localizedDescription)
                 case .finished:
                     ()
                 }

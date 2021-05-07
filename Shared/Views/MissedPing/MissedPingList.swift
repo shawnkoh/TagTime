@@ -104,7 +104,6 @@ struct MissedPingList: View {
 struct MissedPingList_Previews: PreviewProvider {
     static var previews: some View {
         MissedPingList()
-            .environmentObject(AnswerService.shared)
             .preferredColorScheme(.dark)
     }
 }

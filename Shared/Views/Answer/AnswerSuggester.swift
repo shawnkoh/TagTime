@@ -62,6 +62,5 @@ struct AnswerSuggester: View {
 struct AnswerSuggester_Previews: PreviewProvider {
     static var previews: some View {
         AnswerSuggester(keyword: .constant(""))
-            .environmentObject(AnswerService.shared)
     }
 }
