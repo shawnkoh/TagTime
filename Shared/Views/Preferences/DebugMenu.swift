@@ -13,7 +13,7 @@ struct DebugMenu: View {
     @EnvironmentObject private var answerService: AnswerService
     @EnvironmentObject private var authenticationService: AuthenticationService
     @EnvironmentObject private var tagService: TagService
-    @EnvironmentObject private var notificationService: NotificationService
+    @EnvironmentObject private var notificationScheduler: NotificationScheduler
     @EnvironmentObject private var pingService: PingService
 
     var body: some View {
@@ -27,7 +27,7 @@ struct DebugMenu: View {
                 .onTap {
                     let timeInterval = Date(timeIntervalSinceNow: 5).timeIntervalSince1970.rounded()
                     let pingDate = Date(timeIntervalSince1970: timeInterval)
-                    notificationService.scheduleNotification(
+                    notificationScheduler.scheduleNotification(
                         ping: pingDate,
                         badge: pingService.unansweredPings.count,
                         previousAnswer: answerService.latestAnswer
@@ -54,7 +54,7 @@ struct DebugMenu_Previews: PreviewProvider {
     @Injected static var answerService: AnswerService
     @Injected static var authenticationService: AuthenticationService
     @Injected static var tagService: TagService
-    @Injected static var notificationService: NotificationService
+    @Injected static var notificationScheduler: NotificationScheduler
     @Injected static var pingService: PingService
 
     static var previews: some View {
@@ -62,7 +62,7 @@ struct DebugMenu_Previews: PreviewProvider {
             .environmentObject(answerService)
             .environmentObject(authenticationService)
             .environmentObject(tagService)
-            .environmentObject(notificationService)
+            .environmentObject(notificationScheduler)
             .environmentObject(pingService)
     }
 }

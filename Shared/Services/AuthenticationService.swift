@@ -20,13 +20,18 @@ enum AuthError: Error {
 }
 
 public final class AuthenticationService: ObservableObject {
+    static let unauthenticatedUserId = "unauthenticated"
     enum AuthenticationError: Error {
         case couldNotSignInAnonymously
     }
 
-    @Published fileprivate(set) var user = User(id: "unauthenticated", startDate: Date())
-
     @Injected private var alertService: AlertService
+
+    @Published fileprivate(set) var user = User(id: unauthenticatedUserId, startDate: Date())
+
+    public var isAuthenticated: Bool {
+        user.id != Self.unauthenticatedUserId
+    }
 
     public init() {}
 
@@ -80,7 +85,7 @@ public final class AuthenticationService: ObservableObject {
     func signOut() {
         do {
             try Auth.auth().signOut()
-            user = User(id: "unauthenticated", startDate: Date())
+            user = User(id: Self.unauthenticatedUserId, startDate: Date())
         } catch {
             alertService.present(message: error.localizedDescription)
         }

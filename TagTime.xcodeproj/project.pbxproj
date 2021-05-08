@@ -27,6 +27,7 @@
 		863CA83A2635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		863CA83B2635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864203B02632710700668EC1 /* FacebookLoginService.swift */; };
+		8642E2C426469C8400C38D68 /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8642E2C326469C8400C38D68 /* NotificationHandler.swift */; };
 		865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865391EB2633D4A700F202F7 /* AnswerCreator.swift */; };
 		86545E1D2642EB7A00897253 /* DoubleTappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86545E1C2642EB7A00897253 /* DoubleTappable.swift */; };
 		86569A612641B111005C49C7 /* GoalDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86569A602641B111005C49C7 /* GoalDetail.swift */; };
@@ -86,7 +87,7 @@
 		86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */; };
 		86E34E142643FB4A00B3AA5E /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E34E132643FB4A00B3AA5E /* CardStyle.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
-		86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationService.swift */; };
+		86E3AB6826243AC300092CE6 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationScheduler.swift */; };
 		86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */; };
 		86EB953F26455C8200C7A7A2 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 86EB953E26455C8200C7A7A2 /* Resolver */; };
 		86EB954126455CB400C7A7A2 /* Resolver+ResolverRegistering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EB954026455CB400C7A7A2 /* Resolver+ResolverRegistering.swift */; };
@@ -137,6 +138,7 @@
 		863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TagTime.entitlements; sourceTree = "<group>"; };
 		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
+		8642E2C326469C8400C38D68 /* NotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandler.swift; sourceTree = "<group>"; };
 		865391EB2633D4A700F202F7 /* AnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerCreator.swift; sourceTree = "<group>"; };
 		86545E1C2642EB7A00897253 /* DoubleTappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTappable.swift; sourceTree = "<group>"; };
 		86569A602641B111005C49C7 /* GoalDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalDetail.swift; sourceTree = "<group>"; };
@@ -175,7 +177,7 @@
 		86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentReference+Combine.swift"; sourceTree = "<group>"; };
 		86E34E132643FB4A00B3AA5E /* CardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStyle.swift; sourceTree = "<group>"; };
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
-		86E3AB6726243AC300092CE6 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		86E3AB6726243AC300092CE6 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
 		86EB954026455CB400C7A7A2 /* Resolver+ResolverRegistering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resolver+ResolverRegistering.swift"; sourceTree = "<group>"; };
 		86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
@@ -451,11 +453,12 @@
 				8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */,
 				864203B02632710700668EC1 /* FacebookLoginService.swift */,
 				8665E2A42641752B003EB532 /* GoalService.swift */,
-				86E3AB6726243AC300092CE6 /* NotificationService.swift */,
+				8642E2C326469C8400C38D68 /* NotificationHandler.swift */,
+				86E3AB6726243AC300092CE6 /* NotificationScheduler.swift */,
 				86C5A701261E2104001451E9 /* PingService.swift */,
+				86EB954026455CB400C7A7A2 /* Resolver+ResolverRegistering.swift */,
 				8672E70426181B01004081FC /* SettingService.swift */,
 				868D83ED26396B49000211A6 /* TagService.swift */,
-				86EB954026455CB400C7A7A2 /* Resolver+ResolverRegistering.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -643,12 +646,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				8614ED1C264110D700F543F2 /* BeeminderCredentialService.swift in Sources */,
+				8642E2C426469C8400C38D68 /* NotificationHandler.swift in Sources */,
 				8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */,
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
 				86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */,
-				86E3AB6826243AC300092CE6 /* NotificationService.swift in Sources */,
+				86E3AB6826243AC300092CE6 /* NotificationScheduler.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */,

@@ -24,17 +24,18 @@ final class AppService: ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
     @Injected private var authenticationService: AuthenticationService
-    @Injected private var notificationService: NotificationService
+    @Injected private var notificationHandler: NotificationHandler
+    @Injected private var notificationScheduler: NotificationScheduler
     @Injected private var beeminderCredentialService: BeeminderCredentialService
     @Injected private var alertService: AlertService
 
     init() {
         authenticationService.$user
             .receive(on: DispatchQueue.main)
-            .sink { self.isAuthenticated = $0.id != "unauthenticated" }
+            .sink { self.isAuthenticated = $0.id != AuthenticationService.unauthenticatedUserId }
             .store(in: &subscribers)
 
-        notificationService.$openedPing
+        notificationHandler.$openedPing
             .receive(on: DispatchQueue.main)
             .sink { [self] in
                 if let pingDate = $0 {

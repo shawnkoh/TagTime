@@ -20,7 +20,7 @@ struct TagTimeApp: App {
     @StateObject var beeminderCredentialService: BeeminderCredentialService = Resolver.resolve()
     @StateObject var facebookLoginService: FacebookLoginService = Resolver.resolve()
     @StateObject var goalService: GoalService = Resolver.resolve()
-    @StateObject var notificationService: NotificationService = Resolver.resolve()
+    @StateObject var notificationScheduler: NotificationScheduler = Resolver.resolve()
     @StateObject var pingService: PingService = Resolver.resolve()
     @StateObject var settingService: SettingService = Resolver.resolve()
     @StateObject var tagService: TagService = Resolver.resolve()
@@ -44,7 +44,7 @@ struct TagTimeApp: App {
                 .environmentObject(beeminderCredentialService)
                 .environmentObject(facebookLoginService)
                 .environmentObject(goalService)
-                .environmentObject(notificationService)
+                .environmentObject(notificationScheduler)
                 .environmentObject(pingService)
                 .environmentObject(settingService)
                 .environmentObject(tagService)
@@ -55,7 +55,7 @@ struct TagTimeApp: App {
 }
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
-    @Injected private var notificationService: NotificationService
+    @Injected private var notificationHandler: NotificationHandler
 
     func application(
         _ application: UIApplication,
@@ -67,7 +67,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             didFinishLaunchingWithOptions: launchOptions
         )
 
-        UNUserNotificationCenter.current().delegate = notificationService
+        UNUserNotificationCenter.current().delegate = notificationHandler
 
         return true
     }

@@ -24,7 +24,9 @@ extension Resolver: ResolverRegistering {
             .scope(.cached)
         register { GoalService() }
             .scope(.cached)
-        register { NotificationService() }
+        register { NotificationHandler() }
+            .scope(.cached)
+        register { NotificationScheduler() }
             .scope(.cached)
         register { PingService() }
             .scope(.cached)
