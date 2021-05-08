@@ -40,6 +40,7 @@ struct TagTimeApp: App {
                 }
                 .environmentObject(alertService)
                 .environmentObject(answerService)
+                .environmentObject(authenticationService)
                 .environmentObject(beeminderCredentialService)
                 .environmentObject(facebookLoginService)
                 .environmentObject(goalService)
