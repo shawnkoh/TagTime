@@ -7,10 +7,30 @@
 
 import SwiftUI
 import Resolver
+import Combine
+
+final class PreferencesViewModel: ObservableObject {
+    @Injected private var settingService: SettingService
+    @Injected private var facebookLoginService: FacebookLoginService
+
+    @Published var averagePingInterval: Int = 45
+
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        settingService.$averagePingInterval
+            .receive(on: DispatchQueue.main)
+            .sink { self.averagePingInterval = $0 }
+            .store(in: &subscribers)
+    }
+
+    func loginWithFacebook() {
+        facebookLoginService.login()
+    }
+}
 
 struct Preferences: View {
-    @EnvironmentObject var settingService: SettingService
-    @EnvironmentObject var facebookLoginService: FacebookLoginService
+    @StateObject private var viewModel = PreferencesViewModel()
 
     #if DEBUG
     @State private var isDebugPresented = false
@@ -26,7 +46,7 @@ struct Preferences: View {
 
                 TextField(
                     "Ping Interval",
-                    value: $settingService.averagePingInterval,
+                    value: $viewModel.averagePingInterval,
                     formatter: NumberFormatter(),
                     onEditingChanged: { _ in },
                     onCommit: {}
@@ -35,7 +55,7 @@ struct Preferences: View {
                 BeeminderLoginButton()
 
                 Text("Login with Facebook")
-                    .onTap { facebookLoginService.login() }
+                    .onTap { viewModel.loginWithFacebook() }
 
                 #if DEBUG
                 Text("Open Debug Menu")
@@ -52,12 +72,7 @@ struct Preferences: View {
 }
 
 struct Preferences_Previews: PreviewProvider {
-    @Injected static var settingService: SettingService
-    @Injected static var facebookLoginService: FacebookLoginService
-
     static var previews: some View {
         Preferences()
-            .environmentObject(settingService)
-            .environmentObject(facebookLoginService)
     }
 }
