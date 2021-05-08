@@ -1,5 +1,5 @@
 //
-//  NotificationService.swift
+//  NotificationScheduler.swift
 //  TagTime (iOS)
 //
 //  Created by Shawn Koh on 12/4/21.
@@ -11,8 +11,7 @@ import Combine
 import UIKit
 import Resolver
 
-// NSObject is required for NotificationService to be UNUserNotificationCenterDelegate
-public final class NotificationService: NSObject, ObservableObject {
+public final class NotificationScheduler: ObservableObject {
     public enum ActionIdentifier {
         static let previous = "PREVIOUS_ACTION"
         static let reply = "REPLY_ACTION"
@@ -21,8 +20,6 @@ public final class NotificationService: NSObject, ObservableObject {
     public enum CategoryIdentifier {
         static let ping = "PING_CATEGORY"
     }
-
-    @Published public private(set) var openedPing: Date?
 
     private(set) var category: UNNotificationCategory
 
@@ -42,7 +39,7 @@ public final class NotificationService: NSObject, ObservableObject {
         authenticationService.user
     }
 
-    public override init() {
+    public init() {
         self.category = UNNotificationCategory(
             identifier: CategoryIdentifier.ping,
             actions: [replyAction],
@@ -51,7 +48,6 @@ public final class NotificationService: NSObject, ObservableObject {
             categorySummaryFormat: nil,
             options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
         )
-        super.init()
         userSubscriber = authenticationService.$user
             .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
@@ -185,111 +181,6 @@ public final class NotificationService: NSObject, ObservableObject {
             if let error = error {
                 self.alertService.present(message: error.localizedDescription)
             }
-        }
-    }
-}
-
-extension NotificationService: UNUserNotificationCenterDelegate {
-    public func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
-        willPresent notification: UNNotification,
-        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
-    ) {
-        guard
-            let unixtime = notification.request.content.userInfo["pingDate"] as? String,
-            let timeInterval = TimeInterval(unixtime)
-        else {
-            // TODO: Not sure about this completion handler
-            completionHandler([])
-            return
-        }
-        let pingDate = Date(timeIntervalSince1970: timeInterval)
-        self.openedPing = pingDate
-        // TODO: Not sure about this completion handler.
-        completionHandler([.badge, .sound])
-    }
-
-    public func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse,
-        withCompletionHandler completionHandler: @escaping () -> Void
-    ) {
-        let userInfo = response.notification.request.content.userInfo
-        guard
-            let unixtime = userInfo["pingDate"] as? String,
-            let timeInterval = TimeInterval(unixtime)
-        else {
-            completionHandler()
-            return
-        }
-        let pingDate = Date(timeIntervalSince1970: timeInterval)
-
-        switch response.actionIdentifier {
-            case Self.ActionIdentifier.previous:
-                guard let previousAnswer = userInfo["previousAnswer"] as? String else {
-                    // TODO: Log error
-                    completionHandler()
-                    return
-                }
-                signInAndAnswerPing(pingDate, with: previousAnswer, completionHandler: completionHandler)
-
-            case Self.ActionIdentifier.reply:
-                guard let response = response as? UNTextInputNotificationResponse else {
-                    // TODO: Log error
-                    completionHandler()
-                    return
-                }
-                signInAndAnswerPing(pingDate, with: response.userText, completionHandler: completionHandler)
-
-            case UNNotificationDefaultActionIdentifier:
-                self.openedPing = pingDate
-                completionHandler()
-
-            default:
-                break
-        }
-    }
-
-    private func signInAndAnswerPing(_ ping: Date, with text: String, completionHandler: @escaping () -> Void) {
-        // For some reason, this doesn't work if its not wrapped in an async call.
-        DispatchQueue.global(qos: .utility).async {
-            let tags = text.split(separator: " ").map { Tag($0) }
-            let answer = Answer(ping: ping, tags: tags)
-            self.addAnswer(answer: answer, completionHandler: completionHandler)
-        }
-    }
-
-    private func addAnswer(answer: Answer, completionHandler: @escaping () -> Void) {
-        if authenticationService.user.id != "unauthenticated" {
-            answerService.createAnswer(answer)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case let .failure(error):
-                        self.alertService.present(message: error.localizedDescription)
-                    case .finished:
-                        ()
-                    }
-                    completionHandler()
-                }, receiveValue: {})
-                .store(in: &subscribers)
-        } else {
-            authenticationService.signIn()
-                // Setting user updates the notification
-                // TODO: This should be manually done instead. Most probably when we implement dynamic ping schedule
-                .setUser(service: authenticationService)
-                .flatMap { user -> Future<Void, Error> in
-                    self.answerService.createAnswer(answer)
-                }
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case let .failure(error):
-                        self.alertService.present(message: error.localizedDescription)
-                    case .finished:
-                        ()
-                    }
-                    completionHandler()
-                }, receiveValue: {})
-                .store(in: &subscribers)
         }
     }
 }
