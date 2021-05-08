@@ -54,7 +54,7 @@ struct AnswerSuggester: View {
     @StateObject var viewModel = AnswerSuggesterViewModel()
     @Binding var keyword: String
 
-    var body: some View {g
+    var body: some View {
         if keyword == "", let latestAnswer = viewModel.latestAnswer {
             Text(latestAnswer)
                 .onTap { replaceKeyword(with: latestAnswer) }

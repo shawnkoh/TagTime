@@ -9,29 +9,28 @@ import SwiftUI
 import SwiftUIX
 import Resolver
 
-struct BatchAnswerConfig {
-    var isPresented = false
-    var response = ""
+final class BatchAnswerCreatorViewModel: ObservableObject {
+    @Injected private var answerService: AnswerService
+    @Injected private var pingService: PingService
+    @Injected private var alertService: AlertService
 
-    var tags: [Tag] {
-        response.split(separator: " ").map { Tag($0) }
-    }
-
-    mutating func show() {
-        response = ""
-        isPresented = true
-    }
-
-    mutating func dismiss() {
-        isPresented = false
+    func answerAllUnansweredPings(response: String) {
+        let tags = response.split(separator: " ").map { Tag($0) }
+        guard tags.count > 0 else {
+            return
+        }
+        DispatchQueue.global(qos: .utility).async { [self] in
+            answerService
+                .batchAnswerPings(pingDates: pingService.unansweredPings, tags: tags)
+                .errorHandled(by: alertService)
+        }
     }
 }
 
 struct BatchAnswerCreator: View {
-    @EnvironmentObject var answerService: AnswerService
-    @EnvironmentObject var pingService: PingService
-    @EnvironmentObject var alertService: AlertService
-    @Binding var config: BatchAnswerConfig
+    @StateObject var viewModel = BatchAnswerCreatorViewModel()
+    @State private var response = ""
+    @Binding var isPresented: Bool
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -39,39 +38,23 @@ struct BatchAnswerCreator: View {
             Text("")
             CocoaTextField(
                 "PING1 PING2",
-                text: $config.response,
-                onCommit: { answerAllUnansweredPings(tags: config.tags) }
+                text: $response,
+                onCommit: {
+                    viewModel.answerAllUnansweredPings(response: response)
+                    isPresented = false
+                }
             )
             .isInitialFirstResponder(true)
 
             Spacer()
 
-            AnswerSuggester(keyword: $config.response)
+            AnswerSuggester(keyword: $response)
         }
-    }
-
-    private func answerAllUnansweredPings(tags: [Tag]) {
-        guard tags.count > 0 else {
-            return
-        }
-        DispatchQueue.global(qos: .utility).async {
-            answerService
-                .batchAnswerPings(pingDates: pingService.unansweredPings, tags: tags)
-                .errorHandled(by: alertService)
-        }
-        config.dismiss()
     }
 }
 
 struct BatchAnswerCreator_Previews: PreviewProvider {
-    @Injected static var answerService: AnswerService
-    @Injected static var pingService: PingService
-    @Injected static var alertService: AlertService
-
     static var previews: some View {
-        BatchAnswerCreator(config: .constant(.init()))
-            .environmentObject(answerService)
-            .environmentObject(pingService)
-            .environmentObject(alertService)
+        BatchAnswerCreator(isPresented: .constant(true))
     }
 }

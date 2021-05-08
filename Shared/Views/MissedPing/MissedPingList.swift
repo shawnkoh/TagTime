@@ -13,7 +13,7 @@ struct MissedPingList: View {
     @EnvironmentObject var tagService: TagService
     @EnvironmentObject var pingService: PingService
 
-    @State private var batchAnswerConfig = BatchAnswerConfig()
+    @State private var isBatchAnswerCreatorPresented = false
 
     private var unansweredPings: [Date] {
         pingService.unansweredPings.sorted { $0 > $1 }
@@ -89,10 +89,10 @@ struct MissedPingList: View {
 
             if unansweredPings.count > 1 {
                 Text("ANSWER ALL")
-                    .onTap { batchAnswerConfig.show() }
+                    .onTap { isBatchAnswerCreatorPresented = true }
                     .cardButtonStyle(.modalCard)
-                    .sheet(isPresented: $batchAnswerConfig.isPresented) {
-                        BatchAnswerCreator(config: $batchAnswerConfig)
+                    .sheet(isPresented: $isBatchAnswerCreatorPresented) {
+                        BatchAnswerCreator(isPresented: $isBatchAnswerCreatorPresented)
                             .environmentObject(self.answerService)
                             .environmentObject(self.tagService)
                             .environmentObject(self.pingService)
