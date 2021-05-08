@@ -10,28 +10,54 @@ import AuthenticationServices
 import BetterSafariView
 import Beeminder
 import Resolver
+import Combine
 
-struct BeeminderLoginButton: View {
-    @EnvironmentObject var beeminderCredentialService: BeeminderCredentialService
+final class BeeminderLoginButtonViewModel: ObservableObject {
+    @Injected private var beeminderCredentialService: BeeminderCredentialService
 
-    @State private var isAuthenticatingBeeminder = false
+    @Published private(set) var isAuthenticated = false
+    private var subscribers = Set<AnyCancellable>()
 
-    let beeminder = "https://www.beeminder.com/apps/authorize"
-    let clientId = "bq1o00l7savc1vtc2z9rsa4sq"
-    let redirectUri = "tagtime://"
-    let responseType = "token"
+    private let beeminder = "https://www.beeminder.com/apps/authorize"
+    private let clientId = "bq1o00l7savc1vtc2z9rsa4sq"
+    private let redirectUri = "tagtime://"
+    private let responseType = "token"
 
     var url: URL {
         .init(string: "\(beeminder)?client_id=\(clientId)&redirect_uri=\(redirectUri)&response_type=\(responseType)")!
     }
 
+    init() {
+        beeminderCredentialService.$credential
+            .receive(on: DispatchQueue.main)
+            .sink { self.isAuthenticated = $0 != nil}
+            .store(in: &subscribers)
+    }
+
+    func saveCredential(_ credential: Beeminder.Credential) {
+        beeminderCredentialService.saveCredential(credential)
+    }
+
+    func removeCredential() {
+        beeminderCredentialService.removeCredential()
+    }
+}
+
+struct BeeminderLoginButton: View {
+    @StateObject private var viewModel = BeeminderLoginButtonViewModel()
+    @State private var isAuthenticatingBeeminder = false
+
     var body: some View {
-        if beeminderCredentialService.credential == nil {
+        if viewModel.isAuthenticated {
+            Text("Logout from Beeminder")
+                .onTap { viewModel.removeCredential() }
+                .cardButtonStyle(.baseCard)
+        } else {
             Text("Login with Beeminder")
                 .onTap { isAuthenticatingBeeminder = true }
                 .cardButtonStyle(.baseCard)
                 .webAuthenticationSession(isPresented: $isAuthenticatingBeeminder) {
-                    WebAuthenticationSession(url: url, callbackURLScheme: "tagtime") { callbackUrl, error in
+                    WebAuthenticationSession(url: viewModel.url, callbackURLScheme: "tagtime") { callbackUrl, error in
                         if let error = error {
                             print(error)
                         }
@@ -44,23 +70,16 @@ struct BeeminderLoginButton: View {
                             return
                         }
                         let credential = Beeminder.Credential(username: username, accessToken: accessToken)
-                        beeminderCredentialService.saveCredential(credential)
+                        viewModel.saveCredential(credential)
                     }
                     .prefersEphemeralWebBrowserSession(false)
                 }
-        } else {
-            Text("Logout from Beeminder")
-                .onTap { beeminderCredentialService.removeCredential() }
-                .cardButtonStyle(.baseCard)
         }
     }
 }
 
 struct BeeminderLoginButton_Previews: PreviewProvider {
-    @Injected static var beeminderCredentialService: BeeminderCredentialService
-
     static var previews: some View {
         BeeminderLoginButton()
-            .environmentObject(beeminderCredentialService)
     }
 }
