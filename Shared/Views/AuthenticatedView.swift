@@ -7,9 +7,59 @@
 
 import SwiftUI
 import Resolver
+import Combine
+
+final class AuthenticatedViewModel: ObservableObject {
+    enum Page: Hashable {
+        case missedPingList
+        case logbook
+        case goalList
+        case statistics
+        case preferences
+    }
+
+    @Published var isAuthenticated = false
+    @Published var pingNotification = AnswerCreatorConfig()
+    @Published var currentPage: Page = .missedPingList
+
+    private var subscribers = Set<AnyCancellable>()
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var notificationHandler: NotificationHandler
+    @Injected private var notificationScheduler: NotificationScheduler
+    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @Injected private var alertService: AlertService
+
+    init() {
+        authenticationService.$user
+            .receive(on: DispatchQueue.main)
+            .sink { self.isAuthenticated = $0.id != AuthenticationService.unauthenticatedUserId }
+            .store(in: &subscribers)
+
+        notificationHandler.$openedPing
+            .receive(on: DispatchQueue.main)
+            .sink { [self] in
+                if let pingDate = $0 {
+                    pingNotification.create(pingDate: pingDate)
+                } else {
+                    pingNotification.dismiss()
+                }
+            }
+            .store(in: &subscribers)
+
+        beeminderCredentialService.$credential
+            .receive(on: DispatchQueue.main)
+            .sink { [self] credential in
+                if credential == nil, currentPage == .goalList {
+                    currentPage = .missedPingList
+                }
+            }
+            .store(in: &subscribers)
+    }
+}
+
 
 struct AuthenticatedView: View {
-    @EnvironmentObject var appService: AppService
+    @StateObject var viewModel = AuthenticatedViewModel()
     @EnvironmentObject var answerService: AnswerService
     @EnvironmentObject var alertService: AlertService
     @EnvironmentObject var beeminderCredentialService: BeeminderCredentialService
@@ -21,13 +71,13 @@ struct AuthenticatedView: View {
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
     @ViewBuilder
-    func page(name: String, destination: AppService.Page) -> some View {
-        switch appService.currentPage == destination {
+    func page(name: String, destination: AuthenticatedViewModel.Page) -> some View {
+        switch viewModel.currentPage == destination {
         case true:
             Image("\(name)-active")
         case false:
             Image(name)
-                .onTap { appService.currentPage = destination }
+                .onTap { viewModel.currentPage = destination }
                 .buttonStyle(UltraPlainButtonStyle())
         }
     }
@@ -35,38 +85,39 @@ struct AuthenticatedView: View {
     var body: some View {
         VStack {
             // Paddings are placed within TabView in order to allow swiping on the edges
+            // if statement is used here instead of within TabView because SwiftUI is buggy with it inside.
             if isLoggedIntoBeeminder {
-                TabView(selection: $appService.currentPage) {
+                TabView(selection: $viewModel.currentPage) {
                     MissedPingList()
-                        .tag(AppService.Page.missedPingList)
+                        .tag(AuthenticatedViewModel.Page.missedPingList)
                         .padding([.top, .leading, .trailing])
                     Logbook()
-                        .tag(AppService.Page.logbook)
+                        .tag(AuthenticatedViewModel.Page.logbook)
                         .padding([.top, .leading, .trailing])
                     TrackedGoalList()
-                        .tag(AppService.Page.goalList)
+                        .tag(AuthenticatedViewModel.Page.goalList)
                         .padding([.top, .leading, .trailing])
                     Statistics()
-                        .tag(AppService.Page.statistics)
+                        .tag(AuthenticatedViewModel.Page.statistics)
                         .padding([.top, .leading, .trailing])
                     Preferences()
-                        .tag(AppService.Page.preferences)
+                        .tag(AuthenticatedViewModel.Page.preferences)
                         .padding([.top, .leading, .trailing])
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             } else {
-                TabView(selection: $appService.currentPage) {
+                TabView(selection: $viewModel.currentPage) {
                     MissedPingList()
-                        .tag(AppService.Page.missedPingList)
+                        .tag(AuthenticatedViewModel.Page.missedPingList)
                         .padding([.top, .leading, .trailing])
                     Logbook()
-                        .tag(AppService.Page.logbook)
+                        .tag(AuthenticatedViewModel.Page.logbook)
                         .padding([.top, .leading, .trailing])
                     Statistics()
-                        .tag(AppService.Page.statistics)
+                        .tag(AuthenticatedViewModel.Page.statistics)
                         .padding([.top, .leading, .trailing])
                     Preferences()
-                        .tag(AppService.Page.preferences)
+                        .tag(AuthenticatedViewModel.Page.preferences)
                         .padding([.top, .leading, .trailing])
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -85,8 +136,8 @@ struct AuthenticatedView: View {
             }
             .padding()
         }
-        .sheet(isPresented: $appService.pingNotification.isPresented) {
-            AnswerCreator(config: $appService.pingNotification)
+        .sheet(isPresented: $viewModel.pingNotification.isPresented) {
+            AnswerCreator(config: $viewModel.pingNotification)
                 .background(Color.modalBackground)
                 .environmentObject(self.answerService)
                 .environmentObject(self.alertService)
@@ -96,7 +147,6 @@ struct AuthenticatedView: View {
 }
 
 struct AuthenticatedView_Previews: PreviewProvider {
-    @Injected static var appService: AppService
     @Injected static var answerService: AnswerService
     @Injected static var alertService: AlertService
     @Injected static var beeminderCredentialService: BeeminderCredentialService
@@ -105,7 +155,6 @@ struct AuthenticatedView_Previews: PreviewProvider {
     static var previews: some View {
         AuthenticatedView()
             .preferredColorScheme(.dark)
-            .environmentObject(appService)
             .environmentObject(answerService)
             .environmentObject(alertService)
             .environmentObject(beeminderCredentialService)

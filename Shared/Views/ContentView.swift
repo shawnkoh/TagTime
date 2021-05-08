@@ -10,10 +10,10 @@ import Firebase
 import Resolver
 
 struct ContentView: View {
-    @EnvironmentObject var appService: AppService
+    @EnvironmentObject var authenticationService: AuthenticationService
 
     var body: some View {
-        if appService.isAuthenticated {
+        if authenticationService.isAuthenticated {
             AuthenticatedView()
         } else {
             UnauthenticatedView()
@@ -22,11 +22,8 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
-    @Injected static var appService: AppService
-
     static var previews: some View {
         ContentView()
             .preferredColorScheme(.dark)
-            .environmentObject(appService)
     }
 }

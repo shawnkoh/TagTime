@@ -16,7 +16,7 @@ struct TagTimeApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject var alertService: AlertService = Resolver.resolve()
     @StateObject var answerService: AnswerService = Resolver.resolve()
-    @StateObject var appService: AppService = Resolver.resolve()
+    @StateObject var authenticationService: AuthenticationService = Resolver.resolve()
     @StateObject var beeminderCredentialService: BeeminderCredentialService = Resolver.resolve()
     @StateObject var facebookLoginService: FacebookLoginService = Resolver.resolve()
     @StateObject var goalService: GoalService = Resolver.resolve()
@@ -40,7 +40,6 @@ struct TagTimeApp: App {
                 }
                 .environmentObject(alertService)
                 .environmentObject(answerService)
-                .environmentObject(appService)
                 .environmentObject(beeminderCredentialService)
                 .environmentObject(facebookLoginService)
                 .environmentObject(goalService)
@@ -48,7 +47,14 @@ struct TagTimeApp: App {
                 .environmentObject(pingService)
                 .environmentObject(settingService)
                 .environmentObject(tagService)
-                .onAppear() { appService.signIn() }
+                .onAppear() {
+                    // TODO: I'm not sure if Futures should be called in async thread
+                    DispatchQueue.global(qos: .utility).async { [self] in
+                        authenticationService.signIn()
+                            .setUser(service: authenticationService)
+                            .errorHandled(by: alertService)
+                    }
+                }
                 .statusBar(hidden: true)
         }
     }

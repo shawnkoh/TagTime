@@ -78,7 +78,6 @@
 		86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D2E26318D040046C0E3 /* FacebookCore */; };
 		86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3026318D040046C0E3 /* FacebookLogin */; };
 		86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3226318D040046C0E3 /* FacebookShare */; };
-		86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C4C0C3262A09C90023C2A0 /* AppService.swift */; };
 		86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C577AD264190F3008AE4BC /* GoalTracker.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86C6C7402636A19700A24EBA /* Tappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C6C73F2636A19700A24EBA /* Tappable.swift */; };
@@ -168,7 +167,6 @@
 		86ADBB7A26173307003CBA6B /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		86ADBB802617330B003CBA6B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
-		86C4C0C3262A09C90023C2A0 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		86C577AD264190F3008AE4BC /* GoalTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTracker.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
 		86C6C73F2636A19700A24EBA /* Tappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tappable.swift; sourceTree = "<group>"; };
@@ -448,7 +446,6 @@
 			children = (
 				86E3AB59262354F900092CE6 /* AlertService.swift */,
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
-				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
 				8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */,
 				864203B02632710700668EC1 /* FacebookLoginService.swift */,
@@ -664,7 +661,6 @@
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
-				86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
 				8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */,
 				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
