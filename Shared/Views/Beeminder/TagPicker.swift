@@ -26,11 +26,7 @@ final class TagPickerViewModel: ObservableObject {
             .sink { [weak self] in self?.goalTrackers = $0 }
             .store(in: &subscribers)
 
-        tagService.$tags
-            .flatMap { Publishers.Sequence(sequence: $0) }
-            .filter { $0.value.count > 0 }
-            .map { $0.key }
-            .collect()
+        tagService.activeTagsPublisher
             .map { $0.sorted() }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.activeTags = $0 }

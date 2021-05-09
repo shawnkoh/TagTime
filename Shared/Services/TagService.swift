@@ -13,6 +13,14 @@ import Resolver
 
 final class TagService: ObservableObject {
     @Published var tags: [Tag: TagCache] = [:]
+    private(set) lazy var activeTagsPublisher = $tags
+        .flatMap {
+            $0.publisher
+                .filter { $0.value.count > 0 }
+                .map { $0.key }
+                .collect()
+        }
+
     private var userSubscriber: AnyCancellable = .init({})
     
     private var subscribers = Set<AnyCancellable>()

@@ -21,11 +21,7 @@ final class AnswerSuggesterViewModel: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
 
     init() {
-        tagService.$tags
-            .flatMap { Publishers.Sequence(sequence: $0) }
-            .filter { $0.value.count > 0 }
-            .map { $0.key }
-            .collect()
+        tagService.activeTagsPublisher
             .combineLatest($keyword)
             // TODO: Ideally we should flatMap here, but fuse doesn't have Combine support so we use a closure callback for now
             .receive(on: DispatchQueue.main)
