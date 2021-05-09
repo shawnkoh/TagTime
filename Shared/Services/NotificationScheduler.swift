@@ -73,6 +73,7 @@ public final class NotificationScheduler: ObservableObject {
     private func setupNotificationObserver() {
         pingService.$unansweredPings
             .map { $0.count }
+            .receive(on: DispatchQueue.main)
             .sink { UIApplication.shared.applicationIconBadgeNumber = $0 }
             .store(in: &subscribers)
 
