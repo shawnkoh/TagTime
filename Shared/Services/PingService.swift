@@ -39,7 +39,6 @@ public final class PingService: ObservableObject {
         self.startPing = Self.tagTimeBirth
         self.answerablePings = []
         self.userSubscriber = authenticationService.$user
-            .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
 
         setupSubscribers()
@@ -67,7 +66,6 @@ public final class PingService: ObservableObject {
                     .filter { !answeredPings.contains($0.date) }
                     .map { $0.date }
             }
-            .receive(on: DispatchQueue.main)
             .sink { self.unansweredPings = $0 }
             .store(in: &subscribers)
     }

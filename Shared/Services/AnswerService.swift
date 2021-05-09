@@ -39,7 +39,6 @@ final class AnswerService: ObservableObject {
 
     init() {
         userSubscriber = authenticationService.$user
-            .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
     }
 

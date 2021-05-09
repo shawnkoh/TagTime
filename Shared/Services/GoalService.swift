@@ -82,7 +82,6 @@ final class GoalService: ObservableObject {
 
     func getGoals() {
         beeminderApi?.getGoals()
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case let .failure(error):
