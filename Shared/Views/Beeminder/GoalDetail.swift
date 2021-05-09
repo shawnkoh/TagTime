@@ -27,7 +27,7 @@ struct GoalDetail: View {
     @EnvironmentObject var goalService: GoalService
     @EnvironmentObject var tagService: TagService
     @Binding var config: GoalDetailConfig
-    @State var tagPickerConfig = TagPickerConfig()
+    @State private var isTagPickerPresented = false
 
     init(config: Binding<GoalDetailConfig>) {
         self._config = config
@@ -50,7 +50,7 @@ struct GoalDetail: View {
             Spacer()
 
             Text("Edit Tags")
-                .onTap { tagPickerConfig.present() }
+                .onTap { isTagPickerPresented = true }
                 .cardButtonStyle(.modalCard)
 
             HStack {
@@ -67,8 +67,8 @@ struct GoalDetail: View {
             }
         }
         .padding()
-        .sheet(isPresented: $tagPickerConfig.isPresented) {
-            TagPicker(config: $tagPickerConfig, goal: config.goal)
+        .sheet(isPresented: $isTagPickerPresented) {
+            TagPicker(goal: config.goal)
                 .environmentObject(self.tagService)
                 .environmentObject(self.goalService)
         }
