@@ -10,21 +10,6 @@ import Beeminder
 import Resolver
 import Combine
 
-struct GoalDetailConfig {
-    var isPresented = false
-    // TODO: Accept Goal in GoalDetail instead
-    var goal: Goal!
-
-    mutating func present(goal: Goal) {
-        isPresented = true
-        self.goal = goal
-    }
-
-    mutating func dismiss() {
-        isPresented = false
-    }
-}
-
 final class GoalDetailViewModel: ObservableObject {
     @Injected private var goalService: GoalService
     @Injected private var tagService: TagService
@@ -39,22 +24,23 @@ final class GoalDetailViewModel: ObservableObject {
 
 struct GoalDetail: View {
     @StateObject private var viewModel = GoalDetailViewModel()
-    @Binding var config: GoalDetailConfig
+    let goal: Goal
+    @Binding var isPresented: Bool
     @State private var isTagPickerPresented = false
 
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
-                Text(config.goal.slug)
+                Text(goal.slug)
                     .bold()
                     .font(.title)
-                GoalCountdown(goal: config.goal)
+                GoalCountdown(goal: goal)
                     .foregroundColor(.secondary)
                     .font(.subheadline)
             }
             .padding(.bottom)
 
-            TagList(goal: config.goal)
+            TagList(goal: goal)
 
             Spacer()
 
@@ -65,25 +51,25 @@ struct GoalDetail: View {
             HStack {
                 Text("Stop Tracking")
                     .onDoubleTap("Tap again") {
-                        viewModel.untrackGoal(config.goal)
-                        config.dismiss()
+                        viewModel.untrackGoal(goal)
+                        isPresented = false
                     }
                     .cardButtonStyle(.modalCard)
 
                 Text("X")
-                    .onTap { config.dismiss() }
+                    .onTap { isPresented = false }
                     .cardButtonStyle(.modalCard)
             }
         }
         .padding()
         .sheet(isPresented: $isTagPickerPresented) {
-            TagPicker(goal: config.goal)
+            TagPicker(goal: goal)
         }
     }
 }
 
 struct GoalDetail_Previews: PreviewProvider {
     static var previews: some View {
-        GoalDetail(config: .constant(.init(isPresented: true, goal: Stub.goal)))
+        GoalDetail(goal: Stub.goal, isPresented: .constant(true))
     }
 }

@@ -11,7 +11,6 @@ import Resolver
 struct TrackedGoalList: View {
     @EnvironmentObject var goalService: GoalService
     @State private var isGoalPickerPresented = false
-    @State var detailConfig = GoalDetailConfig()
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -21,13 +20,7 @@ struct TrackedGoalList: View {
                 ScrollView {
                     LazyVStack(alignment: .center, spacing: 2, pinnedViews: []) {
                         ForEach(goalService.trackedGoals) { goal in
-                            GoalCard(goal: goal)
-                                .onTap { detailConfig.present(goal: goal) }
-                                .cardButtonStyle(.baseCard)
-                                .fullScreenCover(isPresented: $detailConfig.isPresented) {
-                                    GoalDetail(config: $detailConfig)
-                                        .background(Color.modalBackground)
-                                }
+                            TrackedGoalCard(goal: goal)
                         }
                     }
                 }
