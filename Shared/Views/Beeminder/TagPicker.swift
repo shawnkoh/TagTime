@@ -69,8 +69,13 @@ struct TagPicker: View {
                     guard customTags.count > 0 else {
                         return
                     }
-                    let newTags = trackedTags + customTags.split(separator: " ").map { Tag($0) }
-                    viewModel.trackTags(newTags, for: goal)
+                    let existingTags = Set(trackedTags)
+                    let newTags = customTags
+                        .split(separator: " ")
+                        .map { Tag($0) }
+                        .filter { !existingTags.contains($0) }
+                    let tagsToTrack = trackedTags + newTags
+                    viewModel.trackTags(tagsToTrack, for: goal)
                     customTags = ""
                 })
                 .multilineTextAlignment(.center)
