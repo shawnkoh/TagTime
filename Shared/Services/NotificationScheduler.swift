@@ -49,7 +49,6 @@ public final class NotificationScheduler: ObservableObject {
             options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
         )
         userSubscriber = authenticationService.$user
-            .receive(on: DispatchQueue.main)
             .sink { self.setup(user: $0) }
     }
 
@@ -74,7 +73,6 @@ public final class NotificationScheduler: ObservableObject {
     private func setupNotificationObserver() {
         pingService.$unansweredPings
             .map { $0.count }
-            .receive(on: DispatchQueue.main)
             .sink { UIApplication.shared.applicationIconBadgeNumber = $0 }
             .store(in: &subscribers)
 
@@ -89,7 +87,6 @@ public final class NotificationScheduler: ObservableObject {
                 return nextPings.map { $0.date }
             }
             .combineLatest(answerService.$latestAnswer)
-            .receive(on: DispatchQueue.main)
             .sink { [self] (nextPings, latestAnswer) in
                 tryToScheduleNotifications(pings: nextPings, previousAnswer: latestAnswer)
             }
