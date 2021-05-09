@@ -44,7 +44,6 @@ struct TrackedGoalList: View {
                 .cardButtonStyle(.modalCard)
                 .sheet(isPresented: $pickerConfig.isPresented) {
                     GoalPicker()
-                        .environmentObject(self.goalService)
                         .background(Color.sheetBackground)
                 }
         }
