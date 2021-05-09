@@ -10,7 +10,6 @@ import Resolver
 
 struct TrackedGoalList: View {
     @EnvironmentObject var goalService: GoalService
-    @EnvironmentObject var tagService: TagService
     @State private var isGoalPickerPresented = false
     @State var detailConfig = GoalDetailConfig()
 
@@ -28,8 +27,6 @@ struct TrackedGoalList: View {
                                 .fullScreenCover(isPresented: $detailConfig.isPresented) {
                                     GoalDetail(config: $detailConfig)
                                         .background(Color.modalBackground)
-                                        .environmentObject(self.goalService)
-                                        .environmentObject(self.tagService)
                                 }
                         }
                     }
@@ -52,11 +49,9 @@ struct TrackedGoalList: View {
 
 struct TrackedGoalList_Previews: PreviewProvider {
     @Injected static var goalService: GoalService
-    @Injected static var tagService: TagService
 
     static var previews: some View {
         TrackedGoalList()
             .environmentObject(goalService)
-            .environmentObject(tagService)
     }
 }
