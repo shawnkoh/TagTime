@@ -7,14 +7,31 @@
 
 import SwiftUI
 import Resolver
+import Combine
+
+final class MissedPingListViewModel: ObservableObject {
+    @Injected private var pingService: PingService
+
+    @Published private(set) var unansweredPings: [Date] = []
+
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        pingService.$unansweredPings
+            .map { $0.sorted { $0 > $1 }}
+            .receive(on: DispatchQueue.main)
+            .sink { self.unansweredPings = $0 }
+            .store(in: &subscribers)
+    }
+}
 
 struct MissedPingList: View {
-    @EnvironmentObject var pingService: PingService
+    @StateObject private var viewModel = MissedPingListViewModel()
 
     @State private var isBatchAnswerCreatorPresented = false
 
     private var unansweredPings: [Date] {
-        pingService.unansweredPings.sorted { $0 > $1 }
+        viewModel.unansweredPings
     }
 
     private var pingsToday: [Date] {
@@ -98,11 +115,8 @@ struct MissedPingList: View {
 }
 
 struct MissedPingList_Previews: PreviewProvider {
-    @Injected static var pingService: PingService
-
     static var previews: some View {
         MissedPingList()
             .preferredColorScheme(.dark)
-            .environmentObject(pingService)
     }
 }
