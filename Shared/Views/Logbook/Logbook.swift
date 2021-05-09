@@ -7,14 +7,36 @@
 
 import SwiftUI
 import Resolver
+import Combine
+
+final class LogbookViewModel: ObservableObject {
+    @Injected private var answerService: AnswerService
+
+    @Published private(set) var answers: [Answer] = []
+
+    private var subscribers = Set<AnyCancellable>()
+
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
+
+    init() {
+        answerService.$answers
+            .receive(on: DispatchQueue.main)
+            .sink { self.answers = $0 }
+            .store(in: &subscribers)
+    }
+}
 
 struct Logbook: View {
+    @StateObject private var viewModel = LogbookViewModel()
     @State private var showingSheet: Answer? = nil
 
-    @EnvironmentObject var answerService: AnswerService
-
     private var answers: [Answer] {
-        answerService.answers
+        viewModel.answers
     }
 
     private var answersToday: [Answer] {
@@ -32,13 +54,6 @@ struct Logbook: View {
             .filter { !Calendar.current.isDateInToday($0.ping) }
             .filter { !Calendar.current.isDateInYesterday($0.ping) }
     }
-
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter
-    }()
 
     private func sectionHeader(title: String, subtitle: String) -> some View {
         VStack(alignment: .leading) {
@@ -65,7 +80,7 @@ struct Logbook: View {
                 .cornerRadius(8)
                 VStack {
                     Text(answer.tagDescription)
-                    Text(dateFormatter.string(from: answer.ping))
+                    Text(viewModel.dateFormatter.string(from: answer.ping))
                 }
                 .onTap { }
                 .cardButtonStyle(.baseCard)
@@ -107,10 +122,7 @@ struct Logbook: View {
 }
 
 struct Logbook_Previews: PreviewProvider {
-    @Injected static var answerService: AnswerService
-    
     static var previews: some View {
         Logbook()
-            .environmentObject(answerService)
     }
 }
