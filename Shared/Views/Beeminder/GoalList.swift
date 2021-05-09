@@ -23,7 +23,7 @@ final class GoalListViewModel: ObservableObject {
                 goals.filter { goalTrackers[$0.id] != nil }
             }
             .receive(on: DispatchQueue.main)
-            .sink { self.trackedGoals = $0 }
+            .sink { [weak self] in self?.trackedGoals = $0 }
             .store(in: &subscribers)
     }
 }

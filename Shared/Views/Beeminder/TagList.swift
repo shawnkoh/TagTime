@@ -20,7 +20,7 @@ final class TagListViewModel: ObservableObject {
     init() {
         goalService.$goalTrackers
             .receive(on: DispatchQueue.main)
-            .sink { self.goalTrackers = $0 }
+            .sink { [weak self] in self?.goalTrackers = $0 }
             .store(in: &subscribers)
     }
 }

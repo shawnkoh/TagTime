@@ -20,7 +20,7 @@ final class PreferencesViewModel: ObservableObject {
     init() {
         settingService.$averagePingInterval
             .receive(on: DispatchQueue.main)
-            .sink { self.averagePingInterval = $0 }
+            .sink { [weak self] in self?.averagePingInterval = $0 }
             .store(in: &subscribers)
     }
 

@@ -30,7 +30,7 @@ final class BeeminderLoginButtonViewModel: ObservableObject {
     init() {
         beeminderCredentialService.$credential
             .receive(on: DispatchQueue.main)
-            .sink { self.isAuthenticated = $0 != nil}
+            .sink { [weak self] in self?.isAuthenticated = $0 != nil}
             .store(in: &subscribers)
     }
 

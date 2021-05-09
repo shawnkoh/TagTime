@@ -25,14 +25,14 @@ final class AnswerSuggesterViewModel: ObservableObject {
             .combineLatest($keyword)
             // TODO: Ideally we should flatMap here, but fuse doesn't have Combine support so we use a closure callback for now
             .receive(on: DispatchQueue.main)
-            .sink { activeTags, keyword in
+            .sink { [weak self] activeTags, keyword in
                 guard let keyword = keyword.split(separator: " ").last else {
-                    self.filteredTags = []
+                    self?.filteredTags = []
                     return
                 }
                 let fuse = Fuse()
                 fuse.search(String(keyword), in: activeTags) { results in
-                    self.filteredTags = results.map { activeTags[$0.index] }
+                    self?.filteredTags = results.map { activeTags[$0.index] }
                 }
             }
             .store(in: &subscribers)

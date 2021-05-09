@@ -32,16 +32,16 @@ final class AuthenticatedViewModel: ObservableObject {
     init() {
         authenticationService.$user
             .receive(on: DispatchQueue.main)
-            .sink { self.isAuthenticated = $0.id != AuthenticationService.unauthenticatedUserId }
+            .sink { [weak self] in self?.isAuthenticated = $0.id != AuthenticationService.unauthenticatedUserId }
             .store(in: &subscribers)
 
         notificationHandler.$openedPing
             .receive(on: DispatchQueue.main)
-            .sink { [self] in
+            .sink { [weak self] in
                 if let pingDate = $0 {
-                    pingNotification.create(pingDate: pingDate)
+                    self?.pingNotification.create(pingDate: pingDate)
                 } else {
-                    pingNotification.dismiss()
+                    self?.pingNotification.dismiss()
                 }
             }
             .store(in: &subscribers)
