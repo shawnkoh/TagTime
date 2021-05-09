@@ -8,23 +8,29 @@
 import SwiftUI
 import Beeminder
 import Resolver
+import Combine
+
+final class TagListViewModel: ObservableObject {
+    @Injected private var goalService: GoalService
+
+    @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
+
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        goalService.$goalTrackers
+            .receive(on: DispatchQueue.main)
+            .sink { self.goalTrackers = $0 }
+            .store(in: &subscribers)
+    }
+}
 
 struct TagList: View {
-    @EnvironmentObject var tagService: TagService
-    @EnvironmentObject var goalService: GoalService
+    @StateObject private var viewModel = TagListViewModel()
     let goal: Goal
 
-    var activeTags: [Tag] {
-        tagService.tags
-            .filter { $0.value.count > 0 }
-            .reduce(into: []) { result, cursor in
-                result.append(cursor.key)
-            }
-            .sorted()
-    }
-
     var trackedTags: [Tag] {
-        goalService.goalTrackers[goal.id]?.tags.sorted() ?? []
+        viewModel.goalTrackers[goal.id]?.tags.sorted() ?? []
     }
 
     var body: some View {
@@ -32,7 +38,6 @@ struct TagList: View {
             LazyVStack {
                 ForEach(trackedTags, id: \.self) { tag in
                     Text(tag)
-                        .onTap {}
                         .cardStyle(.modalCard)
                 }
             }
@@ -41,12 +46,7 @@ struct TagList: View {
 }
 
 struct TagList_Previews: PreviewProvider {
-    @Injected static var tagService: TagService
-    @Injected static var goalService: GoalService
-
     static var previews: some View {
         TagList(goal: Stub.goal)
-            .environmentObject(tagService)
-            .environmentObject(goalService)
     }
 }
