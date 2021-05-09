@@ -16,6 +16,13 @@ final class MissedPingListViewModel: ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
 
+    let headerDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        formatter.timeStyle = .none
+        return formatter
+    }()
+
     init() {
         pingService.$unansweredPings
             .map { $0.sorted { $0 > $1 }}
@@ -51,26 +58,12 @@ struct MissedPingList: View {
             }
     }
 
-    private let headerDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .full
-        formatter.timeStyle = .none
-        return formatter
-    }()
-
-    private let pingDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter
-    }()
-
     private func header(date: Date) -> some View {
         VStack(alignment: .leading) {
             Text(Calendar.current.isDateInToday(date) ? "Today" : "Yesterday")
                 .bold()
                 .foregroundColor(.primary)
-            Text(headerDateFormatter.string(from: date))
+            Text(viewModel.headerDateFormatter.string(from: date))
                 .foregroundColor(.secondary)
         }
     }
