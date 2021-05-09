@@ -8,48 +8,54 @@
 import SwiftUI
 import Beeminder
 import Resolver
+import Combine
 
-struct TagPickerConfig {
-    var isPresented = false
+final class TagPickerViewModel: ObservableObject {
+    @Injected private var tagService: TagService
+    @Injected private var goalService: GoalService
+    @Injected private var alertService: AlertService
 
-    mutating func present() {
-        isPresented = true
+    @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
+    @Published private(set) var activeTags: [Tag] = []
+
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        goalService.$goalTrackers
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.goalTrackers = $0 }
+            .store(in: &subscribers)
+
+        tagService.activeTagsPublisher
+            .map { $0.sorted() }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.activeTags = $0 }
+            .store(in: &subscribers)
     }
 
-    mutating func dismiss() {
-        isPresented = false
+    func trackTags(_ tags: [Tag], for goal: Goal) {
+        goalService
+            .trackTags(tags, for: goal)
+            .errorHandled(by: alertService)
     }
 }
 
 struct TagPicker: View {
-    @EnvironmentObject var tagService: TagService
-    @EnvironmentObject var goalService: GoalService
-    @EnvironmentObject var alertService: AlertService
-    @Binding var config: TagPickerConfig
+    @StateObject private var viewModel = TagPickerViewModel()
     let goal: Goal
 
     @State private var customTags = ""
 
     // TODO: This should only save upon clicking save, not upon each button.
-    // TODO: There should be a way for a user to manually add a tag.
-
-    var activeTags: [Tag] {
-        tagService.tags
-            .filter { $0.value.count > 0 }
-            .reduce(into: []) { result, cursor in
-                result.append(cursor.key)
-            }
-            .sorted()
-    }
 
     var trackedTags: [Tag] {
-        goalService.goalTrackers[goal.id]?.tags.sorted() ?? []
+        viewModel.goalTrackers[goal.id]?.tags.sorted() ?? []
     }
 
     // This is required because of the ability to track tags that does not exist yet
     // that have been created through the text field.
     var selectableTags: [Tag] {
-        var selectableTags = Set(activeTags)
+        var selectableTags = Set(viewModel.activeTags)
         trackedTags.forEach { selectableTags.insert($0) }
         return Array(selectableTags).sorted()
     }
@@ -64,8 +70,7 @@ struct TagPicker: View {
                         return
                     }
                     let newTags = trackedTags + customTags.split(separator: " ").map { Tag($0) }
-                    goalService.trackTags(newTags, for: goal)
-                        .errorHandled(by: alertService)
+                    viewModel.trackTags(newTags, for: goal)
                     customTags = ""
                 })
                 .multilineTextAlignment(.center)
@@ -87,9 +92,7 @@ struct TagPicker: View {
                                 } else {
                                     newTags.append(tag)
                                 }
-                                goalService
-                                    .trackTags(newTags, for: goal)
-                                    .errorHandled(by: alertService)
+                                viewModel.trackTags(newTags, for: goal)
                             }
                             .cardButtonStyle(isTracked ? .white : .black)
                     }
@@ -100,14 +103,7 @@ struct TagPicker: View {
 }
 
 struct TagPicker_Previews: PreviewProvider {
-    @Injected static var tagService: TagService
-    @Injected static var goalService: GoalService
-    @Injected static var alertService: AlertService
-
     static var previews: some View {
-        TagPicker(config: .constant(.init()), goal: Stub.goal)
-            .environmentObject(tagService)
-            .environmentObject(goalService)
-            .environmentObject(alertService)
+        TagPicker(goal: Stub.goal)
     }
 }

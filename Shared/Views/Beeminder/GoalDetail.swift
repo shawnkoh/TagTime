@@ -8,80 +8,68 @@
 import SwiftUI
 import Beeminder
 import Resolver
+import Combine
 
-struct GoalDetailConfig {
-    var isPresented = false
-    var goal: Goal!
+final class GoalDetailViewModel: ObservableObject {
+    @Injected private var goalService: GoalService
+    @Injected private var tagService: TagService
+    @Injected private var alertService: AlertService
 
-    mutating func present(goal: Goal) {
-        isPresented = true
-        self.goal = goal
-    }
-
-    mutating func dismiss() {
-        isPresented = false
+    func untrackGoal(_ goal: Goal) {
+        goalService
+            .untrackGoal(goal)
+            .errorHandled(by: alertService)
     }
 }
 
 struct GoalDetail: View {
-    @EnvironmentObject var goalService: GoalService
-    @EnvironmentObject var tagService: TagService
-    @Binding var config: GoalDetailConfig
-    @State var tagPickerConfig = TagPickerConfig()
-
-    init(config: Binding<GoalDetailConfig>) {
-        self._config = config
-    }
+    @StateObject private var viewModel = GoalDetailViewModel()
+    let goal: Goal
+    @Binding var isPresented: Bool
+    @State private var isTagPickerPresented = false
 
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
-                Text(config.goal.slug)
+                Text(goal.slug)
                     .bold()
                     .font(.title)
-                GoalCountdown(goal: config.goal)
+                GoalCountdown(goal: goal)
                     .foregroundColor(.secondary)
                     .font(.subheadline)
             }
             .padding(.bottom)
 
-            TagList(goal: config.goal)
+            TagList(goal: goal)
 
             Spacer()
 
             Text("Edit Tags")
-                .onTap { tagPickerConfig.present() }
+                .onTap { isTagPickerPresented = true }
                 .cardButtonStyle(.modalCard)
 
             HStack {
                 Text("Stop Tracking")
                     .onDoubleTap("Tap again") {
-                        goalService.untrackGoal(config.goal)
-                        config.dismiss()
+                        viewModel.untrackGoal(goal)
+                        isPresented = false
                     }
                     .cardButtonStyle(.modalCard)
 
                 Text("X")
-                    .onTap { config.dismiss() }
+                    .onTap { isPresented = false }
                     .cardButtonStyle(.modalCard)
             }
         }
         .padding()
-        .sheet(isPresented: $tagPickerConfig.isPresented) {
-            TagPicker(config: $tagPickerConfig, goal: config.goal)
-                .environmentObject(self.tagService)
-                .environmentObject(self.goalService)
+        .sheet(isPresented: $isTagPickerPresented) {
+            TagPicker(goal: goal)
         }
     }
 }
 
 struct GoalDetail_Previews: PreviewProvider {
-    @Injected static var goalService: GoalService
-    @Injected static var tagService: TagService
-
     static var previews: some View {
-        GoalDetail(config: .constant(.init(isPresented: true, goal: Stub.goal)))
-            .environmentObject(goalService)
-            .environmentObject(tagService)
+        GoalDetail(goal: Stub.goal, isPresented: .constant(true))
     }
 }

@@ -7,16 +7,38 @@
 
 import SwiftUI
 import Resolver
+import Combine
+
+final class MissedPingListViewModel: ObservableObject {
+    @Injected private var pingService: PingService
+
+    @Published private(set) var unansweredPings: [Date] = []
+
+    private var subscribers = Set<AnyCancellable>()
+
+    let headerDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .full
+        formatter.timeStyle = .none
+        return formatter
+    }()
+
+    init() {
+        pingService.$unansweredPings
+            .map { $0.sorted { $0 > $1 }}
+            .receive(on: DispatchQueue.main)
+            .sink { self.unansweredPings = $0 }
+            .store(in: &subscribers)
+    }
+}
 
 struct MissedPingList: View {
-    @EnvironmentObject var answerService: AnswerService
-    @EnvironmentObject var tagService: TagService
-    @EnvironmentObject var pingService: PingService
+    @StateObject private var viewModel = MissedPingListViewModel()
 
-    @State private var batchAnswerConfig = BatchAnswerConfig()
+    @State private var isBatchAnswerCreatorPresented = false
 
     private var unansweredPings: [Date] {
-        pingService.unansweredPings.sorted { $0 > $1 }
+        viewModel.unansweredPings
     }
 
     private var pingsToday: [Date] {
@@ -36,26 +58,12 @@ struct MissedPingList: View {
             }
     }
 
-    private let headerDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .full
-        formatter.timeStyle = .none
-        return formatter
-    }()
-
-    private let pingDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter
-    }()
-
     private func header(date: Date) -> some View {
         VStack(alignment: .leading) {
             Text(Calendar.current.isDateInToday(date) ? "Today" : "Yesterday")
                 .bold()
                 .foregroundColor(.primary)
-            Text(headerDateFormatter.string(from: date))
+            Text(viewModel.headerDateFormatter.string(from: date))
                 .foregroundColor(.secondary)
         }
     }
@@ -89,13 +97,10 @@ struct MissedPingList: View {
 
             if unansweredPings.count > 1 {
                 Text("ANSWER ALL")
-                    .onTap { batchAnswerConfig.show() }
+                    .onTap { isBatchAnswerCreatorPresented = true }
                     .cardButtonStyle(.modalCard)
-                    .sheet(isPresented: $batchAnswerConfig.isPresented) {
-                        BatchAnswerCreator(config: $batchAnswerConfig)
-                            .environmentObject(self.answerService)
-                            .environmentObject(self.tagService)
-                            .environmentObject(self.pingService)
+                    .sheet(isPresented: $isBatchAnswerCreatorPresented) {
+                        BatchAnswerCreator(isPresented: $isBatchAnswerCreatorPresented)
                     }
             }
         }
@@ -103,15 +108,8 @@ struct MissedPingList: View {
 }
 
 struct MissedPingList_Previews: PreviewProvider {
-    @Injected static var answerService: AnswerService
-    @Injected static var tagService: TagService
-    @Injected static var pingService: PingService
-
     static var previews: some View {
         MissedPingList()
             .preferredColorScheme(.dark)
-            .environmentObject(answerService)
-            .environmentObject(tagService)
-            .environmentObject(pingService)
     }
 }

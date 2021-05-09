@@ -9,12 +9,38 @@
 import SwiftUI
 import Resolver
 
+final class DebugViewModel: ObservableObject {
+    @Injected private var answerService: AnswerService
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var tagService: TagService
+    @Injected private var notificationScheduler: NotificationScheduler
+    @Injected private var pingService: PingService
+
+    func scheduleNotification() {
+        let timeInterval = Date(timeIntervalSinceNow: 5).timeIntervalSince1970.rounded()
+        let pingDate = Date(timeIntervalSince1970: timeInterval)
+        notificationScheduler.scheduleNotification(
+            ping: pingDate,
+            badge: pingService.unansweredPings.count,
+            previousAnswer: answerService.latestAnswer
+        )
+    }
+
+    func deleteAllAnswers() {
+        answerService.deleteAllAnswers()
+    }
+
+    func resetUserStartDate() {
+        authenticationService.resetUserStartDate()
+    }
+
+    func resetTagCache() {
+        tagService.resetTagCache()
+    }
+}
+
 struct DebugMenu: View {
-    @EnvironmentObject private var answerService: AnswerService
-    @EnvironmentObject private var authenticationService: AuthenticationService
-    @EnvironmentObject private var tagService: TagService
-    @EnvironmentObject private var notificationScheduler: NotificationScheduler
-    @EnvironmentObject private var pingService: PingService
+    @StateObject private var viewModel = DebugViewModel()
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -24,24 +50,16 @@ struct DebugMenu: View {
                 .padding()
 
             Text("Schedule notification in 5 seconds")
-                .onTap {
-                    let timeInterval = Date(timeIntervalSinceNow: 5).timeIntervalSince1970.rounded()
-                    let pingDate = Date(timeIntervalSince1970: timeInterval)
-                    notificationScheduler.scheduleNotification(
-                        ping: pingDate,
-                        badge: pingService.unansweredPings.count,
-                        previousAnswer: answerService.latestAnswer
-                    )
-                }
+                .onTap { viewModel.scheduleNotification() }
 
             Text("Delete all answers")
-                .onTap { answerService.deleteAllAnswers() }
+                .onTap { viewModel.deleteAllAnswers() }
 
             Text("Reset User Start Date")
-                .onTap { authenticationService.resetUserStartDate() }
+                .onTap { viewModel.resetUserStartDate() }
 
             Text("Reset Tag Cache")
-                .onTap { tagService.resetTagCache() }
+                .onTap { viewModel.resetTagCache() }
 
             Spacer()
         }
@@ -51,19 +69,8 @@ struct DebugMenu: View {
 }
 
 struct DebugMenu_Previews: PreviewProvider {
-    @Injected static var answerService: AnswerService
-    @Injected static var authenticationService: AuthenticationService
-    @Injected static var tagService: TagService
-    @Injected static var notificationScheduler: NotificationScheduler
-    @Injected static var pingService: PingService
-
     static var previews: some View {
         DebugMenu()
-            .environmentObject(answerService)
-            .environmentObject(authenticationService)
-            .environmentObject(tagService)
-            .environmentObject(notificationScheduler)
-            .environmentObject(pingService)
     }
 }
 #endif

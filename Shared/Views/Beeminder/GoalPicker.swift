@@ -7,28 +7,43 @@
 
 import SwiftUI
 import Resolver
+import Beeminder
+import Combine
 
-struct GoalPickerConfig {
-    var isPresented = false
+final class GoalPickerViewModel: ObservableObject {
+    @Injected private var goalService: GoalService
+    @Injected private var alertService: AlertService
 
-    mutating func present() {
-        isPresented = true
+    @Published private(set) var untrackedGoals: [Goal] = []
+
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        goalService.$goals
+            .combineLatest(goalService.$goalTrackers)
+            .map { goals, goalTrackers in
+                goals.filter { goalTrackers[$0.id] == nil }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { self.untrackedGoals = $0 }
+            .store(in: &subscribers)
     }
 
-    mutating func dismiss() {
-        isPresented = false
+    func trackGoal(_ goal: Goal) {
+        goalService.trackGoal(goal)
+            .errorHandled(by: alertService)
     }
 }
 
 struct GoalPicker: View {
-    @EnvironmentObject var goalService: GoalService
+    @StateObject private var viewModel = GoalPickerViewModel()
 
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
-                ForEach(goalService.untrackedGoals) { goal in
+                ForEach(viewModel.untrackedGoals) { goal in
                     GoalCard(goal: goal)
-                        .onTap { goalService.trackGoal(goal) }
+                        .onTap { viewModel.trackGoal(goal) }
                         .cardButtonStyle(.modalCard)
                         .disabled(!goal.isTrackable)
                 }
@@ -38,10 +53,7 @@ struct GoalPicker: View {
 }
 
 struct GoalPicker_Previews: PreviewProvider {
-    @Injected static var goalService: GoalService
-
     static var previews: some View {
         GoalPicker()
-            .environmentObject(goalService)
     }
 }

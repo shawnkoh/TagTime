@@ -10,20 +10,44 @@ import Firebase
 import UserNotifications
 import FBSDKCoreKit
 import Resolver
+import Combine
+
+final class AppViewModel: ObservableObject {
+    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @Injected private var alertService: AlertService
+    @Injected private var authenticationService: AuthenticationService
+
+    @Published var isAlertPresented = false
+    @Published private(set) var alertMessage = ""
+
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        alertService.$isPresented
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.isAlertPresented = $0 }
+            .store(in: &subscribers)
+
+        alertService.$message
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.alertMessage = $0 }
+            .store(in: &subscribers)
+    }
+
+    func signIn() {
+        // TODO: I'm not sure if Futures should be called in async thread
+        DispatchQueue.global(qos: .utility).async { [self] in
+            authenticationService.signIn()
+                .setUser(service: authenticationService)
+                .errorHandled(by: alertService)
+        }
+    }
+}
 
 @main
 struct TagTimeApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    @StateObject var alertService: AlertService = Resolver.resolve()
-    @StateObject var answerService: AnswerService = Resolver.resolve()
-    @StateObject var appService: AppService = Resolver.resolve()
-    @StateObject var beeminderCredentialService: BeeminderCredentialService = Resolver.resolve()
-    @StateObject var facebookLoginService: FacebookLoginService = Resolver.resolve()
-    @StateObject var goalService: GoalService = Resolver.resolve()
-    @StateObject var notificationScheduler: NotificationScheduler = Resolver.resolve()
-    @StateObject var pingService: PingService = Resolver.resolve()
-    @StateObject var settingService: SettingService = Resolver.resolve()
-    @StateObject var tagService: TagService = Resolver.resolve()
+    @StateObject private var viewModel = AppViewModel()
 
     init() {
         FirebaseApp.configure()
@@ -35,20 +59,10 @@ struct TagTimeApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .alert(isPresented: $alertService.isPresented) {
-                    Alert(title: Text(alertService.message))
+                .alert(isPresented: $viewModel.isAlertPresented) {
+                    Alert(title: Text(viewModel.alertMessage))
                 }
-                .environmentObject(alertService)
-                .environmentObject(answerService)
-                .environmentObject(appService)
-                .environmentObject(beeminderCredentialService)
-                .environmentObject(facebookLoginService)
-                .environmentObject(goalService)
-                .environmentObject(notificationScheduler)
-                .environmentObject(pingService)
-                .environmentObject(settingService)
-                .environmentObject(tagService)
-                .onAppear() { appService.signIn() }
+                .onAppear() { viewModel.signIn() }
                 .statusBar(hidden: true)
         }
     }

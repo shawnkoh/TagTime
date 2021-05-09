@@ -78,7 +78,6 @@
 		86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D2E26318D040046C0E3 /* FacebookCore */; };
 		86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3026318D040046C0E3 /* FacebookLogin */; };
 		86C04D3326318D040046C0E3 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3226318D040046C0E3 /* FacebookShare */; };
-		86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C4C0C3262A09C90023C2A0 /* AppService.swift */; };
 		86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C577AD264190F3008AE4BC /* GoalTracker.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86C6C7402636A19700A24EBA /* Tappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C6C73F2636A19700A24EBA /* Tappable.swift */; };
@@ -92,6 +91,7 @@
 		86EB953F26455C8200C7A7A2 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 86EB953E26455C8200C7A7A2 /* Resolver */; };
 		86EB954126455CB400C7A7A2 /* Resolver+ResolverRegistering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EB954026455CB400C7A7A2 /* Resolver+ResolverRegistering.swift */; };
 		86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */; };
+		86F6504E2647D86C00B070BA /* TrackedGoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F6504D2647D86C00B070BA /* TrackedGoalCard.swift */; };
 		86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD582D2629F52300B32B59 /* AnswerService.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
 /* End PBXBuildFile section */
@@ -168,7 +168,6 @@
 		86ADBB7A26173307003CBA6B /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		86ADBB802617330B003CBA6B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
-		86C4C0C3262A09C90023C2A0 /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		86C577AD264190F3008AE4BC /* GoalTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTracker.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
 		86C6C73F2636A19700A24EBA /* Tappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tappable.swift; sourceTree = "<group>"; };
@@ -181,6 +180,7 @@
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
 		86EB954026455CB400C7A7A2 /* Resolver+ResolverRegistering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resolver+ResolverRegistering.swift"; sourceTree = "<group>"; };
 		86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
+		86F6504D2647D86C00B070BA /* TrackedGoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalCard.swift; sourceTree = "<group>"; };
 		86FD582D2629F52300B32B59 /* AnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerService.swift; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -345,6 +345,7 @@
 				8665E2A22641687B003EB532 /* GoalPicker.swift */,
 				8606042A2643E40800944617 /* TagList.swift */,
 				86338F48264242F800112BBC /* TagPicker.swift */,
+				86F6504D2647D86C00B070BA /* TrackedGoalCard.swift */,
 				8665E29B2641427D003EB532 /* TrackedGoalList.swift */,
 			);
 			path = Beeminder;
@@ -448,7 +449,6 @@
 			children = (
 				86E3AB59262354F900092CE6 /* AlertService.swift */,
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
-				86C4C0C3262A09C90023C2A0 /* AppService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
 				8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */,
 				864203B02632710700668EC1 /* FacebookLoginService.swift */,
@@ -660,11 +660,11 @@
 				8665E29F264142F1003EB532 /* GoalCountdown.swift in Sources */,
 				869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */,
 				86EB954126455CB400C7A7A2 /* Resolver+ResolverRegistering.swift in Sources */,
+				86F6504E2647D86C00B070BA /* TrackedGoalCard.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
-				86C4C0C4262A09C90023C2A0 /* AppService.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
 				8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */,
 				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
