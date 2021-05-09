@@ -7,19 +7,40 @@
 
 import SwiftUI
 import Resolver
+import Beeminder
+import Combine
+
+final class TrackedGoalListViewModel: ObservableObject {
+    @Injected private var goalService: GoalService
+
+    @Published private(set) var trackedGoals: [Goal] = []
+
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        goalService.$goals
+            .combineLatest(goalService.$goalTrackers)
+            .map { goals, goalTrackers in
+                goals.filter { goalTrackers[$0.id] != nil }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.trackedGoals = $0 }
+            .store(in: &subscribers)
+    }
+}
 
 struct TrackedGoalList: View {
-    @EnvironmentObject var goalService: GoalService
+    @StateObject private var viewModel = TrackedGoalListViewModel()
     @State private var isGoalPickerPresented = false
 
     var body: some View {
         VStack(alignment: .leading) {
             PageTitle(title: "Tracked Goals", subtitle: "Don't let the bee sting!")
 
-            if goalService.trackedGoals.count > 0 {
+            if viewModel.trackedGoals.count > 0 {
                 ScrollView {
                     LazyVStack(alignment: .center, spacing: 2, pinnedViews: []) {
-                        ForEach(goalService.trackedGoals) { goal in
+                        ForEach(viewModel.trackedGoals) { goal in
                             TrackedGoalCard(goal: goal)
                         }
                     }
@@ -41,10 +62,7 @@ struct TrackedGoalList: View {
 }
 
 struct TrackedGoalList_Previews: PreviewProvider {
-    @Injected static var goalService: GoalService
-
     static var previews: some View {
         TrackedGoalList()
-            .environmentObject(goalService)
     }
 }
