@@ -44,17 +44,31 @@ struct AnswerCreatorConfig {
     }
 }
 
-struct AnswerCreator: View {
-    @EnvironmentObject var answerService: AnswerService
-    @EnvironmentObject var alertService: AlertService
-    @Binding var config: AnswerCreatorConfig
+final class AnswerCreatorViewModel: ObservableObject {
+    @Injected private var answerService: AnswerService
+    @Injected private var alertService: AlertService
 
-    var dateFormatter: DateFormatter = {
+    private(set) lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
         return formatter
     }()
+
+    func updateAnswer(_ answer: Answer, tags: [Tag]) {
+        answerService.updateAnswer(answer, tags: tags)
+            .errorHandled(by: alertService)
+    }
+
+    func createAnswerAndUpdateTrackedGoals(_ answer: Answer) {
+        answerService.createAnswerAndUpdateTrackedGoals(answer)
+            .errorHandled(by: alertService)
+    }
+}
+
+struct AnswerCreator: View {
+    @StateObject private var viewModel = AnswerCreatorViewModel()
+    @Binding var config: AnswerCreatorConfig
 
     var body: some View {
         VStack {
@@ -62,7 +76,7 @@ struct AnswerCreator: View {
                 Text("What are you doing")
                 Text("RIGHT NOW?")
             }
-            Text(dateFormatter.string(from: config.pingDate))
+            Text(viewModel.dateFormatter.string(from: config.pingDate))
 
             Spacer()
 
@@ -85,24 +99,17 @@ struct AnswerCreator: View {
             return
         }
         if let editingAnswer = config.editingAnswer {
-            answerService.updateAnswer(editingAnswer, tags: tags)
-                .errorHandled(by: alertService)
+            viewModel.updateAnswer(editingAnswer, tags: tags)
         } else {
             let answer = Answer(ping: config.pingDate, tags: tags)
-            answerService.createAnswerAndUpdateTrackedGoals(answer)
-                .errorHandled(by: alertService)
+            viewModel.createAnswerAndUpdateTrackedGoals(answer)
         }
         config.dismiss()
     }
 }
 
 struct AnswerCreator_Previews: PreviewProvider {
-    @Injected static var answerService: AnswerService
-    @Injected static var alertService: AlertService
-
     static var previews: some View {
         AnswerCreator(config: .constant(AnswerCreatorConfig()))
-            .environmentObject(answerService)
-            .environmentObject(alertService)
     }
 }

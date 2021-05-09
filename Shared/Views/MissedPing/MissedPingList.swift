@@ -9,8 +9,6 @@ import SwiftUI
 import Resolver
 
 struct MissedPingList: View {
-    @EnvironmentObject var answerService: AnswerService
-    @EnvironmentObject var tagService: TagService
     @EnvironmentObject var pingService: PingService
 
     @State private var isBatchAnswerCreatorPresented = false
@@ -93,9 +91,6 @@ struct MissedPingList: View {
                     .cardButtonStyle(.modalCard)
                     .sheet(isPresented: $isBatchAnswerCreatorPresented) {
                         BatchAnswerCreator(isPresented: $isBatchAnswerCreatorPresented)
-                            .environmentObject(self.answerService)
-                            .environmentObject(self.tagService)
-                            .environmentObject(self.pingService)
                     }
             }
         }
@@ -103,15 +98,11 @@ struct MissedPingList: View {
 }
 
 struct MissedPingList_Previews: PreviewProvider {
-    @Injected static var answerService: AnswerService
-    @Injected static var tagService: TagService
     @Injected static var pingService: PingService
 
     static var previews: some View {
         MissedPingList()
             .preferredColorScheme(.dark)
-            .environmentObject(answerService)
-            .environmentObject(tagService)
             .environmentObject(pingService)
     }
 }

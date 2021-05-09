@@ -45,7 +45,6 @@ struct TrackedGoalList: View {
                 .sheet(isPresented: $pickerConfig.isPresented) {
                     GoalPicker()
                         .environmentObject(self.goalService)
-                        .environmentObject(self.tagService)
                         .background(Color.sheetBackground)
                 }
         }

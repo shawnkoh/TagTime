@@ -11,9 +11,6 @@ import Resolver
 struct LogbookCard: View {
     var answer: Answer
 
-    @EnvironmentObject var answerService: AnswerService
-    @EnvironmentObject var alertService: AlertService
-
     @State var config = AnswerCreatorConfig()
 
     init(answer: Answer) {
@@ -36,20 +33,12 @@ struct LogbookCard: View {
         .cardButtonStyle(.baseCard)
         .sheet(isPresented: $config.isPresented) {
             AnswerCreator(config: $config)
-                .environmentObject(self.answerService)
-                .environmentObject(self.alertService)
         }
-
     }
 }
 
 struct LogbookCard_Previews: PreviewProvider {
-    @Injected static var answerService: AnswerService
-    @Injected static var alertService: AlertService
-
     static var previews: some View {
         LogbookCard(answer: Stub.answers.first!)
-            .environmentObject(answerService)
-            .environmentObject(alertService)
     }
 }

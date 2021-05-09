@@ -27,7 +27,6 @@ final class AuthenticatedViewModel: ObservableObject {
     @Injected private var notificationHandler: NotificationHandler
     @Injected private var notificationScheduler: NotificationScheduler
     @Injected private var beeminderCredentialService: BeeminderCredentialService
-    @Injected private var alertService: AlertService
 
     init() {
         authenticationService.$user
@@ -60,10 +59,7 @@ final class AuthenticatedViewModel: ObservableObject {
 
 struct AuthenticatedView: View {
     @StateObject var viewModel = AuthenticatedViewModel()
-    @EnvironmentObject var answerService: AnswerService
-    @EnvironmentObject var alertService: AlertService
     @EnvironmentObject var beeminderCredentialService: BeeminderCredentialService
-    @EnvironmentObject var tagService: TagService
 
     var isLoggedIntoBeeminder: Bool {
         beeminderCredentialService.credential != nil
@@ -139,25 +135,17 @@ struct AuthenticatedView: View {
         .sheet(isPresented: $viewModel.pingNotification.isPresented) {
             AnswerCreator(config: $viewModel.pingNotification)
                 .background(Color.modalBackground)
-                .environmentObject(self.answerService)
-                .environmentObject(self.alertService)
-                .environmentObject(self.tagService)
         }
     }
 }
 
 struct AuthenticatedView_Previews: PreviewProvider {
-    @Injected static var answerService: AnswerService
-    @Injected static var alertService: AlertService
     @Injected static var beeminderCredentialService: BeeminderCredentialService
-    @Injected static var tagService: TagService
 
     static var previews: some View {
         AuthenticatedView()
             .preferredColorScheme(.dark)
-            .environmentObject(answerService)
-            .environmentObject(alertService)
+
             .environmentObject(beeminderCredentialService)
-            .environmentObject(tagService)
     }
 }
