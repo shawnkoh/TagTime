@@ -10,18 +10,6 @@ import Resolver
 import Beeminder
 import Combine
 
-struct GoalPickerConfig {
-    var isPresented = false
-
-    mutating func present() {
-        isPresented = true
-    }
-
-    mutating func dismiss() {
-        isPresented = false
-    }
-}
-
 final class GoalPickerViewModel: ObservableObject {
     @Injected private var goalService: GoalService
     @Injected private var alertService: AlertService

@@ -11,7 +11,7 @@ import Resolver
 struct TrackedGoalList: View {
     @EnvironmentObject var goalService: GoalService
     @EnvironmentObject var tagService: TagService
-    @State var pickerConfig = GoalPickerConfig()
+    @State private var isGoalPickerPresented = false
     @State var detailConfig = GoalDetailConfig()
 
     var body: some View {
@@ -40,9 +40,9 @@ struct TrackedGoalList: View {
             }
 
             Text("TRACK NEW GOAL")
-                .onTap { pickerConfig.present() }
+                .onTap { isGoalPickerPresented = true }
                 .cardButtonStyle(.modalCard)
-                .sheet(isPresented: $pickerConfig.isPresented) {
+                .sheet(isPresented: $isGoalPickerPresented) {
                     GoalPicker()
                         .background(Color.sheetBackground)
                 }
