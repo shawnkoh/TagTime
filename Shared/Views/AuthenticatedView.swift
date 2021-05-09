@@ -19,6 +19,7 @@ final class AuthenticatedViewModel: ObservableObject {
     }
 
     @Published var isAuthenticated = false
+    @Published var isLoggedIntoBeeminder = false
     @Published var pingNotification = AnswerCreatorConfig()
     @Published var currentPage: Page = .missedPingList
 
@@ -47,9 +48,11 @@ final class AuthenticatedViewModel: ObservableObject {
 
         beeminderCredentialService.$credential
             .receive(on: DispatchQueue.main)
-            .sink { [self] credential in
-                if credential == nil, currentPage == .goalList {
-                    currentPage = .missedPingList
+            .sink { [weak self] credential in
+                self?.isLoggedIntoBeeminder = credential != nil
+
+                if credential == nil, self?.currentPage == .goalList {
+                    self?.currentPage = .missedPingList
                 }
             }
             .store(in: &subscribers)
@@ -59,11 +62,6 @@ final class AuthenticatedViewModel: ObservableObject {
 
 struct AuthenticatedView: View {
     @StateObject var viewModel = AuthenticatedViewModel()
-    @EnvironmentObject var beeminderCredentialService: BeeminderCredentialService
-
-    var isLoggedIntoBeeminder: Bool {
-        beeminderCredentialService.credential != nil
-    }
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
     @ViewBuilder
@@ -82,7 +80,7 @@ struct AuthenticatedView: View {
         VStack {
             // Paddings are placed within TabView in order to allow swiping on the edges
             // if statement is used here instead of within TabView because SwiftUI is buggy with it inside.
-            if isLoggedIntoBeeminder {
+            if viewModel.isLoggedIntoBeeminder {
                 TabView(selection: $viewModel.currentPage) {
                     MissedPingList()
                         .tag(AuthenticatedViewModel.Page.missedPingList)
@@ -123,7 +121,7 @@ struct AuthenticatedView: View {
                 Spacer()
                 page(name: "missed-ping-list", destination: .missedPingList)
                 page(name: "logbook", destination: .logbook)
-                if isLoggedIntoBeeminder {
+                if viewModel.isLoggedIntoBeeminder {
                     page(name: "goal-list", destination: .goalList)
                 }
                 page(name: "statistics", destination: .statistics)
@@ -140,12 +138,8 @@ struct AuthenticatedView: View {
 }
 
 struct AuthenticatedView_Previews: PreviewProvider {
-    @Injected static var beeminderCredentialService: BeeminderCredentialService
-
     static var previews: some View {
         AuthenticatedView()
             .preferredColorScheme(.dark)
-
-            .environmentObject(beeminderCredentialService)
     }
 }

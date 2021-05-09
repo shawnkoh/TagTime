@@ -8,12 +8,29 @@
 import SwiftUI
 import Firebase
 import Resolver
+import Combine
+
+final class ContentViewModel: ObservableObject {
+    @Injected private var authenticationService: AuthenticationService
+
+    private var subscribers = Set<AnyCancellable>()
+
+    @Published private(set) var isAuthenticated = false
+
+    init() {
+        authenticationService.$user
+            .map { $0.id != AuthenticationService.unauthenticatedUserId }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.isAuthenticated = $0 }
+            .store(in: &subscribers)
+    }
+}
 
 struct ContentView: View {
-    @EnvironmentObject var authenticationService: AuthenticationService
+    @StateObject private var viewModel = ContentViewModel()
 
     var body: some View {
-        if authenticationService.isAuthenticated {
+        if viewModel.isAuthenticated {
             AuthenticatedView()
         } else {
             UnauthenticatedView()

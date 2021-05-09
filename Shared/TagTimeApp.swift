@@ -48,7 +48,6 @@ final class AppViewModel: ObservableObject {
 struct TagTimeApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject private var viewModel = AppViewModel()
-    @StateObject var beeminderCredentialService: BeeminderCredentialService = Resolver.resolve()
 
     init() {
         FirebaseApp.configure()
@@ -63,7 +62,6 @@ struct TagTimeApp: App {
                 .alert(isPresented: $viewModel.isAlertPresented) {
                     Alert(title: Text(viewModel.alertMessage))
                 }
-                .environmentObject(beeminderCredentialService)
                 .onAppear() { viewModel.signIn() }
                 .statusBar(hidden: true)
         }
