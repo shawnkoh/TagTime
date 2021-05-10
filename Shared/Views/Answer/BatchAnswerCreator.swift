@@ -20,8 +20,12 @@ final class BatchAnswerCreatorViewModel: ObservableObject {
             return
         }
         DispatchQueue.global(qos: .utility).async { [self] in
-            answerService
-                .batchAnswerPings(pingDates: pingService.unansweredPings, tags: tags)
+            let builder = AnswerBuilder()
+            pingService.unansweredPings
+                .map { Answer(ping: $0, tags: tags) }
+                .forEach { _ = builder.createAnswer($0) }
+            builder
+                .execute()
                 .errorHandled(by: alertService)
         }
     }

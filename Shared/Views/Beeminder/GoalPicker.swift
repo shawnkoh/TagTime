@@ -25,7 +25,7 @@ final class GoalPickerViewModel: ObservableObject {
                 goals.filter { goalTrackers[$0.id] == nil }
             }
             .receive(on: DispatchQueue.main)
-            .sink { self.untrackedGoals = $0 }
+            .sink { [weak self] in self?.untrackedGoals = $0 }
             .store(in: &subscribers)
     }
 

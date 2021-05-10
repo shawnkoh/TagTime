@@ -27,7 +27,7 @@ final class MissedPingListViewModel: ObservableObject {
         pingService.$unansweredPings
             .map { $0.sorted { $0 > $1 }}
             .receive(on: DispatchQueue.main)
-            .sink { self.unansweredPings = $0 }
+            .sink { [weak self] in self?.unansweredPings = $0 }
             .store(in: &subscribers)
     }
 }

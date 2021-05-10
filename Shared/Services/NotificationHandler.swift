@@ -89,7 +89,9 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
             let answer = Answer(ping: ping, tags: tags)
 
             if authenticationService.isAuthenticated {
-                answerService.createAnswer(answer)
+                AnswerBuilder()
+                    .createAnswer(answer)
+                    .execute()
                     .receive(on: DispatchQueue.global(qos: .utility))
                     .sink(receiveCompletion: { completion in
                         switch completion {
@@ -117,8 +119,10 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
                     // Instead, the ViewModels should observe its interested services via @Injected, then receive their updates on the main thread, in order
                     // to update the view models
                     .setUser(service: authenticationService)
-                    .flatMap { user -> Future<Void, Error> in
-                        answerService.createAnswer(answer)
+                    .flatMap { user -> AnyPublisher<Void, Error> in
+                        AnswerBuilder()
+                            .createAnswer(answer)
+                            .execute()
                     }
                     .receive(on: DispatchQueue.global(qos: .utility))
                     .sink(receiveCompletion: { completion in
