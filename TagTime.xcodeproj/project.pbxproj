@@ -84,6 +84,7 @@
 		86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F142263D76D9002062E2 /* Auth+Combine.swift */; };
 		86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */; };
 		86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */; };
+		86E13CD5264971F800432A5A /* AnswerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E13CD4264971F800432A5A /* AnswerBuilder.swift */; };
 		86E34E142643FB4A00B3AA5E /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E34E132643FB4A00B3AA5E /* CardStyle.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationScheduler.swift */; };
@@ -174,6 +175,7 @@
 		86D2F142263D76D9002062E2 /* Auth+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+Combine.swift"; sourceTree = "<group>"; };
 		86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseUser+Combine.swift"; sourceTree = "<group>"; };
 		86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentReference+Combine.swift"; sourceTree = "<group>"; };
+		86E13CD4264971F800432A5A /* AnswerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerBuilder.swift; sourceTree = "<group>"; };
 		86E34E132643FB4A00B3AA5E /* CardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStyle.swift; sourceTree = "<group>"; };
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
@@ -448,6 +450,7 @@
 			isa = PBXGroup;
 			children = (
 				86E3AB59262354F900092CE6 /* AlertService.swift */,
+				86E13CD4264971F800432A5A /* AnswerBuilder.swift */,
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
 				8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */,
@@ -666,6 +669,7 @@
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
+				86E13CD5264971F800432A5A /* AnswerBuilder.swift in Sources */,
 				8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */,
 				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
 				8665E2A52641752B003EB532 /* GoalService.swift in Sources */,
