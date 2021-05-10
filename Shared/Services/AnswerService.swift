@@ -13,6 +13,11 @@ import FirebaseFirestoreSwift
 import Resolver
 
 final class AnswerService: ObservableObject {
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var goalService: GoalService
+    @Injected private var tagService: TagService
+    @Injected private var alertService: AlertService
+
     // Solely updated by Firestore listener
     // Sorted in descending order
     @Published private(set) var answers: [Answer] = []
@@ -23,11 +28,6 @@ final class AnswerService: ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
-
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var goalService: GoalService
-    @Injected private var tagService: TagService
-    @Injected private var alertService: AlertService
 
     private var user: User {
         authenticationService.user
@@ -75,7 +75,6 @@ extension User {
         userDocument.collection("answers")
     }
 }
-
 
 #if DEBUG
 extension AnswerService {
