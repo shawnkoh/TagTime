@@ -36,6 +36,8 @@ final class BeeminderCredentialService: ObservableObject {
         subscribers = []
         listeners.forEach { $0.remove() }
         listeners = []
+        credential = nil
+
         user.credentialDocument.addSnapshotListener { snapshot, error in
             if let error = error {
                 self.alertService.present(message: error.localizedDescription)

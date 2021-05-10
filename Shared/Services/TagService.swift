@@ -52,22 +52,12 @@ final class TagService: ObservableObject {
             return
         }
         user.userDocument.collection("tags")
-            .addSnapshotListener() { snapshot, error in
+            .addSnapshotListener { snapshot, error in
                 if let error = error {
                     self.alertService.present(message: error.localizedDescription)
                 }
-                guard let snapshot = snapshot else {
-                    return
-                }
-                snapshot.documents.forEach {
-                    do {
-                        guard let tagCache = try $0.data(as: TagCache.self) else {
-                            return
-                        }
-                        self.tags[$0.documentID] = tagCache
-                    } catch {
-                        self.alertService.present(message: error.localizedDescription)
-                    }
+                snapshot?.documents.forEach {
+                    self.tags[$0.documentID] = try? $0.data(as: TagCache.self)
                 }
             }
             .store(in: &listeners)

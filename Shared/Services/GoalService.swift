@@ -62,17 +62,15 @@ final class GoalService: ObservableObject {
         subscribers = []
         listeners.forEach { $0.remove() }
         listeners = []
+        goalTrackers = [:]
 
         user.goalCollection.addSnapshotListener { snapshot, error in
             if let error = error {
                 self.alertService.present(message: error.localizedDescription)
             }
 
-            guard let snapshot = snapshot else {
-                return
-            }
             var goalTrackers = [String: GoalTracker]()
-            snapshot.documents.forEach { document in
+            snapshot?.documents.forEach { document in
                 goalTrackers[document.documentID] = try? document.data(as: GoalTracker.self)
             }
             self.goalTrackers = goalTrackers

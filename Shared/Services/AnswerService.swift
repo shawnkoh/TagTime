@@ -180,6 +180,8 @@ final class AnswerService: ObservableObject {
         listeners = []
         subscribers.forEach { $0.cancel() }
         subscribers = []
+        answers = []
+        latestAnswer = nil
 
         setupFirestoreListeners(user: user)
     }
@@ -188,23 +190,14 @@ final class AnswerService: ObservableObject {
         user.answerCollection
             .order(by: "ping", descending: true)
             .limit(to: PingService.answerablePingCount)
-            .addSnapshotListener() { [self] (snapshot, error) in
+            .addSnapshotListener { [self] (snapshot, error) in
                 if let error = error {
                     alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")
                 }
 
-                guard let snapshot = snapshot else {
-                    alertService.present(message: "setupFirestoreListeners unable to get snapshot")
-                    return
-                }
-
-                do {
-                    // TODO: this is problematic for pagination because it overwrites all the answers.
-                    answers = try snapshot.documents.compactMap { try $0.data(as: Answer.self) }
-                    latestAnswer = answers.first
-                } catch {
-                    alertService.present(message: "setupFirestoreListeners unable to decode latestAnswer")
-                }
+                // TODO: this is problematic for pagination because it overwrites all the answers.
+                answers = snapshot?.documents.compactMap { try? $0.data(as: Answer.self) } ?? []
+                latestAnswer = answers.first
             }
             .store(in: &listeners)
     }
