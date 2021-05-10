@@ -40,8 +40,7 @@ final class BeeminderCredentialService: ObservableObject {
             if let error = error {
                 self.alertService.present(message: error.localizedDescription)
             }
-            let credential = try? snapshot?.data(as: Beeminder.Credential.self)
-            self.credential = credential
+            self.credential = try? snapshot?.data(as: Beeminder.Credential.self)
         }
         .store(in: &listeners)
     }

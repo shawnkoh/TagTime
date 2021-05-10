@@ -42,12 +42,13 @@ final class TagService: ObservableObject {
             .sink { self.setup(user: $0) }
     }
     
-    private func setup(user: User?) {
+    private func setup(user: User) {
         subscribers.forEach { $0.cancel() }
         subscribers = []
         listeners.forEach { $0.remove() }
         listeners = []
-        guard let user = user else {
+        tags = [:]
+        guard user.id != AuthenticationService.unauthenticatedUserId else {
             return
         }
         user.userDocument.collection("tags")
