@@ -12,12 +12,14 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Resolver
 
+// If we make it a struct we can't inject the services. that has to be done somewhere else.
+// Will have to split it into struct AnswerBuilder and class AnswerExecuter
+// For simplicity let's keep it as a mutable builder for now
 final class AnswerBuilder {
-    @Injected private var answerService: AnswerService
     @Injected private var tagService: TagService
     @Injected private var goalService: GoalService
-    @Injected private var alertService: AlertService
     @Injected private var authenticationService: AuthenticationService
+    @Injected private var beeminderCredentialService: BeeminderCredentialService
 
     private enum Operation {
         case create(Answer)
@@ -58,9 +60,7 @@ final class AnswerBuilder {
             }
         }
 
-        let tagDeltas = getTagDeltas(from: operations)
-
-        tagDeltas.forEach { tagDelta in
+        getTagDeltas(from: operations).forEach { tagDelta in
             if tagDelta.value > 0 {
                 tagService.registerTags([tagDelta.key], with: batch, increment: tagDelta.value)
             } else if tagDelta.value < 0 {
@@ -69,7 +69,7 @@ final class AnswerBuilder {
             // 0 is ignored because it has no change
         }
 
-        return Future { promise in
+        let writePublisher = Future<Void, Error> { promise in
             batch.commit() { error in
                 if let error = error {
                     promise(.failure(error))
@@ -79,45 +79,69 @@ final class AnswerBuilder {
             }
         }
         .eraseToAnyPublisher()
+
+        guard beeminderCredentialService.credential != nil else {
+            return writePublisher
+        }
+
+        return writePublisher
+            .flatMap { self.updateGoals(from: self.operations) }
+            .map { _ in }
+            .eraseToAnyPublisher()
     }
 
     private func getTagDeltas(from operations: [Operation]) -> [Tag: Int] {
         var tagDeltas: [Tag: Int] = [:]
+
+        func addTag(_ tag: Tag) {
+            if let delta = tagDeltas[tag] {
+                tagDeltas[tag] = delta + 1
+            } else {
+                tagDeltas[tag] = 1
+            }
+        }
+
+        func removeTag(_ tag: Tag) {
+            if let delta = tagDeltas[tag] {
+                tagDeltas[tag] = delta - 1
+            } else {
+                tagDeltas[tag] = -1
+            }
+        }
+
         operations.forEach { operation in
             switch operation {
             case let .create(answer):
-                answer.tags.forEach { tag in
-                    if let delta = tagDeltas[tag] {
-                        tagDeltas[tag] = delta + 1
-                    } else {
-                        tagDeltas[tag] = 1
-                    }
-                }
+                answer.tags.forEach(addTag)
 
             case let .update(answer, tags):
                 let newTags = Set(tags)
                 let oldTags = Set(answer.tags)
-                let removedTags = Array(oldTags.subtracting(newTags))
                 let addedTags = Array(newTags.subtracting(oldTags))
-
-                addedTags.forEach { tag in
-                    if let delta = tagDeltas[tag] {
-                        tagDeltas[tag] = delta + 1
-                    } else {
-                        tagDeltas[tag] = 1
-                    }
-                }
-
-                removedTags.forEach { tag in
-                    if let delta = tagDeltas[tag] {
-                        tagDeltas[tag] = delta - 1
-                    } else {
-                        tagDeltas[tag] = -1
-                    }
-                }
+                let removedTags = Array(oldTags.subtracting(newTags))
+                addedTags.forEach(addTag)
+                removedTags.forEach(removeTag)
             }
         }
         return tagDeltas
+    }
+
+    private func updateGoals(from operations: [Operation]) -> AnyPublisher<Void, Error> {
+        let operationPublishers = operations
+            .map { operation -> AnyPublisher<Void, Error> in
+                switch operation {
+                case let .create(answer):
+                    return self.goalService.updateTrackedGoals(answer: answer)
+                case let .update(answer, tags):
+                    let answer = Answer(ping: answer.ping, tags: tags)
+                    return self.goalService.updateTrackedGoals(answer: answer)
+                }
+            }
+
+        return Publishers.MergeMany(operationPublishers)
+            .collect()
+            .map { _ in }
+            .eraseToAnyPublisher()
     }
 }
 
