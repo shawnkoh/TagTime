@@ -111,7 +111,7 @@ final class GoalService: ObservableObject {
             .setData(from: GoalTracker(tags: tags, updatedDate: Date()))
     }
 
-    func updateTrackedGoals(answer: Answer) -> AnyPublisher<Void, Error> {
+    func createDatapointsForTrackedGoals(answer: Answer) -> AnyPublisher<Void, Error> {
         guard let beeminderApi = beeminderApi else {
             return Fail(error: AuthError.notAuthenticated).eraseToAnyPublisher()
         }
@@ -134,7 +134,32 @@ final class GoalService: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-    private func getTrackedGoalsToUpdate(answer: Answer) -> [Goal] {
+    func deleteManualDatapoints(for goal: Goal) -> AnyPublisher<Void, Error> {
+        guard let beeminderApi = beeminderApi else {
+            return Fail(error: AuthError.notAuthenticated).eraseToAnyPublisher()
+        }
+
+        return beeminderApi.getDatapoints(slug: goal.slug, sort: nil, count: nil, page: nil, per: nil)
+            .flatMap { datapoints -> AnyPublisher<Void, Error> in
+                let deletePublishers = datapoints
+                    .filter { $0.requestid == nil }
+                    // TODO: We need to further filter here to protect existing datapoints before the user started TagTime.
+                    // option 1: timestamp > user.startDate
+                    // option 2: timestamp within last 7 days
+                    // option 3: save all datapoints that exist before importing and filter them
+                    // option 4: just don't delete datapoints and we won't have to deal with this issue
+                    // i suspect option 4 is a better choice because we have to rewrite the code anyway when we get official integration
+                    .map { beeminderApi.deleteDatapoint(slug: goal.slug, id: $0.id) }
+
+                return Publishers.MergeMany(deletePublishers)
+                    .collect()
+                    .map { _ in }
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func getTrackedGoalsToUpdate(answer: Answer) -> [Goal] {
         // any goal that contains answer.tags is a goal that needs to be tracked
         // but the goal must also be tracked
         goals.filter { goal in

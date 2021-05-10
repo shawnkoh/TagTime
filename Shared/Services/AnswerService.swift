@@ -11,6 +11,7 @@ import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Resolver
+import Beeminder
 
 // If we make it a struct we can't inject the services. that has to be done somewhere else.
 // Will have to split it into struct AnswerBuilder and class AnswerExecuter
@@ -40,7 +41,6 @@ final class AnswerBuilder {
         return self
     }
 
-    // TODO: Handle goal updates
     func execute() -> AnyPublisher<Void, Error> {
         guard operations.count > 0 else {
             return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
@@ -49,18 +49,11 @@ final class AnswerBuilder {
         // TODO: Chunk this if it exceeds 500 writes
         // can do this by summing the cost of each operation, preferably in a different function
         let batch = Firestore.firestore().batch()
-        operations.forEach { operation in
-            switch operation {
-            case let .create(answer):
-                batch.createAnswer(answer, user: authenticationService.user)
-
-            case let .update(answer, tags):
-                let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
-                batch.createAnswer(newAnswer, user: authenticationService.user)
-            }
+        answers.forEach { answer in
+            batch.createAnswer(answer, user: authenticationService.user)
         }
 
-        getTagDeltas(from: operations).forEach { tagDelta in
+        tagDeltas.forEach { tagDelta in
             if tagDelta.value > 0 {
                 tagService.registerTags([tagDelta.key], with: batch, increment: tagDelta.value)
             } else if tagDelta.value < 0 {
@@ -85,12 +78,13 @@ final class AnswerBuilder {
         }
 
         return writePublisher
-            .flatMap { self.updateGoals(from: self.operations) }
+            .flatMap { self.deleteManualDatapoints() }
+            .flatMap { self.createDatapointsForTrackedGoals() }
             .map { _ in }
             .eraseToAnyPublisher()
     }
 
-    private func getTagDeltas(from operations: [Operation]) -> [Tag: Int] {
+    private var tagDeltas: [Tag: Int] {
         var tagDeltas: [Tag: Int] = [:]
 
         func addTag(_ tag: Tag) {
@@ -126,19 +120,45 @@ final class AnswerBuilder {
         return tagDeltas
     }
 
-    private func updateGoals(from operations: [Operation]) -> AnyPublisher<Void, Error> {
-        let operationPublishers = operations
-            .map { operation -> AnyPublisher<Void, Error> in
+    private var answers: [Answer] {
+        operations
+            .map { operation -> Answer in
                 switch operation {
                 case let .create(answer):
-                    return self.goalService.updateTrackedGoals(answer: answer)
+                    return answer
                 case let .update(answer, tags):
                     let answer = Answer(ping: answer.ping, tags: tags)
-                    return self.goalService.updateTrackedGoals(answer: answer)
+                    return answer
                 }
             }
+    }
 
-        return Publishers.MergeMany(operationPublishers)
+    private var trackedGoalsToUpdate: [Goal] {
+        var goals = Set<Goal>()
+        answers
+            .flatMap { goalService.getTrackedGoalsToUpdate(answer: $0) }
+            .forEach { goals.insert($0) }
+        return Array(goals)
+    }
+
+    private func deleteManualDatapoints() -> AnyPublisher<Void, Error> {
+        let deletePublishers = trackedGoalsToUpdate.map { goal in
+            self.goalService.deleteManualDatapoints(for: goal)
+        }
+
+        return Publishers.MergeMany(deletePublishers)
+            .collect()
+            .map { _ in }
+            .eraseToAnyPublisher()
+    }
+
+    private func createDatapointsForTrackedGoals() -> AnyPublisher<Void, Error> {
+        let createPublishers = answers
+            .map { answer -> AnyPublisher<Void, Error> in
+                self.goalService.createDatapointsForTrackedGoals(answer: answer)
+            }
+
+        return Publishers.MergeMany(createPublishers)
             .collect()
             .map { _ in }
             .eraseToAnyPublisher()

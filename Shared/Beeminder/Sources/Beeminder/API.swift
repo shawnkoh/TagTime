@@ -56,7 +56,7 @@ public final class API {
     ///    - count: Limit results to count number of datapoints. Defaults to all datapoints if parameter is missing.
     ///    - page: Used to paginate results.
     ///    - per: Number of results per page. Default 25. Ignored without page parameter.
-    public func getDatapoints(for slug: String, sort: String?, count: Int?, page: Int?, per: Int?) -> AnyPublisher<[Datapoint], Error> {
+    public func getDatapoints(slug: String, sort: String?, count: Int?, page: Int?, per: Int?) -> AnyPublisher<[Datapoint], Error> {
         var url = baseURL
         url.path.append("goals/\(slug)/datapoints.json")
         if let sort = sort {
@@ -106,11 +106,31 @@ public final class API {
             .eraseToAnyPublisher()
     }
 
+    /// Delete the datapoint with ID id for user u's goal g (beeminder.com/u/g).
+    /// - Parameters:
+    ///     - slug: The goal's slug
+    ///     - id: The datapoint's id
+    public func deleteDatapoint(slug: String, id: String) -> AnyPublisher<Datapoint, Error> {
+        var url = baseURL
+        url.path.append("goals/\(slug)/datapoints/\(id).json")
+        let request = makeDeleteRequest(url: url.url!)
+        return urlSession.dataTaskPublisher(for: request)
+            .map { $0.data }
+            .decode(type: Datapoint.self, decoder: decoder)
+            .eraseToAnyPublisher()
+    }
+
     private func makePostRequest(url: URL, httpBody: Data?) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = httpBody
+        return request
+    }
+
+    private func makeDeleteRequest(url: URL) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
         return request
     }
 }
