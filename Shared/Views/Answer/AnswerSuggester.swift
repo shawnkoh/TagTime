@@ -26,13 +26,17 @@ final class AnswerSuggesterViewModel: ObservableObject {
             // TODO: Ideally we should flatMap here, but fuse doesn't have Combine support so we use a closure callback for now
             .receive(on: DispatchQueue.main)
             .sink { [weak self] activeTags, keyword in
-                guard let keyword = keyword.split(separator: " ").last else {
+                guard keyword.last != " ", let keyword = keyword.split(separator: " ").last else {
                     self?.filteredTags = []
                     return
                 }
                 let fuse = Fuse()
                 fuse.search(String(keyword), in: activeTags) { results in
-                    self?.filteredTags = results.map { activeTags[$0.index] }
+                    self?.filteredTags = results
+                        // TODO: Not sure about this sorting and suffix
+                        .sorted { $0.score > $1.score }
+                        .suffix(7)
+                        .map { activeTags[$0.index] }
                 }
             }
             .store(in: &subscribers)
@@ -73,7 +77,11 @@ struct AnswerSuggester: View {
 
     private func replaceKeyword(with suggestion: String) {
         var result = keyword.split(separator: " ").dropLast().joined(separator: " ")
-        result += " \(suggestion)"
+        if result.count > 0 {
+            result += " \(suggestion) "
+        } else {
+            result = "\(suggestion) "
+        }
         keyword = result
     }
 }
