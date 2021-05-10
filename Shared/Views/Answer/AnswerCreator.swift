@@ -56,12 +56,16 @@ final class AnswerCreatorViewModel: ObservableObject {
     }()
 
     func updateAnswer(_ answer: Answer, tags: [Tag]) {
-        answerService.updateAnswer(answer, tags: tags)
+        AnswerBuilder()
+            .updateAnswer(answer, tags: tags)
+            .execute()
             .errorHandled(by: alertService)
     }
 
-    func createAnswerAndUpdateTrackedGoals(_ answer: Answer) {
-        answerService.createAnswerAndUpdateTrackedGoals(answer)
+    func createAnswer(_ answer: Answer) {
+        AnswerBuilder()
+            .createAnswer(answer)
+            .execute()
             .errorHandled(by: alertService)
     }
 }
@@ -102,7 +106,7 @@ struct AnswerCreator: View {
             viewModel.updateAnswer(editingAnswer, tags: tags)
         } else {
             let answer = Answer(ping: config.pingDate, tags: tags)
-            viewModel.createAnswerAndUpdateTrackedGoals(answer)
+            viewModel.createAnswer(answer)
         }
         config.dismiss()
     }

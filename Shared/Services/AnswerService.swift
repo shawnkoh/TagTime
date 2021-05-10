@@ -12,6 +12,115 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Resolver
 
+final class AnswerBuilder {
+    @Injected private var answerService: AnswerService
+    @Injected private var tagService: TagService
+    @Injected private var goalService: GoalService
+    @Injected private var alertService: AlertService
+    @Injected private var authenticationService: AuthenticationService
+
+    private enum Operation {
+        case create(Answer)
+        case update(Answer, [Tag])
+    }
+
+    init() {}
+
+    private var operations: [Operation] = []
+
+    func createAnswer(_ answer: Answer) -> Self {
+        operations.append(.create(answer))
+        return self
+    }
+
+    func updateAnswer(_ answer: Answer, tags: [Tag]) -> Self {
+        operations.append(.update(answer, tags))
+        return self
+    }
+
+    // TODO: Handle goal updates
+    func execute() -> AnyPublisher<Void, Error> {
+        guard operations.count > 0 else {
+            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+
+        // TODO: Chunk this if it exceeds 500 writes
+        // can do this by summing the cost of each operation, preferably in a different function
+        let batch = Firestore.firestore().batch()
+        operations.forEach { operation in
+            switch operation {
+            case let .create(answer):
+                batch.createAnswer(answer, user: authenticationService.user)
+
+            case let .update(answer, tags):
+                let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
+                batch.createAnswer(newAnswer, user: authenticationService.user)
+            }
+        }
+
+        let tagDeltas = getTagDeltas(from: operations)
+
+        tagDeltas.forEach { tagDelta in
+            if tagDelta.value > 0 {
+                tagService.registerTags([tagDelta.key], with: batch, increment: tagDelta.value)
+            } else if tagDelta.value < 0 {
+                tagService.deregisterTags([tagDelta.key], with: batch, decrement: tagDelta.value)
+            }
+            // 0 is ignored because it has no change
+        }
+
+        return Future { promise in
+            batch.commit() { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    private func getTagDeltas(from operations: [Operation]) -> [Tag: Int] {
+        var tagDeltas: [Tag: Int] = [:]
+        operations.forEach { operation in
+            switch operation {
+            case let .create(answer):
+                answer.tags.forEach { tag in
+                    if let delta = tagDeltas[tag] {
+                        tagDeltas[tag] = delta + 1
+                    } else {
+                        tagDeltas[tag] = 1
+                    }
+                }
+
+            case let .update(answer, tags):
+                let newTags = Set(tags)
+                let oldTags = Set(answer.tags)
+                let removedTags = Array(oldTags.subtracting(newTags))
+                let addedTags = Array(newTags.subtracting(oldTags))
+
+                addedTags.forEach { tag in
+                    if let delta = tagDeltas[tag] {
+                        tagDeltas[tag] = delta + 1
+                    } else {
+                        tagDeltas[tag] = 1
+                    }
+                }
+
+                removedTags.forEach { tag in
+                    if let delta = tagDeltas[tag] {
+                        tagDeltas[tag] = delta - 1
+                    } else {
+                        tagDeltas[tag] = -1
+                    }
+                }
+            }
+        }
+        return tagDeltas
+    }
+}
+
 final class AnswerService: ObservableObject {
     // Solely updated by Firestore listener
     // Sorted in descending order
@@ -74,89 +183,6 @@ final class AnswerService: ObservableObject {
                 }
             }
             .store(in: &listeners)
-    }
-
-    // TODO: This needs to be split into chunks
-    func batchAnswerPings(pingDates: [Date], tags: [Tag]) -> Future<Void, Error> {
-        Future { promise in
-            let batch = Firestore.firestore().batch()
-            let answers = pingDates.map { Answer(ping: $0, tags: tags) }
-            answers.forEach { batch.createAnswer($0, user: self.user) }
-            self.tagService.registerTags(tags, with: batch, increment: answers.count)
-
-            batch.commit() { error in
-                if let error = error {
-                    promise(.failure(error))
-                } else {
-                    promise(.success(()))
-                }
-            }
-        }
-    }
-
-    // Not used at the moment. But useful for import.
-    func batchCreateAnswers(_ answers: [Answer]) -> Future<Void, Error> {
-        Future { promise in
-            let batch = Firestore.firestore().batch()
-            // TODO: This needs to be split into chunks of maximum 500 / 3
-            answers.forEach { answer in
-                batch.createAnswer(answer, user: self.user)
-                self.tagService.registerTags(answer.tags, with: batch)
-            }
-            batch.commit() { error in
-                if let error = error {
-                    promise(.failure(error))
-                } else {
-                    promise(.success(()))
-                }
-            }
-        }
-    }
-
-    func createAnswer(_ answer: Answer) -> Future<Void, Error> {
-        Future { promise in
-            let batch = Firestore.firestore().batch()
-            batch.createAnswer(answer, user: self.user)
-            self.tagService.registerTags(answer.tags, with: batch)
-
-            batch.commit() { error in
-                if let error = error {
-                    promise(.failure(error))
-                } else {
-                    promise(.success(()))
-                }
-            }
-        }
-    }
-
-    func createAnswerAndUpdateTrackedGoals(_ answer: Answer) -> AnyPublisher<Void, Error> {
-        createAnswer(answer)
-            .flatMap { _ -> AnyPublisher<Void, Error> in
-                self.goalService.updateTrackedGoals(answer: answer)
-            }
-            .eraseToAnyPublisher()
-    }
-
-    func updateAnswer(_ answer: Answer, tags: [Tag]) -> Future<Void, Error> {
-        Future { promise in
-            let batch = Firestore.firestore().batch()
-            let newTags = Set(tags)
-            let oldTags = Set(answer.tags)
-            let removedTags = Array(oldTags.subtracting(newTags))
-            let addedTags = Array(newTags.subtracting(oldTags))
-            let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
-            batch.createAnswer(newAnswer, user: self.user)
-            self.tagService.registerTags(Array(addedTags), with: batch)
-            self.tagService.deregisterTags(Array(removedTags), with: batch)
-
-            batch.commit() { error in
-                if let error = error {
-                    promise(.failure(error))
-                } else {
-                    promise(.success(()))
-                }
-            }
-        }
     }
 }
 
