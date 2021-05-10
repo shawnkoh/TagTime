@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DoubleTappable: ViewModifier {
     let confirmationText: String
+    let timeInterval: TimeInterval
     let action: () -> ()
 
     @State var isTapped = false
@@ -29,7 +30,7 @@ struct DoubleTappable: ViewModifier {
             action()
         } else {
             isTapped = true
-            Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
+            Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { _ in
                 isTapped = false
             }
         }
@@ -37,7 +38,7 @@ struct DoubleTappable: ViewModifier {
 }
 
 extension View {
-    func onDoubleTap(_ confirmationText: String, perform action: @escaping () -> ()) -> some View {
-        self.modifier(DoubleTappable(confirmationText: confirmationText, action: action))
+    func onDoubleTap(_ confirmationText: String, timeInterval: TimeInterval = 2, perform action: @escaping () -> ()) -> some View {
+        self.modifier(DoubleTappable(confirmationText: confirmationText, timeInterval: timeInterval, action: action))
     }
 }
