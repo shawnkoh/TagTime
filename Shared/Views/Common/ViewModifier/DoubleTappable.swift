@@ -28,6 +28,7 @@ struct DoubleTappable: ViewModifier {
     private func tap() {
         if isTapped {
             action()
+            isTapped = false
         } else {
             isTapped = true
             Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { _ in
