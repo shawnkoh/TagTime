@@ -218,7 +218,6 @@ private extension WriteBatch {
 
 #if DEBUG
 extension AnswerService {
-    // TODO: Deprecated. Need to implement using new removeAnswer
     func deleteAllAnswers() {
         // TODO: This has a limit of 500 writes, we should ideally split tags into multiple chunks of 500
         let writeBatch = Firestore.firestore().batch()

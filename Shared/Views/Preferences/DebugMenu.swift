@@ -50,16 +50,16 @@ struct DebugMenu: View {
                 .padding()
 
             Text("Schedule notification in 5 seconds")
-                .onTap { viewModel.scheduleNotification() }
+                .onDoubleTap("Tap again to confirm") { viewModel.scheduleNotification() }
 
             Text("Delete all answers")
-                .onTap { viewModel.deleteAllAnswers() }
+                .onDoubleTap("Tap again to confirm") { viewModel.deleteAllAnswers() }
 
             Text("Reset User Start Date")
-                .onTap { viewModel.resetUserStartDate() }
+                .onDoubleTap("Tap again to confirm") { viewModel.resetUserStartDate() }
 
             Text("Reset Tag Cache")
-                .onTap { viewModel.resetTagCache() }
+                .onDoubleTap("Tap again to confirm") { viewModel.resetTagCache() }
 
             Spacer()
         }
