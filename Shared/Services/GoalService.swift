@@ -48,7 +48,7 @@ final class GoalService: ObservableObject {
             .sink { self.setup(user: $0) }
             .store(in: &serviceSubscribers)
 
-        beeminderCredentialService.$credential
+        beeminderCredentialService.credentialPublisher
             .sink {
                 guard let credential = $0 else {
                     self.beeminderApi = nil

@@ -19,7 +19,8 @@ extension Resolver: ResolverRegistering {
         register { FirestoreAuthenticationService() }
             .implements(AuthenticationService.self)
             .scope(.cached)
-        register { BeeminderCredentialService() }
+        register { FirestoreBeeminderCredentialService() }
+            .implements(BeeminderCredentialService.self)
             .scope(.cached)
         register { FacebookLoginService() }
             .scope(.cached)

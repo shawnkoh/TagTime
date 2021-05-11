@@ -46,7 +46,7 @@ final class AuthenticatedViewModel: ObservableObject {
             }
             .store(in: &subscribers)
 
-        beeminderCredentialService.$credential
+        beeminderCredentialService.credentialPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] credential in
                 self?.isLoggedIntoBeeminder = credential != nil
