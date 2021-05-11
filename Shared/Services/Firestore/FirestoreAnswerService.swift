@@ -12,15 +12,16 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Resolver
 
-final class FirestoreAnswerService {
+final class FirestoreAnswerService: AnswerService {
     @Injected private var authenticationService: AuthenticationService
     @Injected private var goalService: GoalService
     @Injected private var tagService: TagService
     @Injected private var alertService: AlertService
 
-    // [Answer.id: Answer]
     @Published private(set) var answers: [String: Answer] = [:]
+    var answersPublisher: Published<[String : Answer]>.Publisher { $answers }
     @Published private(set) var latestAnswer: Answer?
+    var latestAnswerPublisher: Published<Answer?>.Publisher { $latestAnswer }
 
     @Published private var lastFetched: LastFetchedStatus = .loading
 
