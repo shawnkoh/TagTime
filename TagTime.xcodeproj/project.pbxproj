@@ -44,6 +44,7 @@
 		867858DA26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		867858DB26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		867858DC26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
+		867B42FC2649905A00DDF1A6 /* Query+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867B42FB2649905A00DDF1A6 /* Query+Combine.swift */; };
 		86821D6D2644794A001EF75D /* Beeminder in Frameworks */ = {isa = PBXBuildFile; productRef = 86821D6C2644794A001EF75D /* Beeminder */; };
 		868D83EE26396B49000211A6 /* TagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83ED26396B49000211A6 /* TagService.swift */; };
 		868D83F2263A6356000211A6 /* TagCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83F1263A6356000211A6 /* TagCache.swift */; };
@@ -84,6 +85,7 @@
 		86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F142263D76D9002062E2 /* Auth+Combine.swift */; };
 		86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */; };
 		86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */; };
+		86E13CD5264971F800432A5A /* AnswerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E13CD4264971F800432A5A /* AnswerBuilder.swift */; };
 		86E34E142643FB4A00B3AA5E /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E34E132643FB4A00B3AA5E /* CardStyle.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
 		86E3AB6826243AC300092CE6 /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB6726243AC300092CE6 /* NotificationScheduler.swift */; };
@@ -150,6 +152,7 @@
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
 		867858C8263709D9009370F6 /* BatchAnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchAnswerCreator.swift; sourceTree = "<group>"; };
 		867858D826370F3F009370F6 /* AnswerSuggester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerSuggester.swift; sourceTree = "<group>"; };
+		867B42FB2649905A00DDF1A6 /* Query+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Query+Combine.swift"; sourceTree = "<group>"; };
 		86821D6B264478EA001EF75D /* Beeminder */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Beeminder; sourceTree = "<group>"; };
 		868D83ED26396B49000211A6 /* TagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagService.swift; sourceTree = "<group>"; };
 		868D83F1263A6356000211A6 /* TagCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCache.swift; sourceTree = "<group>"; };
@@ -174,6 +177,7 @@
 		86D2F142263D76D9002062E2 /* Auth+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+Combine.swift"; sourceTree = "<group>"; };
 		86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseUser+Combine.swift"; sourceTree = "<group>"; };
 		86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentReference+Combine.swift"; sourceTree = "<group>"; };
+		86E13CD4264971F800432A5A /* AnswerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerBuilder.swift; sourceTree = "<group>"; };
 		86E34E132643FB4A00B3AA5E /* CardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStyle.swift; sourceTree = "<group>"; };
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
 		86E3AB6726243AC300092CE6 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
@@ -331,6 +335,7 @@
 				86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */,
 				86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */,
 				86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */,
+				867B42FB2649905A00DDF1A6 /* Query+Combine.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -448,6 +453,7 @@
 			isa = PBXGroup;
 			children = (
 				86E3AB59262354F900092CE6 /* AlertService.swift */,
+				86E13CD4264971F800432A5A /* AnswerBuilder.swift */,
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
 				8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */,
@@ -666,6 +672,7 @@
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
+				86E13CD5264971F800432A5A /* AnswerBuilder.swift in Sources */,
 				8665E29C2641427D003EB532 /* TrackedGoalList.swift in Sources */,
 				867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */,
 				8665E2A52641752B003EB532 /* GoalService.swift in Sources */,
@@ -688,6 +695,7 @@
 				86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
 				865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */,
+				867B42FC2649905A00DDF1A6 /* Query+Combine.swift in Sources */,
 				868D83EE26396B49000211A6 /* TagService.swift in Sources */,
 				8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */,
 				868E97B3261736A7000A41FF /* Ping.swift in Sources */,

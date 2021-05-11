@@ -11,10 +11,12 @@ import Firebase
 struct User: Identifiable, Codable {
     let id: String
     let startDate: Date
+    let updatedDate: Date
 
-    init(id: String, startDate: Date = Date()) {
+    init(id: String, startDate: Date = Date(), updatedDate: Date = Date()) {
         self.id = id
         self.startDate = startDate
+        self.updatedDate = updatedDate
     }
 }
 
