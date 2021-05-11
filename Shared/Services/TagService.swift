@@ -12,10 +12,6 @@ import FirebaseFirestoreSwift
 import Resolver
 
 final class TagService: ObservableObject {
-    private enum LastFetchedStatus: Equatable {
-        case loading
-        case lastFetched(Date)
-    }
     @Injected private var alertService: AlertService
     @Injected private var authenticationService: AuthenticationService
 
@@ -102,39 +98,36 @@ final class TagService: ObservableObject {
             .sink { lastFetched in
                 self.serverListener?.remove()
                 self.serverListener = nil
+                guard case let .lastFetched(lastFetched) = lastFetched else {
+                    return
+                }
 
-                switch lastFetched {
-                case .loading:
-                    ()
-                case let .lastFetched(lastFetched):
-                    self.serverListener = tagCollection
-                        .whereField("updatedDate", isGreaterThan: lastFetched)
-                        .addSnapshotListener { snapshot, error in
-                            if let error = error {
-                                self.alertService.present(message: error.localizedDescription)
-                            }
+                self.serverListener = tagCollection
+                    .whereField("updatedDate", isGreaterThan: lastFetched)
+                    .addSnapshotListener { snapshot, error in
+                        if let error = error {
+                            self.alertService.present(message: error.localizedDescription)
+                        }
 
-                            guard let snapshot = snapshot else {
-                                return
-                            }
+                        guard let snapshot = snapshot else {
+                            return
+                        }
 
-                            let result = snapshot.documents.compactMap { document -> (String, TagCache)? in
-                                guard let tagCache = try? document.data(as: TagCache.self) else {
-                                    return nil
-                                }
-                                return (document.documentID, tagCache)
+                        let result = snapshot.documents.compactMap { document -> (String, TagCache)? in
+                            guard let tagCache = try? document.data(as: TagCache.self) else {
+                                return nil
                             }
+                            return (document.documentID, tagCache)
+                        }
 
-                            result.forEach { tag, tagCache in
-                                self.tags[tag] = tagCache
-                            }
+                        result.forEach { tag, tagCache in
+                            self.tags[tag] = tagCache
+                        }
 
-                            guard let lastFetched = result.map({ $0.1.updatedDate }).max() else {
-                                return
-                            }
+                        if let lastFetched = result.map({ $0.1.updatedDate }).max() {
                             self.lastFetched = .lastFetched(lastFetched)
                         }
-                }
+                    }
             }
             .store(in: &subscribers)
     }
