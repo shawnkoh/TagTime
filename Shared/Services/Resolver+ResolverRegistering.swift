@@ -24,7 +24,8 @@ extension Resolver: ResolverRegistering {
             .scope(.cached)
         register { FacebookLoginService() }
             .scope(.cached)
-        register { GoalService() }
+        register { FirestoreGoalService() }
+            .implements(GoalService.self)
             .scope(.cached)
         register { NotificationHandler() }
             .scope(.cached)

@@ -18,8 +18,8 @@ final class TrackedGoalListViewModel: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
 
     init() {
-        goalService.$goals
-            .combineLatest(goalService.$goalTrackers)
+        goalService.goalsPublisher
+            .combineLatest(goalService.goalTrackersPublisher)
             .map { goals, goalTrackers in
                 goals.filter { goalTrackers[$0.id] != nil }
             }

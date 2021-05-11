@@ -23,6 +23,7 @@
 		86338F49264242F800112BBC /* TagPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F48264242F800112BBC /* TagPicker.swift */; };
 		86338F4D26429F4C00112BBC /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4C26429F4C00112BBC /* CardButtonStyle.swift */; };
 		86338F4F2642A96600112BBC /* UltraPlainButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */; };
+		863B354B264AFA43006D549F /* FirestoreGoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863B354A264AFA43006D549F /* FirestoreGoalService.swift */; };
 		863CA8382635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		863CA8392635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		863CA83A2635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
@@ -142,6 +143,7 @@
 		86338F48264242F800112BBC /* TagPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPicker.swift; sourceTree = "<group>"; };
 		86338F4C26429F4C00112BBC /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
 		86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraPlainButtonStyle.swift; sourceTree = "<group>"; };
+		863B354A264AFA43006D549F /* FirestoreGoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreGoalService.swift; sourceTree = "<group>"; };
 		863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TagTime.entitlements; sourceTree = "<group>"; };
 		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 			children = (
 				86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */,
 				86719AF2264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift */,
+				863B354A264AFA43006D549F /* FirestoreGoalService.swift */,
 			);
 			path = Firestore;
 			sourceTree = "<group>";
@@ -714,6 +717,7 @@
 				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
 				867858D926370F3F009370F6 /* AnswerSuggester.swift in Sources */,
 				8672E70526181B01004081FC /* SettingService.swift in Sources */,
+				863B354B264AFA43006D549F /* FirestoreGoalService.swift in Sources */,
 				86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */,
 				86338F4F2642A96600112BBC /* UltraPlainButtonStyle.swift in Sources */,
 				86338F4D26429F4C00112BBC /* CardButtonStyle.swift in Sources */,
