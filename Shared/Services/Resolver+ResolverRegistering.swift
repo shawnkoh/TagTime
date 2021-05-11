@@ -36,7 +36,8 @@ extension Resolver: ResolverRegistering {
             .scope(.cached)
         register { SettingService() }
             .scope(.cached)
-        register { TagService() }
+        register { FirestoreTagService() }
+            .implements(TagService.self)
             .scope(.cached)
     }
 }

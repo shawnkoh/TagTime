@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860144132642B70A00AA5DB6 /* GoalCard.swift */; };
 		8606042B2643E40800944617 /* TagList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8606042A2643E40800944617 /* TagList.swift */; };
+		860F137B264B1052001D15EB /* FirestoreTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F137A264B1052001D15EB /* FirestoreTagService.swift */; };
 		861256E326139CAB00C2B81B /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256E226139CAB00C2B81B /* Tests_iOS.swift */; };
 		861256EE26139CAB00C2B81B /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256ED26139CAB00C2B81B /* Tests_macOS.swift */; };
 		861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C726139CAA00C2B81B /* TagTimeApp.swift */; };
@@ -124,6 +125,7 @@
 /* Begin PBXFileReference section */
 		860144132642B70A00AA5DB6 /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
 		8606042A2643E40800944617 /* TagList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagList.swift; sourceTree = "<group>"; };
+		860F137A264B1052001D15EB /* FirestoreTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreTagService.swift; sourceTree = "<group>"; };
 		861256C726139CAA00C2B81B /* TagTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTimeApp.swift; sourceTree = "<group>"; };
 		861256C826139CAA00C2B81B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		861256C926139CAB00C2B81B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 				86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */,
 				86719AF2264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift */,
 				863B354A264AFA43006D549F /* FirestoreGoalService.swift */,
+				860F137A264B1052001D15EB /* FirestoreTagService.swift */,
 			);
 			path = Firestore;
 			sourceTree = "<group>";
@@ -695,6 +698,7 @@
 				86E3AB6826243AC300092CE6 /* NotificationScheduler.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
+				860F137B264B1052001D15EB /* FirestoreTagService.swift in Sources */,
 				860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */,
 				863B354D264AFD69006D549F /* FirestoreAnswerService.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
