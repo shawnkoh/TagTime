@@ -18,8 +18,14 @@ final class GoalService: ObservableObject {
         case notAuthenticated
     }
 
+    @Injected private var alertService: AlertService
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var beeminderCredentialService: BeeminderCredentialService
+
     @Published private(set) var goals: [Goal] = []
     @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
+    @Published private var lastFetched: LastFetchedStatus = .loading
+
     var trackedGoals: [Goal] {
         goals.filter { goalTrackers[$0.id] != nil }
     }
@@ -31,10 +37,7 @@ final class GoalService: ObservableObject {
     private var serviceSubscribers = Set<AnyCancellable>()
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
-
-    @Injected private var alertService: AlertService
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    private var serverListener: ListenerRegistration?
 
     private var user: User {
         authenticationService.user
@@ -63,19 +66,78 @@ final class GoalService: ObservableObject {
         listeners.forEach { $0.remove() }
         listeners = []
         goalTrackers = [:]
+        lastFetched = .loading
+        serverListener?.remove()
+        serverListener = nil
 
-        user.goalCollection.addSnapshotListener { snapshot, error in
-            if let error = error {
-                self.alertService.present(message: error.localizedDescription)
-            }
-
-            var goalTrackers = [String: GoalTracker]()
-            snapshot?.documents.forEach { document in
-                goalTrackers[document.documentID] = try? document.data(as: GoalTracker.self)
-            }
-            self.goalTrackers = goalTrackers
+        guard user.id != AuthenticationService.unauthenticatedUserId else {
+            return
         }
-        .store(in: &listeners)
+
+        user.goalTrackerCollection
+            .order(by: "updatedDate", descending: true)
+            .limit(to: 1)
+            .getDocuments(source: .cache)
+            .map { try? $0.documents.first?.data(as: GoalTracker.self)?.updatedDate }
+            .replaceError(with: user.startDate)
+            .replaceNil(with: user.startDate)
+            .sink { self.lastFetched = .lastFetched($0) }
+            .store(in: &subscribers)
+
+        user.goalTrackerCollection
+            .getDocuments(source: .cache)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case let .failure(error):
+                    self.alertService.present(message: error.localizedDescription)
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { snapshot in
+                snapshot.documents.forEach { document in
+                    self.goalTrackers[document.documentID] = try? document.data(as: GoalTracker.self)
+                }
+            })
+            .store(in: &subscribers)
+
+        $lastFetched
+            // Prevent infinite recursion
+            .removeDuplicates()
+            .sink { lastFetched in
+                self.serverListener?.remove()
+                self.serverListener = nil
+                guard case let .lastFetched(lastFetched) = lastFetched else {
+                    return
+                }
+
+                self.serverListener = user.goalTrackerCollection
+                    .whereField("updatedDate", isGreaterThan: lastFetched)
+                    .addSnapshotListener { snapshot, error in
+                        if let error = error {
+                            self.alertService.present(message: error.localizedDescription)
+                        }
+
+                        guard let snapshot = snapshot else {
+                            return
+                        }
+
+                        let result = snapshot.documents.compactMap { document -> (String, GoalTracker)? in
+                            guard let tagCache = try? document.data(as: GoalTracker.self) else {
+                                return nil
+                            }
+                            return (document.documentID, tagCache)
+                        }
+
+                        result.forEach { goalId, goalTracker in
+                            self.goalTrackers[goalId] = goalTracker
+                        }
+
+                        if let lastFetched = result.map({ $0.1.updatedDate }).max() {
+                            self.lastFetched = .lastFetched(lastFetched)
+                        }
+                    }
+            }
+            .store(in: &subscribers)
     }
 
     func getGoals() {
@@ -94,19 +156,19 @@ final class GoalService: ObservableObject {
     }
 
     func trackGoal(_ goal: Goal) -> Future<Void, Error> {
-        user.goalCollection
+        user.goalTrackerCollection
             .document(goal.id)
             .setData(from: GoalTracker(tags: [], updatedDate: Date()))
     }
 
     func untrackGoal(_ goal: Goal) -> Future<Void, Error> {
-        user.goalCollection
+        user.goalTrackerCollection
             .document(goal.id)
             .delete()
     }
 
     func trackTags(_ tags: [Tag], for goal: Goal) -> Future<Void, Error> {
-        user.goalCollection
+        user.goalTrackerCollection
             .document(goal.id)
             .setData(from: GoalTracker(tags: tags, updatedDate: Date()))
     }
@@ -148,7 +210,7 @@ final class GoalService: ObservableObject {
 }
 
 private extension User {
-    var goalCollection: CollectionReference {
+    var goalTrackerCollection: CollectionReference {
         userDocument.collection("beeminder-goals")
     }
 }
