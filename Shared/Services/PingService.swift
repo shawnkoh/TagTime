@@ -10,64 +10,34 @@ import Combine
 import Resolver
 
 public final class PingService: ObservableObject {
-    // 2 days worth of pings = 2 * 24 * 60 / 45
-    static let answerablePingCount = 64
-
     var startPing: Ping
 
     // Average gap between pings, in seconds
     var averagePingInterval: Int
 
-    // Solely updated by updateAnswerablePings
     @Published private(set) var answerablePings: [Ping] {
         didSet {
+            // TODO: Find out why I need to call it in didSet
             updateAnswerablePings()
         }
     }
 
-    // Solely updated by publisher
-    @Published private(set) var unansweredPings: [Date] = []
-
-    private var userSubscriber: AnyCancellable = .init({})
     private var subscribers = Set<AnyCancellable>()
 
     @Injected private var authenticationService: AuthenticationService
-    @Injected private var answerService: AnswerService
 
     init(averagePingInterval: Int = defaultAveragePingInterval) {
         self.averagePingInterval = averagePingInterval
         self.startPing = Self.tagTimeBirth
         self.answerablePings = []
-        self.userSubscriber = authenticationService.$user
-            .sink { self.setup(user: $0) }
 
-        setupSubscribers()
+        authenticationService.$user
+            .sink { self.setup(user: $0) }
+            .store(in: &subscribers)
     }
 
     private func setup(user: User) {
         changeStartDate(to: user.startDate)
-    }
-
-    private func setupSubscribers() {
-        // Update unansweredPings by comparing answerablePings with answers.
-        // answerablePings is maintained by PingService
-        // answers is maintained by observing Firestore's answers
-        // TODO: Consider adding pagination for this
-        $answerablePings
-            .map { $0.suffix(Self.answerablePingCount) }
-            .combineLatest(
-                answerService.$answers
-                    .map { $0.prefix(Self.answerablePingCount) }
-                    .map { $0.map { $0.ping }}
-                    .map { Set($0) }
-            )
-            .map { (answerablePings, answeredPings) -> [Date] in
-                answerablePings
-                    .filter { !answeredPings.contains($0.date) }
-                    .map { $0.date }
-            }
-            .sink { self.unansweredPings = $0 }
-            .store(in: &subscribers)
     }
 
     // TODO: This needs to be based on the users' recent answers instead.

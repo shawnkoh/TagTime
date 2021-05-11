@@ -25,6 +25,11 @@ final class LogbookViewModel: ObservableObject {
 
     init() {
         answerService.$answers
+            .map { answers in
+                answers
+                    .map { $0.value }
+                    .sorted { $0.ping > $1.ping }
+            }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.answers = $0 }
             .store(in: &subscribers)

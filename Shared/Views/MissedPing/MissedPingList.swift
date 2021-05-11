@@ -10,7 +10,7 @@ import Resolver
 import Combine
 
 final class MissedPingListViewModel: ObservableObject {
-    @Injected private var pingService: PingService
+    @Injected private var answerablePingService: AnswerablePingService
 
     @Published private(set) var unansweredPings: [Date] = []
 
@@ -24,7 +24,7 @@ final class MissedPingListViewModel: ObservableObject {
     }()
 
     init() {
-        pingService.$unansweredPings
+        answerablePingService.$unansweredPings
             .map { $0.sorted { $0 > $1 }}
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.unansweredPings = $0 }

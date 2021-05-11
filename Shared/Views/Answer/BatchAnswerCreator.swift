@@ -10,7 +10,7 @@ import SwiftUIX
 import Resolver
 
 final class BatchAnswerCreatorViewModel: ObservableObject {
-    @Injected private var pingService: PingService
+    @Injected private var answerablePingService: AnswerablePingService
     @Injected private var alertService: AlertService
 
     func answerAllUnansweredPings(response: String) {
@@ -22,7 +22,7 @@ final class BatchAnswerCreatorViewModel: ObservableObject {
             let builder = AnswerBuilder()
             // TODO: This might be wrong. AnswerBuilder might not be mutated? not sure.
             // TODO: Find out if builders should be structs
-            pingService.unansweredPings
+            answerablePingService.unansweredPings
                 .map { Answer(ping: $0, tags: tags) }
                 .forEach { _ = builder.createAnswer($0) }
             builder
