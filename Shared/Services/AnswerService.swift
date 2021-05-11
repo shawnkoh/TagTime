@@ -80,7 +80,22 @@ extension User {
 extension AnswerService {
     func deleteAllAnswers() {
         // TODO: This has a limit of 500 writes, we should ideally split tags into multiple chunks of 500
-        let writeBatch = Firestore.firestore().batch()
+        answerCollection.getDocuments(source: .cache) { result, error in
+            if let error = error {
+                self.alertService.present(message: error.localizedDescription)
+            }
+            guard let result = result else {
+                return
+            }
+            let writeBatch = Firestore.firestore().batch()
+            result.documents.forEach { writeBatch.deleteDocument($0.reference) }
+            writeBatch.commit() { error in
+                if let error = error {
+                    self.alertService.present(message: error.localizedDescription)
+                }
+            }
+        }
+
         answerCollection.getDocuments() { result, error in
             if let error = error {
                 self.alertService.present(message: error.localizedDescription)
@@ -88,6 +103,7 @@ extension AnswerService {
             guard let result = result else {
                 return
             }
+            let writeBatch = Firestore.firestore().batch()
             result.documents.forEach { writeBatch.deleteDocument($0.reference) }
             writeBatch.commit() { error in
                 if let error = error {
