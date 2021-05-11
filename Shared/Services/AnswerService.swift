@@ -27,6 +27,7 @@ final class AnswerService: ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
+    private var serverListener: ListenerRegistration?
 
     private var user: User {
         authenticationService.user
@@ -70,29 +71,72 @@ final class AnswerService: ObservableObject {
             }
             .store(in: &subscribers)
 
-        user.answerCollection
-            .order(by: "ping", descending: true)
-            // TODO: Nasty cyclic dependency
-            .limit(to: AnswerablePingService.answerablePingCount)
-            .addSnapshotListener { [self] (snapshot, error) in
-                if let error = error {
-                    alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")
-                }
-
-                guard let snapshot = snapshot else {
+        $lastFetched
+            // Prevents infinite recursion
+            .removeDuplicates()
+            .sink { lastFetched in
+                self.serverListener?.remove()
+                self.serverListener = nil
+                guard case let .lastFetched(lastFetched) = lastFetched else {
                     return
                 }
-                let results = snapshot.documents.compactMap { answer -> (String, Answer)? in
-                    guard let answer = try? answer.data(as: Answer.self) else {
-                        return nil
-                    }
-                    return (answer.id, answer)
-                }
 
-                results.forEach { id, answer in
-                    self.answers[id] = answer
+                self.serverListener = user.answerCollection
+                    .whereField("updatedDate", isGreaterThan: lastFetched)
+                    .addSnapshotListener { snapshot, error in
+                        if let error = error {
+                            self.alertService.present(message: error.localizedDescription)
+                        }
+
+                        guard let snapshot = snapshot else {
+                            return
+                        }
+
+                        let result = snapshot.documents.compactMap { document -> (String, Answer)? in
+                            guard let tagCache = try? document.data(as: Answer.self) else {
+                                return nil
+                            }
+                            return (document.documentID, tagCache)
+                        }
+
+                        result.forEach { id, answer in
+                            self.answers[id] = answer
+                        }
+
+                        if let lastFetched = result.map({ $0.1.updatedDate }).max() {
+                            self.lastFetched = .lastFetched(lastFetched)
+                        }
+                    }
+            }
+            .store(in: &subscribers)
+
+        // TODO: Pagination should be applied to the cache so we don't end up loading everything
+        user.answerCollection
+            .order(by: "ping", descending: true)
+            .getDocuments(source: .cache)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case let .failure(error):
+                    self.alertService.present(message: error.localizedDescription)
+                case .finished:
+                    ()
                 }
-                latestAnswer = results.first?.1
+            }, receiveValue: { snapshot in
+                snapshot.documents.forEach {
+                    self.answers[$0.documentID] = try? $0.data(as: Answer.self)
+                }
+            })
+            .store(in: &subscribers)
+
+        // Watch for latest answer only here because the user might edit an old answer
+        user.answerCollection
+            .order(by: "ping", descending: true)
+            .limit(to: 1)
+            .addSnapshotListener { snapshot, error in
+                if let error = error {
+                    self.alertService.present(message: error.localizedDescription)
+                }
+                self.latestAnswer = try? snapshot?.documents.first?.data(as: Answer.self)
             }
             .store(in: &listeners)
     }
