@@ -24,6 +24,7 @@
 		86338F4D26429F4C00112BBC /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4C26429F4C00112BBC /* CardButtonStyle.swift */; };
 		86338F4F2642A96600112BBC /* UltraPlainButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */; };
 		863B354B264AFA43006D549F /* FirestoreGoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863B354A264AFA43006D549F /* FirestoreGoalService.swift */; };
+		863B354D264AFD69006D549F /* FirestoreAnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863B354C264AFD69006D549F /* FirestoreAnswerService.swift */; };
 		863CA8382635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		863CA8392635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		863CA83A2635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
@@ -144,6 +145,7 @@
 		86338F4C26429F4C00112BBC /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
 		86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraPlainButtonStyle.swift; sourceTree = "<group>"; };
 		863B354A264AFA43006D549F /* FirestoreGoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreGoalService.swift; sourceTree = "<group>"; };
+		863B354C264AFD69006D549F /* FirestoreAnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreAnswerService.swift; sourceTree = "<group>"; };
 		863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TagTime.entitlements; sourceTree = "<group>"; };
 		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 		86719AEE264AF25600B6086D /* Firestore */ = {
 			isa = PBXGroup;
 			children = (
+				863B354C264AFD69006D549F /* FirestoreAnswerService.swift */,
 				86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */,
 				86719AF2264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift */,
 				863B354A264AFA43006D549F /* FirestoreGoalService.swift */,
@@ -693,6 +696,7 @@
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */,
+				863B354D264AFD69006D549F /* FirestoreAnswerService.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
 				8665E29F264142F1003EB532 /* GoalCountdown.swift in Sources */,
 				869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */,

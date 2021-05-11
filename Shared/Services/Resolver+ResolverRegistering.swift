@@ -12,7 +12,8 @@ extension Resolver: ResolverRegistering {
     public static func registerAllServices() {
         register { AlertService() }
             .scope(.cached)
-        register { AnswerService() }
+        register { FirestoreAnswerService() }
+            .implements(AnswerService.self)
             .scope(.cached)
         register { AnswerablePingService() }
             .scope(.cached)

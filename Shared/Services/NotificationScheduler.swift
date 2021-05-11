@@ -88,7 +88,7 @@ public final class NotificationScheduler {
                 }
                 return nextPings.map { $0.date }
             }
-            .combineLatest(answerService.$latestAnswer)
+            .combineLatest(answerService.latestAnswerPublisher)
             .sink { [self] (nextPings, latestAnswer) in
                 tryToScheduleNotifications(pings: nextPings, previousAnswer: latestAnswer)
             }

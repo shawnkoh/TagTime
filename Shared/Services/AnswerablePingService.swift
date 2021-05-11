@@ -29,7 +29,7 @@ final class AnswerablePingService {
         pingService.$answerablePings
             .map { $0.suffix(Self.answerablePingCount) }
             .combineLatest(
-                answerService.$answers
+                answerService.answersPublisher
                     .map { answers in
                         answers
                             .map { $0.value }

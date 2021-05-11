@@ -13,15 +13,15 @@ import FirebaseFirestoreSwift
 import FirebaseFirestore
 
 final class FirestoreBeeminderCredentialService: BeeminderCredentialService {
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var alertService: AlertService
+
     @Published private(set) var credential: Beeminder.Credential?
     var credentialPublisher: Published<Credential?>.Publisher { $credential }
 
     private var userSubscriber: AnyCancellable!
     private var subscribers = Set<AnyCancellable>()
     private var listeners = [ListenerRegistration]()
-
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var alertService: AlertService
 
     private var user: User {
         authenticationService.user

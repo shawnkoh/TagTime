@@ -42,7 +42,7 @@ final class AnswerSuggesterViewModel: ObservableObject {
             .store(in: &subscribers)
 
         answerService
-            .$latestAnswer
+            .latestAnswerPublisher
             .receive(on: DispatchQueue.main)
             .sink { self.latestAnswer = $0?.tagDescription }
             .store(in: &subscribers)
