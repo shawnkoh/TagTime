@@ -44,7 +44,7 @@ final class GoalService: ObservableObject {
     }
     
     init() {
-        authenticationService.$user
+        authenticationService.userPublisher
             .sink { self.setup(user: $0) }
             .store(in: &serviceSubscribers)
 
@@ -70,7 +70,7 @@ final class GoalService: ObservableObject {
         serverListener?.remove()
         serverListener = nil
 
-        guard user.id != AuthenticationService.unauthenticatedUserId else {
+        guard user.isAuthenticated else {
             return
         }
 

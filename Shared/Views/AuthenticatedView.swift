@@ -30,9 +30,9 @@ final class AuthenticatedViewModel: ObservableObject {
     @Injected private var beeminderCredentialService: BeeminderCredentialService
 
     init() {
-        authenticationService.$user
+        authenticationService.userPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.isAuthenticated = $0.id != AuthenticationService.unauthenticatedUserId }
+            .sink { [weak self] in self?.isAuthenticated = $0.isAuthenticated }
             .store(in: &subscribers)
 
         notificationHandler.$openedPing

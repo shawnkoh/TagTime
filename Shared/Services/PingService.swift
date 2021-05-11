@@ -31,7 +31,7 @@ public final class PingService: ObservableObject {
         self.startPing = Self.tagTimeBirth
         self.answerablePings = []
 
-        authenticationService.$user
+        authenticationService.userPublisher
             .sink { self.setup(user: $0) }
             .store(in: &subscribers)
     }

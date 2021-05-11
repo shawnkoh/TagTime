@@ -42,7 +42,7 @@ final class TagService: ObservableObject {
     }
     
     init() {
-        userSubscriber = authenticationService.$user
+        userSubscriber = authenticationService.userPublisher
             .sink { self.setup(user: $0) }
     }
     
@@ -55,7 +55,7 @@ final class TagService: ObservableObject {
         lastFetched = .loading
         serverListener?.remove()
         serverListener = nil
-        guard user.id != AuthenticationService.unauthenticatedUserId else {
+        guard user.isAuthenticated else {
             return
         }
         // Using self.tagCollection results in referring to unauthenticated

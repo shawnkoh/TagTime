@@ -16,7 +16,8 @@ extension Resolver: ResolverRegistering {
             .scope(.cached)
         register { AnswerablePingService() }
             .scope(.cached)
-        register { AuthenticationService() }
+        register { FirestoreAuthenticationService() }
+            .implements(AuthenticationService.self)
             .scope(.cached)
         register { BeeminderCredentialService() }
             .scope(.cached)

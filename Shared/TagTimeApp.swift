@@ -37,8 +37,7 @@ final class AppViewModel: ObservableObject {
     func signIn() {
         // TODO: I'm not sure if Futures should be called in async thread
         DispatchQueue.global(qos: .utility).async { [self] in
-            authenticationService.signIn()
-                .setUser(service: authenticationService)
+            authenticationService.signInAndSetUser()
                 .errorHandled(by: alertService)
         }
     }

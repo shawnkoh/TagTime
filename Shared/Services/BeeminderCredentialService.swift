@@ -27,7 +27,7 @@ final class BeeminderCredentialService: ObservableObject {
     }
 
     init() {
-        userSubscriber = authenticationService.$user
+        userSubscriber = authenticationService.userPublisher
             .sink { self.setup(user: $0) }
     }
 

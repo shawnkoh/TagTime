@@ -38,7 +38,7 @@ final class AnswerService: ObservableObject {
     }
 
     init() {
-        userSubscriber = authenticationService.$user
+        userSubscriber = authenticationService.userPublisher
             .sink { self.setup(user: $0) }
     }
 
@@ -51,7 +51,7 @@ final class AnswerService: ObservableObject {
         latestAnswer = nil
         lastFetched = .loading
 
-        guard user.id != AuthenticationService.unauthenticatedUserId else {
+        guard user.isAuthenticated else {
             return
         }
 

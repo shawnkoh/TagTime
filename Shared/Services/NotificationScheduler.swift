@@ -49,7 +49,7 @@ public final class NotificationScheduler: ObservableObject {
             categorySummaryFormat: nil,
             options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
         )
-        userSubscriber = authenticationService.$user
+        userSubscriber = authenticationService.userPublisher
             .sink { self.setup(user: $0) }
     }
 

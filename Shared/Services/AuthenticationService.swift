@@ -19,18 +19,38 @@ enum AuthError: Error {
     case noSnapshot
 }
 
-public final class AuthenticationService: ObservableObject {
+extension User {
     static let unauthenticatedUserId = "unauthenticated"
-    enum AuthenticationError: Error {
-        case couldNotSignInAnonymously
-    }
 
+    var isAuthenticated: Bool {
+        id != Self.unauthenticatedUserId
+    }
+}
+
+protocol AuthenticationService {
+    var user: User { get }
+    var userPublisher: Published<User>.Publisher { get }
+
+    func signIn() -> AnyPublisher<User, Error>
+    // TODO: Not sure if we should have a signInAndSetUser method. Workaround to allow this protocol
+    func signInAndSetUser() -> AnyPublisher<User, Error>
+    func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error>
+    func link(with credential: AuthCredential) -> AnyPublisher<Void, Error>
+    func signOut()
+
+    #if DEBUG
+    func resetUserStartDate()
+    #endif
+}
+
+public final class FirestoreAuthenticationService: AuthenticationService {
     @Injected private var alertService: AlertService
 
-    @Published fileprivate(set) var user = User(id: unauthenticatedUserId, startDate: Date())
+    @Published fileprivate(set) var user = User(id: User.unauthenticatedUserId, startDate: Date())
+    var userPublisher: Published<User>.Publisher { $user }
 
     public var isAuthenticated: Bool {
-        user.id != Self.unauthenticatedUserId
+        user.id != User.unauthenticatedUserId
     }
 
     public init() {}
@@ -53,6 +73,15 @@ public final class AuthenticationService: ObservableObject {
                 }
                 .eraseToAnyPublisher()
         }
+    }
+
+    func signInAndSetUser() -> AnyPublisher<User, Error> {
+        signIn()
+            .map { user in
+                self.user = user
+                return user
+            }
+            .eraseToAnyPublisher()
     }
 
     func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error> {
@@ -85,7 +114,7 @@ public final class AuthenticationService: ObservableObject {
     func signOut() {
         do {
             try Auth.auth().signOut()
-            user = User(id: Self.unauthenticatedUserId, startDate: Date())
+            user = User(id: User.unauthenticatedUserId, startDate: Date())
         } catch {
             alertService.present(message: error.localizedDescription)
         }
@@ -115,18 +144,8 @@ public final class AuthenticationService: ObservableObject {
     }
 }
 
-extension AnyPublisher where Output == User, Failure == Error {
-    func setUser(service: AuthenticationService) -> AnyPublisher<User, Error> {
-        self.map { user -> User in
-            service.user = user
-            return user
-        }
-        .eraseToAnyPublisher()
-    }
-}
-
 #if DEBUG
-extension AuthenticationService {
+extension FirestoreAuthenticationService {
     func resetUserStartDate() {
         let newUser = User(id: user.id, startDate: Date())
         do {
