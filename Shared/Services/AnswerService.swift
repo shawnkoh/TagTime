@@ -21,6 +21,7 @@ final class AnswerService: ObservableObject {
     // [Answer.id: Answer]
     @Published private(set) var answers: [String: Answer] = [:]
     @Published private(set) var latestAnswer: Answer?
+    @Published private var lastFetched: LastFetchedStatus = .loading
 
     private var userSubscriber: AnyCancellable = .init({})
 
@@ -47,11 +48,28 @@ final class AnswerService: ObservableObject {
         subscribers = []
         answers = [:]
         latestAnswer = nil
+        lastFetched = .loading
+
+        guard user.id != AuthenticationService.unauthenticatedUserId else {
+            return
+        }
 
         setupFirestoreListeners(user: user)
     }
 
     private func setupFirestoreListeners(user: User) {
+        user.answerCollection
+            .order(by: "updatedDate", descending: true)
+            .limit(to: 1)
+            .getDocuments(source: .cache)
+            .map { try? $0.documents.first?.data(as: Answer.self)?.updatedDate }
+            .replaceNil(with: user.startDate)
+            .replaceError(with: user.startDate)
+            .sink { lastFetched in
+                self.lastFetched = .lastFetched(lastFetched)
+            }
+            .store(in: &subscribers)
+
         user.answerCollection
             .order(by: "ping", descending: true)
             // TODO: Nasty cyclic dependency
