@@ -30,6 +30,11 @@ final class AnswerablePingService {
             .map { $0.suffix(Self.answerablePingCount) }
             .combineLatest(
                 answerService.$answers
+                    .map { answers in
+                        answers
+                            .map { $0.value }
+                            .sorted { $0.ping > $1.ping }
+                    }
                     .map { $0.prefix(Self.answerablePingCount) }
                     .map { $0.map { $0.ping }}
                     .map { Set($0) }

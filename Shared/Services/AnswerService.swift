@@ -18,10 +18,8 @@ final class AnswerService: ObservableObject {
     @Injected private var tagService: TagService
     @Injected private var alertService: AlertService
 
-    // Solely updated by Firestore listener
-    // Sorted in descending order
-    @Published private(set) var answers: [Answer] = []
-    // Solely updated by Firestore listener
+    // [Answer.id: Answer]
+    @Published private(set) var answers: [String: Answer] = [:]
     @Published private(set) var latestAnswer: Answer?
 
     private var userSubscriber: AnyCancellable = .init({})
@@ -47,7 +45,7 @@ final class AnswerService: ObservableObject {
         listeners = []
         subscribers.forEach { $0.cancel() }
         subscribers = []
-        answers = []
+        answers = [:]
         latestAnswer = nil
 
         setupFirestoreListeners(user: user)
@@ -63,9 +61,20 @@ final class AnswerService: ObservableObject {
                     alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")
                 }
 
-                // TODO: this is problematic for pagination because it overwrites all the answers.
-                answers = snapshot?.documents.compactMap { try? $0.data(as: Answer.self) } ?? []
-                latestAnswer = answers.first
+                guard let snapshot = snapshot else {
+                    return
+                }
+                let results = snapshot.documents.compactMap { answer -> (String, Answer)? in
+                    guard let answer = try? answer.data(as: Answer.self) else {
+                        return nil
+                    }
+                    return (answer.id, answer)
+                }
+
+                results.forEach { id, answer in
+                    self.answers[id] = answer
+                }
+                latestAnswer = results.first?.1
             }
             .store(in: &listeners)
     }
