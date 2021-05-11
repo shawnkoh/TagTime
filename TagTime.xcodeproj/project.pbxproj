@@ -19,6 +19,7 @@
 		861256F526139CAB00C2B81B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 861256C926139CAB00C2B81B /* Assets.xcassets */; };
 		8614ED1C264110D700F543F2 /* BeeminderCredentialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */; };
 		862914E52634A1D6006BF198 /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862914E42634A1D6006BF198 /* DebugMenu.swift */; };
+		862F93CB264A63ED005C925C /* AnswerablePingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862F93CA264A63ED005C925C /* AnswerablePingService.swift */; };
 		86338F49264242F800112BBC /* TagPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F48264242F800112BBC /* TagPicker.swift */; };
 		86338F4D26429F4C00112BBC /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4C26429F4C00112BBC /* CardButtonStyle.swift */; };
 		86338F4F2642A96600112BBC /* UltraPlainButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */; };
@@ -135,6 +136,7 @@
 		861256EF26139CAB00C2B81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderCredentialService.swift; sourceTree = "<group>"; };
 		862914E42634A1D6006BF198 /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
+		862F93CA264A63ED005C925C /* AnswerablePingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerablePingService.swift; sourceTree = "<group>"; };
 		86338F48264242F800112BBC /* TagPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPicker.swift; sourceTree = "<group>"; };
 		86338F4C26429F4C00112BBC /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
 		86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraPlainButtonStyle.swift; sourceTree = "<group>"; };
@@ -455,6 +457,7 @@
 			isa = PBXGroup;
 			children = (
 				86E3AB59262354F900092CE6 /* AlertService.swift */,
+				862F93CA264A63ED005C925C /* AnswerablePingService.swift */,
 				86E13CD4264971F800432A5A /* AnswerBuilder.swift */,
 				86FD582D2629F52300B32B59 /* AnswerService.swift */,
 				86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */,
@@ -699,6 +702,7 @@
 				86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
 				865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */,
+				862F93CB264A63ED005C925C /* AnswerablePingService.swift in Sources */,
 				867B42FC2649905A00DDF1A6 /* Query+Combine.swift in Sources */,
 				868D83EE26396B49000211A6 /* TagService.swift in Sources */,
 				8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */,

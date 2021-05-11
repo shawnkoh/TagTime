@@ -56,7 +56,8 @@ final class AnswerService: ObservableObject {
     private func setupFirestoreListeners(user: User) {
         user.answerCollection
             .order(by: "ping", descending: true)
-            .limit(to: PingService.answerablePingCount)
+            // TODO: Nasty cyclic dependency
+            .limit(to: AnswerablePingService.answerablePingCount)
             .addSnapshotListener { [self] (snapshot, error) in
                 if let error = error {
                     alertService.present(message: "setupFirestoreListeners \(error.localizedDescription)")

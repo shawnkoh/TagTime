@@ -14,6 +14,8 @@ extension Resolver: ResolverRegistering {
             .scope(.cached)
         register { AnswerService() }
             .scope(.cached)
+        register { AnswerablePingService() }
+            .scope(.cached)
         register { AuthenticationService() }
             .scope(.cached)
         register { BeeminderCredentialService() }

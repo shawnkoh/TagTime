@@ -14,14 +14,14 @@ final class DebugViewModel: ObservableObject {
     @Injected private var authenticationService: AuthenticationService
     @Injected private var tagService: TagService
     @Injected private var notificationScheduler: NotificationScheduler
-    @Injected private var pingService: PingService
+    @Injected private var answerablePingService: AnswerablePingService
 
     func scheduleNotification() {
         let timeInterval = Date(timeIntervalSinceNow: 5).timeIntervalSince1970.rounded()
         let pingDate = Date(timeIntervalSince1970: timeInterval)
         notificationScheduler.scheduleNotification(
             ping: pingDate,
-            badge: pingService.unansweredPings.count,
+            badge: answerablePingService.unansweredPings.count,
             previousAnswer: answerService.latestAnswer
         )
     }

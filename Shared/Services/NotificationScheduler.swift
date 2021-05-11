@@ -21,6 +21,12 @@ public final class NotificationScheduler: ObservableObject {
         static let ping = "PING_CATEGORY"
     }
 
+    @Injected private var alertService: AlertService
+    @Injected private var authenticationService: AuthenticationService
+    @Injected private var answerablePingService: AnswerablePingService
+    @Injected private var pingService: PingService
+    @Injected private var answerService: AnswerService
+
     private(set) var category: UNNotificationCategory
 
     let center = UNUserNotificationCenter.current()
@@ -29,11 +35,6 @@ public final class NotificationScheduler: ObservableObject {
     private var userSubscriber: AnyCancellable = .init({})
 
     private var subscribers = Set<AnyCancellable>()
-
-    @Injected private var alertService: AlertService
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var pingService: PingService
-    @Injected private var answerService: AnswerService
 
     private var user: User {
         authenticationService.user
@@ -71,7 +72,7 @@ public final class NotificationScheduler: ObservableObject {
     }
 
     private func setupNotificationObserver() {
-        pingService.$unansweredPings
+        answerablePingService.$unansweredPings
             .map { $0.count }
             .receive(on: DispatchQueue.main)
             .sink { UIApplication.shared.applicationIconBadgeNumber = $0 }
@@ -140,7 +141,7 @@ public final class NotificationScheduler: ObservableObject {
         center.removeAllPendingNotificationRequests()
 
         pings.enumerated().forEach { index, ping in
-            scheduleNotification(ping: ping, badge: pingService.unansweredPings.count + index + 1, previousAnswer: previousAnswer)
+            scheduleNotification(ping: ping, badge: answerablePingService.unansweredPings.count + index + 1, previousAnswer: previousAnswer)
         }
     }
 
