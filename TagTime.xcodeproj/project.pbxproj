@@ -38,6 +38,7 @@
 		8665E29F264142F1003EB532 /* GoalCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29E264142F1003EB532 /* GoalCountdown.swift */; };
 		8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A22641687B003EB532 /* GoalPicker.swift */; };
 		8665E2A52641752B003EB532 /* GoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A42641752B003EB532 /* GoalService.swift */; };
+		86719AF1264AF27600B6086D /* FirestoreAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
 		867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858C8263709D9009370F6 /* BatchAnswerCreator.swift */; };
@@ -151,6 +152,7 @@
 		8665E29E264142F1003EB532 /* GoalCountdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCountdown.swift; sourceTree = "<group>"; };
 		8665E2A22641687B003EB532 /* GoalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPicker.swift; sourceTree = "<group>"; };
 		8665E2A42641752B003EB532 /* GoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalService.swift; sourceTree = "<group>"; };
+		86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreAuthenticationService.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
 		867858C8263709D9009370F6 /* BatchAnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchAnswerCreator.swift; sourceTree = "<group>"; };
@@ -321,6 +323,21 @@
 			path = Answer;
 			sourceTree = "<group>";
 		};
+		86719AEE264AF25600B6086D /* Firestore */ = {
+			isa = PBXGroup;
+			children = (
+				86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */,
+			);
+			path = Firestore;
+			sourceTree = "<group>";
+		};
+		86719AEF264AF25A00B6086D /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		8672E71A26182207004081FC /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -456,6 +473,8 @@
 		86EF829E2626949A001EA3C5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				86719AEE264AF25600B6086D /* Firestore */,
+				86719AEF264AF25A00B6086D /* Mock */,
 				86E3AB59262354F900092CE6 /* AlertService.swift */,
 				862F93CA264A63ED005C925C /* AnswerablePingService.swift */,
 				86E13CD4264971F800432A5A /* AnswerBuilder.swift */,
@@ -674,6 +693,7 @@
 				86EB954126455CB400C7A7A2 /* Resolver+ResolverRegistering.swift in Sources */,
 				86F6504E2647D86C00B070BA /* TrackedGoalCard.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
+				86719AF1264AF27600B6086D /* FirestoreAuthenticationService.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86D7B264264A37CF002FE4BA /* LastFetchedStatus.swift in Sources */,
