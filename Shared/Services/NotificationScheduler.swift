@@ -11,7 +11,7 @@ import Combine
 import UIKit
 import Resolver
 
-public final class NotificationScheduler: ObservableObject {
+public final class NotificationScheduler {
     public enum ActionIdentifier {
         static let previous = "PREVIOUS_ACTION"
         static let reply = "REPLY_ACTION"

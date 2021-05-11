@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import Resolver
 
-public final class PingService: ObservableObject {
+public final class PingService {
     var startPing: Ping
 
     // Average gap between pings, in seconds

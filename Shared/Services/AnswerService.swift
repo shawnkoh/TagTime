@@ -12,7 +12,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Resolver
 
-final class AnswerService: ObservableObject {
+final class AnswerService {
     @Injected private var authenticationService: AuthenticationService
     @Injected private var goalService: GoalService
     @Injected private var tagService: TagService

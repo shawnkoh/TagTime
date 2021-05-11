@@ -11,7 +11,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Resolver
 
-final class TagService: ObservableObject {
+final class TagService {
     @Injected private var alertService: AlertService
     @Injected private var authenticationService: AuthenticationService
 

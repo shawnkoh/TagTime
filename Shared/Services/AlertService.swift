@@ -9,7 +9,7 @@ import Foundation
 import os
 import Combine
 
-final class AlertService: ObservableObject {
+final class AlertService {
     @Published var isPresented = false
     @Published private(set) var message = ""
 
