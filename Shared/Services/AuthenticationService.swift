@@ -25,14 +25,14 @@ extension User {
     }
 }
 
-enum Providers: String {
+enum AuthProvider: String {
     case facebook = "facebook.com"
     case apple = "apple.com"
 }
 
 enum AuthStatus: Equatable {
     case anonymous(String)
-    case signedIn(String, [Providers])
+    case signedIn(String, [AuthProvider])
     case signedOut
 }
 
@@ -43,8 +43,9 @@ protocol AuthenticationService {
     var authStatusPublisher: Published<AuthStatus>.Publisher { get }
 
     func signIn() -> AnyPublisher<User, Error>
-    func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error>
+    func signIn(with credential: AuthCredential) -> AnyPublisher<Void, Error>
     func link(with credential: AuthCredential) -> AnyPublisher<Void, Error>
+    func unlink(from provider: AuthProvider) -> AnyPublisher<Void, Error>
     func signOut()
 
     #if DEBUG

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct Statistics: View {
     var body: some View {

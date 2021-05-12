@@ -13,6 +13,7 @@ final class PreferencesViewModel: ObservableObject {
     @Injected private var settingService: SettingService
     @Injected private var facebookLoginService: FacebookLoginService
     @Injected private var authenticationService: AuthenticationService
+    @Injected private var alertService: AlertService
 
     @Published private(set) var isLoggedIntoFacebook = false
     @Published var averagePingInterval: Int = 45
@@ -42,7 +43,10 @@ final class PreferencesViewModel: ObservableObject {
         facebookLoginService.login()
     }
 
-    func logoutFromFacebook() {}
+    func logoutFromFacebook() {
+        authenticationService.unlink(from: .facebook)
+            .errorHandled(by: alertService)
+    }
 }
 
 struct Preferences: View {
@@ -71,11 +75,11 @@ struct Preferences: View {
                 BeeminderLoginButton()
 
                 if viewModel.isLoggedIntoFacebook {
-                    Text("Login with Facebook")
-                        .onTap { viewModel.loginWithFacebook() }
-                } else {
                     Text("Logout from Facebook")
                         .onTap { viewModel.logoutFromFacebook() }
+                } else {
+                    Text("Login with Facebook")
+                        .onTap { viewModel.loginWithFacebook() }
                 }
 
                 #if DEBUG

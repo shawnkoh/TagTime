@@ -37,13 +37,20 @@ final class MockAuthenticationService: AuthenticationService {
             .eraseToAnyPublisher()
     }
 
-    func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error> {
-        Just(Self.mockUser)
+    // TODO: These credential and unlink should update authStatus accordingly
+    func signIn(with credential: AuthCredential) -> AnyPublisher<Void, Error> {
+        Just(())
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
 
     func link(with credential: AuthCredential) -> AnyPublisher<Void, Error> {
+        Just(())
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+
+    func unlink(from provider: AuthProvider) -> AnyPublisher<Void, Error> {
         Just(())
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()

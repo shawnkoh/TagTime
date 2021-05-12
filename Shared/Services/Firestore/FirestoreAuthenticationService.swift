@@ -41,11 +41,11 @@ public final class FirestoreAuthenticationService: AuthenticationService {
                 return
             }
 
-            let providers: [Providers] = user.providerData.compactMap {
+            let providers: [AuthProvider] = user.providerData.compactMap {
                 switch $0.providerID {
-                case Providers.apple.rawValue:
+                case AuthProvider.apple.rawValue:
                     return .apple
-                case Providers.facebook.rawValue:
+                case AuthProvider.facebook.rawValue:
                     return .facebook
                 default:
                     return nil
@@ -111,19 +111,9 @@ public final class FirestoreAuthenticationService: AuthenticationService {
         }
     }
 
-    func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error> {
+    func signIn(with credential: AuthCredential) -> AnyPublisher<Void, Error> {
         Auth.auth().signIn(with: credential)
-            .flatMap { result -> AnyPublisher<User, Error> in
-                self.getUser(id: result.user.uid)
-                    .flatMap { user -> AnyPublisher<User, Error> in
-                        if let user = user {
-                            return Just(user).setFailureType(to: Error.self).eraseToAnyPublisher()
-                        } else {
-                            return self.makeUser(id: result.user.uid).eraseToAnyPublisher()
-                        }
-                    }
-                    .eraseToAnyPublisher()
-            }
+            .map { _ in }
             .eraseToAnyPublisher()
     }
 
@@ -136,6 +126,22 @@ public final class FirestoreAuthenticationService: AuthenticationService {
             // TODO: flatMap to update User document e.g. to get email address
             .map { _ in }
             .eraseToAnyPublisher()
+    }
+
+    func unlink(from provider: AuthProvider) -> AnyPublisher<Void, Error> {
+        guard let currentUser = Auth.auth().currentUser else {
+            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+        return Future { promise in
+            currentUser.unlink(fromProvider: provider.rawValue) { _, error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     func signOut() {
