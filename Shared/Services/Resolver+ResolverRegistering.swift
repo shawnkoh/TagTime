@@ -9,6 +9,10 @@ import Foundation
 import Resolver
 
 extension Resolver: ResolverRegistering {
+    #if DEBUG
+    static let mock = Resolver(parent: main)
+    #endif
+
     public static func registerAllServices() {
         //MARK: Common
 
@@ -60,5 +64,30 @@ extension Resolver: ResolverRegistering {
             .scope(.cached)
 
         // MARK: Mock
+        #if DEBUG
+        mock.register { MockAnswerService() }
+            .implements(AnswerService.self)
+            .scope(.cached)
+
+        mock.register { MockAnswerBuilderExecutor() }
+            .implements(AnswerBuilderExecutor.self)
+            .scope(.cached)
+
+        mock.register { MockAuthenticationService() }
+            .implements(AuthenticationService.self)
+            .scope(.cached)
+
+        mock.register { MockBeeminderCredentialService() }
+            .implements(BeeminderCredentialService.self)
+            .scope(.cached)
+
+        mock.register { MockGoalService() }
+            .implements(GoalService.self)
+            .scope(.cached)
+
+        mock.register { MockTagService() }
+            .implements(TagService.self)
+            .scope(.cached)
+        #endif
     }
 }
