@@ -13,9 +13,7 @@ import Resolver
 import Combine
 
 final class AppViewModel: ObservableObject {
-    @Injected private var beeminderCredentialService: BeeminderCredentialService
     @Injected private var alertService: AlertService
-    @Injected private var authenticationService: AuthenticationService
 
     @Published var isAlertPresented = false
     @Published private(set) var alertMessage = ""
@@ -32,14 +30,6 @@ final class AppViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.alertMessage = $0 }
             .store(in: &subscribers)
-    }
-
-    func signIn() {
-        // TODO: I'm not sure if Futures should be called in async thread
-        DispatchQueue.global(qos: .utility).async { [self] in
-            authenticationService.signInAndSetUser()
-                .errorHandled(by: alertService)
-        }
     }
 }
 
@@ -61,7 +51,6 @@ struct TagTimeApp: App {
                 .alert(isPresented: $viewModel.isAlertPresented) {
                     Alert(title: Text(viewModel.alertMessage))
                 }
-                .onAppear() { viewModel.signIn() }
                 .statusBar(hidden: true)
         }
     }

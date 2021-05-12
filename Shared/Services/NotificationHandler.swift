@@ -106,7 +106,8 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
                     }, receiveValue: {})
                     .store(in: &subscribers)
             } else {
-                authenticationService.signInAndSetUser()
+                // TODO: I don't think this works anymore.
+                authenticationService.signIn()
                     // TODO: We should not rely on setUser to trigger the rest of the services. They should be explicitly called.
                     // setUser definitely needs to go.
                     // currently, the services watch AuthenticationService's user, but they receive this on DispatchQueue.main
@@ -114,12 +115,6 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
                     // This call is done on the ground thread, and there is a possibility that it will call completionHandler()
                     // telling the app to shut down, before the other services can complete their calculations.
                     // I suspect the solution is to be very explicit in all the calls
-
-                    // This also points to a key problem with the current architecture
-                    // The underlying Services & Repositories cannot receive their calculations on the main thread, otherwise it will be difficult
-                    // to make use of async threads
-                    // Instead, the ViewModels should observe its interested services via @Injected, then receive their updates on the main thread, in order
-                    // to update the view models
                     .flatMap { user -> AnyPublisher<Void, Error> in
                         var builder = AnswerBuilder()
                         return builder

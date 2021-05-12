@@ -40,7 +40,10 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return ContentView()
             .preferredColorScheme(.dark)
     }
 }
