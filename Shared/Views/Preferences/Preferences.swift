@@ -12,12 +12,26 @@ import Combine
 final class PreferencesViewModel: ObservableObject {
     @Injected private var settingService: SettingService
     @Injected private var facebookLoginService: FacebookLoginService
+    @Injected private var authenticationService: AuthenticationService
 
+    @Published private(set) var isLoggedIntoFacebook = false
     @Published var averagePingInterval: Int = 45
 
     private var subscribers = Set<AnyCancellable>()
 
     init() {
+        authenticationService.authStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink {
+                switch $0 {
+                case let .signedIn(_, providers):
+                    self.isLoggedIntoFacebook = providers.contains(.facebook)
+                default:
+                    self.isLoggedIntoFacebook = false
+                }
+            }
+            .store(in: &subscribers)
+
         settingService.$averagePingInterval
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.averagePingInterval = $0 }
@@ -27,6 +41,8 @@ final class PreferencesViewModel: ObservableObject {
     func loginWithFacebook() {
         facebookLoginService.login()
     }
+
+    func logoutFromFacebook() {}
 }
 
 struct Preferences: View {
@@ -54,8 +70,13 @@ struct Preferences: View {
 
                 BeeminderLoginButton()
 
-                Text("Login with Facebook")
-                    .onTap { viewModel.loginWithFacebook() }
+                if viewModel.isLoggedIntoFacebook {
+                    Text("Login with Facebook")
+                        .onTap { viewModel.loginWithFacebook() }
+                } else {
+                    Text("Logout from Facebook")
+                        .onTap { viewModel.logoutFromFacebook() }
+                }
 
                 #if DEBUG
                 Text("Open Debug Menu")
@@ -73,6 +94,9 @@ struct Preferences: View {
 
 struct Preferences_Previews: PreviewProvider {
     static var previews: some View {
-        Preferences()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return Preferences()
     }
 }

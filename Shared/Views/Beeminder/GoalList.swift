@@ -44,6 +44,9 @@ struct GoalList: View {
 
 struct GoalList_Previews: PreviewProvider {
     static var previews: some View {
-        GoalList()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return GoalList()
     }
 }

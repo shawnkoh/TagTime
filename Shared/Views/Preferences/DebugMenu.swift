@@ -70,7 +70,10 @@ struct DebugMenu: View {
 
 struct DebugMenu_Previews: PreviewProvider {
     static var previews: some View {
-        DebugMenu()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return DebugMenu()
     }
 }
 #endif

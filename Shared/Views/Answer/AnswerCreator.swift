@@ -116,6 +116,9 @@ struct AnswerCreator: View {
 
 struct AnswerCreator_Previews: PreviewProvider {
     static var previews: some View {
-        AnswerCreator(config: .constant(AnswerCreatorConfig()))
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return AnswerCreator(config: .constant(AnswerCreatorConfig()))
     }
 }

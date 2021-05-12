@@ -63,6 +63,9 @@ struct TrackedGoalList: View {
 
 struct TrackedGoalList_Previews: PreviewProvider {
     static var previews: some View {
-        TrackedGoalList()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return TrackedGoalList()
     }
 }

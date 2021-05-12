@@ -17,6 +17,9 @@ struct Statistics: View {
 
 struct Statistics_Previews: PreviewProvider {
     static var previews: some View {
-        Statistics()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return Statistics()
     }
 }

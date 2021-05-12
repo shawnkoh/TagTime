@@ -30,7 +30,7 @@ enum Providers: String {
     case apple = "apple.com"
 }
 
-enum AuthStatus {
+enum AuthStatus: Equatable {
     case anonymous(String)
     case signedIn(String, [Providers])
     case signedOut

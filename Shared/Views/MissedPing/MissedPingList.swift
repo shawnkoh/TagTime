@@ -109,7 +109,10 @@ struct MissedPingList: View {
 
 struct MissedPingList_Previews: PreviewProvider {
     static var previews: some View {
-        MissedPingList()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return MissedPingList()
             .preferredColorScheme(.dark)
     }
 }

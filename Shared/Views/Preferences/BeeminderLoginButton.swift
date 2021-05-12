@@ -80,6 +80,9 @@ struct BeeminderLoginButton: View {
 
 struct BeeminderLoginButton_Previews: PreviewProvider {
     static var previews: some View {
-        BeeminderLoginButton()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return BeeminderLoginButton()
     }
 }

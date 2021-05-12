@@ -139,7 +139,10 @@ struct AuthenticatedView: View {
 
 struct AuthenticatedView_Previews: PreviewProvider {
     static var previews: some View {
-        AuthenticatedView()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return AuthenticatedView()
             .preferredColorScheme(.dark)
     }
 }

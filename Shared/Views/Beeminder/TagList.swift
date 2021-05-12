@@ -47,6 +47,9 @@ struct TagList: View {
 
 struct TagList_Previews: PreviewProvider {
     static var previews: some View {
-        TagList(goal: Stub.goal)
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return TagList(goal: Stub.goal)
     }
 }

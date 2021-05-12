@@ -88,6 +88,9 @@ struct AnswerSuggester: View {
 
 struct AnswerSuggester_Previews: PreviewProvider {
     static var previews: some View {
-        AnswerSuggester(keyword: .constant(""))
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return AnswerSuggester(keyword: .constant(""))
     }
 }
