@@ -11,13 +11,23 @@ import Combine
 import Firebase
 
 final class MockAuthenticationService: AuthenticationService {
+    private static let mockUser = User(id: "mock", startDate: Date().addingTimeInterval(-60*60*48))
+
     @Published private(set) var user: User = .init(id: User.unauthenticatedUserId)
     var userPublisher: Published<User>.Publisher { $user }
 
-    init() {}
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        // SwiftUI previews do not call TagTimeApp.ContentView.onAppear
+        // so AppViewModel never calls signInAndSetUser
+        signInAndSetUser()
+            .sink(receiveCompletion: { completion in }, receiveValue: { user in })
+            .store(in: &subscribers)
+    }
 
     func signIn() -> AnyPublisher<User, Error> {
-        Just(User(id: "mock"))
+        Just(Self.mockUser)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
@@ -32,7 +42,7 @@ final class MockAuthenticationService: AuthenticationService {
     }
 
     func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error> {
-        Just(User(id: "authCredential"))
+        Just(Self.mockUser)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }

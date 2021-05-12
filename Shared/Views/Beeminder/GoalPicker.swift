@@ -54,6 +54,10 @@ struct GoalPicker: View {
 
 struct GoalPicker_Previews: PreviewProvider {
     static var previews: some View {
-        GoalPicker()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return GoalPicker()
+            .preferredColorScheme(.dark)
     }
 }

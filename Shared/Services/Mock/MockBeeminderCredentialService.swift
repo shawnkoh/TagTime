@@ -8,12 +8,27 @@
 import Foundation
 import Beeminder
 import Combine
+import Resolver
 
 final class MockBeeminderCredentialService: BeeminderCredentialService {
+    @Injected private var authenticationService: AuthenticationService
+
     @Published var credential: Credential?
     var credentialPublisher: Published<Credential?>.Publisher { $credential }
 
-    init() {}
+    private var subscribers = Set<AnyCancellable>()
+
+    init() {
+        authenticationService.userPublisher
+            .sink { user in
+                guard user.isAuthenticated else {
+                    self.credential = nil
+                    return
+                }
+                self.credential = .init(username: "mock", accessToken: "abc")
+            }
+            .store(in: &subscribers)
+    }
 
     func saveCredential(_ credential: Credential) {
         self.credential = credential

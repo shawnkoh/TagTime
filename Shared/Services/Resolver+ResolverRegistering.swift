@@ -64,6 +64,7 @@ extension Resolver: ResolverRegistering {
             .scope(.cached)
 
         // MARK: Mock
+
         #if DEBUG
         mock.register { MockAnswerService() }
             .implements(AnswerService.self)
