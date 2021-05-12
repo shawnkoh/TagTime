@@ -361,12 +361,12 @@
 		86719AEF264AF25A00B6086D /* Mock */ = {
 			isa = PBXGroup;
 			children = (
+				86BB88E6264B9F190076BC3C /* MockAnswerBuilderExecutor.swift */,
 				860F137C264B1163001D15EB /* MockAnswerService.swift */,
 				860F137E264B1169001D15EB /* MockAuthenticationService.swift */,
 				860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */,
 				860F1382264B1174001D15EB /* MockGoalService.swift */,
 				860F1384264B1178001D15EB /* MockTagService.swift */,
-				86BB88E6264B9F190076BC3C /* MockAnswerBuilderExecutor.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
