@@ -18,10 +18,16 @@ final class ContentViewModel: ObservableObject {
     @Published private(set) var isAuthenticated = false
 
     init() {
-        authenticationService.userPublisher
-            .map { $0.isAuthenticated }
+        authenticationService.authStatusPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.isAuthenticated = $0 }
+            .sink { authStatus in
+                switch authStatus {
+                case .anonymous, .signedIn:
+                    self.isAuthenticated = true
+                case .signedOut:
+                    self.isAuthenticated = false
+                }
+            }
             .store(in: &subscribers)
     }
 }
@@ -40,7 +46,10 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return ContentView()
             .preferredColorScheme(.dark)
     }
 }

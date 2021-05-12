@@ -8,6 +8,7 @@
 #if DEBUG
 import SwiftUI
 import Resolver
+import Firebase
 
 final class DebugViewModel: ObservableObject {
     @Injected private var answerService: AnswerService
@@ -15,6 +16,8 @@ final class DebugViewModel: ObservableObject {
     @Injected private var tagService: TagService
     @Injected private var notificationScheduler: NotificationScheduler
     @Injected private var answerablePingService: AnswerablePingService
+    @Injected private var goalService: GoalService
+    @Injected private var alertService: AlertService
 
     func scheduleNotification() {
         let timeInterval = Date(timeIntervalSinceNow: 5).timeIntervalSince1970.rounded()
@@ -36,6 +39,14 @@ final class DebugViewModel: ObservableObject {
 
     func resetTagCache() {
         tagService.resetTagCache()
+    }
+
+    func clearPersistence() {
+        Firestore.firestore().clearPersistence { error in
+            if let error = error {
+                self.alertService.present(message: error.localizedDescription)
+            }
+        }
     }
 }
 
@@ -61,6 +72,9 @@ struct DebugMenu: View {
             Text("Reset Tag Cache")
                 .onDoubleTap("Tap again to confirm") { viewModel.resetTagCache() }
 
+            Text("Clear Persistence")
+                .onDoubleTap("Tap again to perform") { viewModel.clearPersistence() }
+
             Spacer()
         }
         .background(.modalBackground)
@@ -70,7 +84,10 @@ struct DebugMenu: View {
 
 struct DebugMenu_Previews: PreviewProvider {
     static var previews: some View {
-        DebugMenu()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return DebugMenu()
     }
 }
 #endif

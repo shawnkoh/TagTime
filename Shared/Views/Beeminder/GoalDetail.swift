@@ -70,6 +70,9 @@ struct GoalDetail: View {
 
 struct GoalDetail_Previews: PreviewProvider {
     static var previews: some View {
-        GoalDetail(goal: Stub.goal, isPresented: .constant(true))
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return GoalDetail(goal: Stub.goal, isPresented: .constant(true))
     }
 }

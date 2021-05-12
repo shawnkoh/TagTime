@@ -128,6 +128,9 @@ struct Logbook: View {
 
 struct Logbook_Previews: PreviewProvider {
     static var previews: some View {
-        Logbook()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return Logbook()
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Resolver
 
 struct Statistics: View {
     var body: some View {
@@ -17,6 +18,9 @@ struct Statistics: View {
 
 struct Statistics_Previews: PreviewProvider {
     static var previews: some View {
-        Statistics()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return Statistics()
     }
 }

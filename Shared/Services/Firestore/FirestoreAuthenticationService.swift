@@ -19,11 +19,77 @@ public final class FirestoreAuthenticationService: AuthenticationService {
     @Published fileprivate(set) var user = User(id: User.unauthenticatedUserId, startDate: Date())
     var userPublisher: Published<User>.Publisher { $user }
 
+    @Published var authStatus: AuthStatus = .signedOut
+    var authStatusPublisher: Published<AuthStatus>.Publisher { $authStatus }
+
     public var isAuthenticated: Bool {
         user.id != User.unauthenticatedUserId
     }
 
-    public init() {}
+    private var handle: AuthStateDidChangeListenerHandle?
+    private var subscribers = Set<AnyCancellable>()
+
+    public init() {
+        handle = Auth.auth().addStateDidChangeListener { [self] auth, user in
+            guard let user = user else {
+                authStatus = .signedOut
+                return
+            }
+
+            guard !user.isAnonymous else {
+                authStatus = .anonymous(user.uid)
+                return
+            }
+
+            let providers: [AuthProvider] = user.providerData.compactMap {
+                switch $0.providerID {
+                case AuthProvider.apple.rawValue:
+                    return .apple
+                case AuthProvider.facebook.rawValue:
+                    return .facebook
+                default:
+                    return nil
+                }
+            }
+            authStatus = .signedIn(user.uid, providers)
+        }
+
+        $authStatus
+            .map { authStatus -> String? in
+                switch authStatus {
+                case let .anonymous(uid), let .signedIn(uid, _):
+                    return uid
+                case .signedOut:
+                    return nil
+                }
+            }
+            .removeDuplicates()
+            .flatMap { [self] uid -> AnyPublisher<User, Error> in
+                if let uid = uid {
+                    return getOrMakeUser(uid: uid)
+                } else {
+                    return Just(User(id: User.unauthenticatedUserId))
+                        .setFailureType(to: Error.self)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case let .failure(error):
+                    self.alertService.present(message: error.localizedDescription)
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { user in
+                self.user = user
+            })
+            .store(in: &subscribers)
+    }
+
+    func signInAnonymously() {
+        Auth.auth().signInAnonymously()
+            .errorHandled(by: alertService)
+    }
 
     func signIn() -> AnyPublisher<User, Error> {
         if let currentUser = Auth.auth().currentUser {
@@ -45,28 +111,9 @@ public final class FirestoreAuthenticationService: AuthenticationService {
         }
     }
 
-    func signInAndSetUser() -> AnyPublisher<User, Error> {
-        signIn()
-            .map { user in
-                self.user = user
-                return user
-            }
-            .eraseToAnyPublisher()
-    }
-
-    func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error> {
+    func signIn(with credential: AuthCredential) -> AnyPublisher<Void, Error> {
         Auth.auth().signIn(with: credential)
-            .flatMap { result -> AnyPublisher<User, Error> in
-                self.getUser(id: result.user.uid)
-                    .flatMap { user -> AnyPublisher<User, Error> in
-                        if let user = user {
-                            return Just(user).setFailureType(to: Error.self).eraseToAnyPublisher()
-                        } else {
-                            return self.makeUser(id: result.user.uid).eraseToAnyPublisher()
-                        }
-                    }
-                    .eraseToAnyPublisher()
-            }
+            .map { _ in }
             .eraseToAnyPublisher()
     }
 
@@ -79,6 +126,22 @@ public final class FirestoreAuthenticationService: AuthenticationService {
             // TODO: flatMap to update User document e.g. to get email address
             .map { _ in }
             .eraseToAnyPublisher()
+    }
+
+    func unlink(from provider: AuthProvider) -> AnyPublisher<Void, Error> {
+        guard let currentUser = Auth.auth().currentUser else {
+            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+        return Future { promise in
+            currentUser.unlink(fromProvider: provider.rawValue) { _, error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     func signOut() {
@@ -111,6 +174,18 @@ public final class FirestoreAuthenticationService: AuthenticationService {
                     }
                 }
         }
+    }
+
+    private func getOrMakeUser(uid: String) -> AnyPublisher<User, Error> {
+        getUser(id: uid)
+            .flatMap { user -> AnyPublisher<User, Error> in
+                if let user = user {
+                    return Just(user).setFailureType(to: Error.self).eraseToAnyPublisher()
+                } else {
+                    return self.makeUser(id: uid)
+                }
+            }
+            .eraseToAnyPublisher()
     }
 }
 

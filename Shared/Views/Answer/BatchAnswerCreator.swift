@@ -61,6 +61,9 @@ struct BatchAnswerCreator: View {
 
 struct BatchAnswerCreator_Previews: PreviewProvider {
     static var previews: some View {
-        BatchAnswerCreator(isPresented: .constant(true))
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return BatchAnswerCreator(isPresented: .constant(true))
     }
 }

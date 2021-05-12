@@ -25,15 +25,27 @@ extension User {
     }
 }
 
+enum AuthProvider: String {
+    case facebook = "facebook.com"
+    case apple = "apple.com"
+}
+
+enum AuthStatus: Equatable {
+    case anonymous(String)
+    case signedIn(String, [AuthProvider])
+    case signedOut
+}
+
 protocol AuthenticationService {
     var user: User { get }
     var userPublisher: Published<User>.Publisher { get }
+    var authStatus: AuthStatus { get }
+    var authStatusPublisher: Published<AuthStatus>.Publisher { get }
 
     func signIn() -> AnyPublisher<User, Error>
-    // TODO: Not sure if we should have a signInAndSetUser method. Workaround to allow this protocol
-    func signInAndSetUser() -> AnyPublisher<User, Error>
-    func signIn(with credential: AuthCredential) -> AnyPublisher<User, Error>
+    func signIn(with credential: AuthCredential) -> AnyPublisher<Void, Error>
     func link(with credential: AuthCredential) -> AnyPublisher<Void, Error>
+    func unlink(from provider: AuthProvider) -> AnyPublisher<Void, Error>
     func signOut()
 
     #if DEBUG

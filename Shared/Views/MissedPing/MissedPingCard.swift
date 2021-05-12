@@ -32,6 +32,9 @@ struct MissedPingCard: View {
 
 struct MissedPingCard_Previews: PreviewProvider {
     static var previews: some View {
-        MissedPingCard(ping: Stub.pings.first!)
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return MissedPingCard(ping: Stub.pings.first!)
     }
 }

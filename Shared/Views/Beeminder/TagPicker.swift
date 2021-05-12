@@ -109,6 +109,9 @@ struct TagPicker: View {
 
 struct TagPicker_Previews: PreviewProvider {
     static var previews: some View {
-        TagPicker(goal: Stub.goal)
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return TagPicker(goal: Stub.goal)
     }
 }
