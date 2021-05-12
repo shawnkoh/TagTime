@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860144132642B70A00AA5DB6 /* GoalCard.swift */; };
 		8606042B2643E40800944617 /* TagList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8606042A2643E40800944617 /* TagList.swift */; };
+		860F137B264B1052001D15EB /* FirestoreTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F137A264B1052001D15EB /* FirestoreTagService.swift */; };
+		860F137D264B1163001D15EB /* MockAnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F137C264B1163001D15EB /* MockAnswerService.swift */; };
+		860F137F264B1169001D15EB /* MockAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F137E264B1169001D15EB /* MockAuthenticationService.swift */; };
+		860F1381264B116F001D15EB /* MockBeeminderCredentialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */; };
+		860F1383264B1174001D15EB /* MockGoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1382264B1174001D15EB /* MockGoalService.swift */; };
+		860F1385264B1178001D15EB /* MockTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1384264B1178001D15EB /* MockTagService.swift */; };
+		860F1387264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1386264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift */; };
 		861256E326139CAB00C2B81B /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256E226139CAB00C2B81B /* Tests_iOS.swift */; };
 		861256EE26139CAB00C2B81B /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256ED26139CAB00C2B81B /* Tests_macOS.swift */; };
 		861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C726139CAA00C2B81B /* TagTimeApp.swift */; };
@@ -23,6 +30,8 @@
 		86338F49264242F800112BBC /* TagPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F48264242F800112BBC /* TagPicker.swift */; };
 		86338F4D26429F4C00112BBC /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4C26429F4C00112BBC /* CardButtonStyle.swift */; };
 		86338F4F2642A96600112BBC /* UltraPlainButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */; };
+		863B354B264AFA43006D549F /* FirestoreGoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863B354A264AFA43006D549F /* FirestoreGoalService.swift */; };
+		863B354D264AFD69006D549F /* FirestoreAnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863B354C264AFD69006D549F /* FirestoreAnswerService.swift */; };
 		863CA8382635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		863CA8392635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
 		863CA83A2635CAC900D12FD9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */; };
@@ -38,6 +47,8 @@
 		8665E29F264142F1003EB532 /* GoalCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29E264142F1003EB532 /* GoalCountdown.swift */; };
 		8665E2A32641687B003EB532 /* GoalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A22641687B003EB532 /* GoalPicker.swift */; };
 		8665E2A52641752B003EB532 /* GoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A42641752B003EB532 /* GoalService.swift */; };
+		86719AF1264AF27600B6086D /* FirestoreAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */; };
+		86719AF3264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86719AF2264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
 		8672E71526182204004081FC /* PageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E71426182204004081FC /* PageTitle.swift */; };
 		867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858C8263709D9009370F6 /* BatchAnswerCreator.swift */; };
@@ -76,6 +87,7 @@
 		86ADBB7526173303003CBA6B /* Logbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7426173303003CBA6B /* Logbook.swift */; };
 		86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7A26173307003CBA6B /* Statistics.swift */; };
 		86ADBB812617330B003CBA6B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB802617330B003CBA6B /* Preferences.swift */; };
+		86BB88E7264B9F190076BC3C /* MockAnswerBuilderExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BB88E6264B9F190076BC3C /* MockAnswerBuilderExecutor.swift */; };
 		86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
 		86C04D2F26318D040046C0E3 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D2E26318D040046C0E3 /* FacebookCore */; };
 		86C04D3126318D040046C0E3 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 86C04D3026318D040046C0E3 /* FacebookLogin */; };
@@ -120,6 +132,13 @@
 /* Begin PBXFileReference section */
 		860144132642B70A00AA5DB6 /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
 		8606042A2643E40800944617 /* TagList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagList.swift; sourceTree = "<group>"; };
+		860F137A264B1052001D15EB /* FirestoreTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreTagService.swift; sourceTree = "<group>"; };
+		860F137C264B1163001D15EB /* MockAnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnswerService.swift; sourceTree = "<group>"; };
+		860F137E264B1169001D15EB /* MockAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthenticationService.swift; sourceTree = "<group>"; };
+		860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBeeminderCredentialService.swift; sourceTree = "<group>"; };
+		860F1382264B1174001D15EB /* MockGoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGoalService.swift; sourceTree = "<group>"; };
+		860F1384264B1178001D15EB /* MockTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTagService.swift; sourceTree = "<group>"; };
+		860F1386264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreAnswerBuilderExecutor.swift; sourceTree = "<group>"; };
 		861256C726139CAA00C2B81B /* TagTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTimeApp.swift; sourceTree = "<group>"; };
 		861256C826139CAA00C2B81B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		861256C926139CAB00C2B81B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -140,6 +159,8 @@
 		86338F48264242F800112BBC /* TagPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPicker.swift; sourceTree = "<group>"; };
 		86338F4C26429F4C00112BBC /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
 		86338F4E2642A96600112BBC /* UltraPlainButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraPlainButtonStyle.swift; sourceTree = "<group>"; };
+		863B354A264AFA43006D549F /* FirestoreGoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreGoalService.swift; sourceTree = "<group>"; };
+		863B354C264AFD69006D549F /* FirestoreAnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreAnswerService.swift; sourceTree = "<group>"; };
 		863CA8372635CAC900D12FD9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		863CA84C2635D0AD00D12FD9 /* TagTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TagTime.entitlements; sourceTree = "<group>"; };
 		864203B02632710700668EC1 /* FacebookLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginService.swift; sourceTree = "<group>"; };
@@ -151,6 +172,8 @@
 		8665E29E264142F1003EB532 /* GoalCountdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCountdown.swift; sourceTree = "<group>"; };
 		8665E2A22641687B003EB532 /* GoalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalPicker.swift; sourceTree = "<group>"; };
 		8665E2A42641752B003EB532 /* GoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalService.swift; sourceTree = "<group>"; };
+		86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreAuthenticationService.swift; sourceTree = "<group>"; };
+		86719AF2264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreBeeminderCredentialService.swift; sourceTree = "<group>"; };
 		8672E70426181B01004081FC /* SettingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingService.swift; sourceTree = "<group>"; };
 		8672E71426182204004081FC /* PageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTitle.swift; sourceTree = "<group>"; };
 		867858C8263709D9009370F6 /* BatchAnswerCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchAnswerCreator.swift; sourceTree = "<group>"; };
@@ -173,6 +196,7 @@
 		86ADBB7426173303003CBA6B /* Logbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logbook.swift; sourceTree = "<group>"; };
 		86ADBB7A26173307003CBA6B /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		86ADBB802617330B003CBA6B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		86BB88E6264B9F190076BC3C /* MockAnswerBuilderExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnswerBuilderExecutor.swift; sourceTree = "<group>"; };
 		86BEE8382618D43700645F2F /* MissedPingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingCard.swift; sourceTree = "<group>"; };
 		86C577AD264190F3008AE4BC /* GoalTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTracker.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
@@ -321,6 +345,32 @@
 			path = Answer;
 			sourceTree = "<group>";
 		};
+		86719AEE264AF25600B6086D /* Firestore */ = {
+			isa = PBXGroup;
+			children = (
+				860F1386264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift */,
+				863B354C264AFD69006D549F /* FirestoreAnswerService.swift */,
+				86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */,
+				86719AF2264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift */,
+				863B354A264AFA43006D549F /* FirestoreGoalService.swift */,
+				860F137A264B1052001D15EB /* FirestoreTagService.swift */,
+			);
+			path = Firestore;
+			sourceTree = "<group>";
+		};
+		86719AEF264AF25A00B6086D /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				86BB88E6264B9F190076BC3C /* MockAnswerBuilderExecutor.swift */,
+				860F137C264B1163001D15EB /* MockAnswerService.swift */,
+				860F137E264B1169001D15EB /* MockAuthenticationService.swift */,
+				860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */,
+				860F1382264B1174001D15EB /* MockGoalService.swift */,
+				860F1384264B1178001D15EB /* MockTagService.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		8672E71A26182207004081FC /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -456,6 +506,8 @@
 		86EF829E2626949A001EA3C5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				86719AEE264AF25600B6086D /* Firestore */,
+				86719AEF264AF25A00B6086D /* Mock */,
 				86E3AB59262354F900092CE6 /* AlertService.swift */,
 				862F93CA264A63ED005C925C /* AnswerablePingService.swift */,
 				86E13CD4264971F800432A5A /* AnswerBuilder.swift */,
@@ -659,22 +711,30 @@
 			files = (
 				8614ED1C264110D700F543F2 /* BeeminderCredentialService.swift in Sources */,
 				8642E2C426469C8400C38D68 /* NotificationHandler.swift in Sources */,
+				860F1385264B1178001D15EB /* MockTagService.swift in Sources */,
 				8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */,
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
 				86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */,
+				860F1387264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift in Sources */,
 				86E3AB6826243AC300092CE6 /* NotificationScheduler.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
+				860F137B264B1052001D15EB /* FirestoreTagService.swift in Sources */,
 				860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */,
+				860F137F264B1169001D15EB /* MockAuthenticationService.swift in Sources */,
+				863B354D264AFD69006D549F /* FirestoreAnswerService.swift in Sources */,
+				86BB88E7264B9F190076BC3C /* MockAnswerBuilderExecutor.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
 				8665E29F264142F1003EB532 /* GoalCountdown.swift in Sources */,
 				869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */,
 				86EB954126455CB400C7A7A2 /* Resolver+ResolverRegistering.swift in Sources */,
 				86F6504E2647D86C00B070BA /* TrackedGoalCard.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
+				86719AF1264AF27600B6086D /* FirestoreAuthenticationService.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
+				860F1381264B116F001D15EB /* MockBeeminderCredentialService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86D7B264264A37CF002FE4BA /* LastFetchedStatus.swift in Sources */,
 				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
@@ -691,9 +751,11 @@
 				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
 				867858D926370F3F009370F6 /* AnswerSuggester.swift in Sources */,
 				8672E70526181B01004081FC /* SettingService.swift in Sources */,
+				863B354B264AFA43006D549F /* FirestoreGoalService.swift in Sources */,
 				86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */,
 				86338F4F2642A96600112BBC /* UltraPlainButtonStyle.swift in Sources */,
 				86338F4D26429F4C00112BBC /* CardButtonStyle.swift in Sources */,
+				86719AF3264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift in Sources */,
 				86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */,
 				86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */,
 				86C6C7402636A19700A24EBA /* Tappable.swift in Sources */,
@@ -701,6 +763,7 @@
 				86569A612641B111005C49C7 /* GoalDetail.swift in Sources */,
 				86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
+				860F1383264B1174001D15EB /* MockGoalService.swift in Sources */,
 				865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */,
 				862F93CB264A63ED005C925C /* AnswerablePingService.swift in Sources */,
 				867B42FC2649905A00DDF1A6 /* Query+Combine.swift in Sources */,
@@ -713,6 +776,7 @@
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,
 				861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				86A59147261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
+				860F137D264B1163001D15EB /* MockAnswerService.swift in Sources */,
 				86A59150261DBCBD00A25D1F /* User.swift in Sources */,
 				86545E1D2642EB7A00897253 /* DoubleTappable.swift in Sources */,
 			);

@@ -11,7 +11,7 @@ import Combine
 import UIKit
 import Resolver
 
-public final class NotificationScheduler: ObservableObject {
+public final class NotificationScheduler {
     public enum ActionIdentifier {
         static let previous = "PREVIOUS_ACTION"
         static let reply = "REPLY_ACTION"
@@ -49,7 +49,7 @@ public final class NotificationScheduler: ObservableObject {
             categorySummaryFormat: nil,
             options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
         )
-        userSubscriber = authenticationService.$user
+        userSubscriber = authenticationService.userPublisher
             .sink { self.setup(user: $0) }
     }
 
@@ -88,7 +88,7 @@ public final class NotificationScheduler: ObservableObject {
                 }
                 return nextPings.map { $0.date }
             }
-            .combineLatest(answerService.$latestAnswer)
+            .combineLatest(answerService.latestAnswerPublisher)
             .sink { [self] (nextPings, latestAnswer) in
                 tryToScheduleNotifications(pings: nextPings, previousAnswer: latestAnswer)
             }

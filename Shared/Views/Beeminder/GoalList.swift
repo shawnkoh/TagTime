@@ -17,8 +17,8 @@ final class GoalListViewModel: ObservableObject {
     @Published private(set) var trackedGoals: [Goal] = []
 
     init() {
-        goalService.$goals
-            .combineLatest(goalService.$goalTrackers)
+        goalService.goalsPublisher
+            .combineLatest(goalService.goalTrackersPublisher)
             .map { goals, goalTrackers in
                 goals.filter { goalTrackers[$0.id] != nil }
             }

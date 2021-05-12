@@ -16,6 +16,7 @@ final class NotificationHandler: NSObject {
     @Injected private var authenticationService: AuthenticationService
     @Injected private var answerService: AnswerService
     @Injected private var alertService: AlertService
+    @Injected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     private var subscribers = Set<AnyCancellable>()
 }
@@ -88,10 +89,11 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
             let tags = text.split(separator: " ").map { Tag($0) }
             let answer = Answer(ping: ping, tags: tags)
 
-            if authenticationService.isAuthenticated {
-                AnswerBuilder()
+            if authenticationService.user.isAuthenticated {
+                var builder = AnswerBuilder()
+                builder
                     .createAnswer(answer)
-                    .execute()
+                    .execute(with: answerBuilderExecutor)
                     .receive(on: DispatchQueue.global(qos: .utility))
                     .sink(receiveCompletion: { completion in
                         switch completion {
@@ -104,7 +106,7 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
                     }, receiveValue: {})
                     .store(in: &subscribers)
             } else {
-                authenticationService.signIn()
+                authenticationService.signInAndSetUser()
                     // TODO: We should not rely on setUser to trigger the rest of the services. They should be explicitly called.
                     // setUser definitely needs to go.
                     // currently, the services watch AuthenticationService's user, but they receive this on DispatchQueue.main
@@ -118,11 +120,11 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
                     // to make use of async threads
                     // Instead, the ViewModels should observe its interested services via @Injected, then receive their updates on the main thread, in order
                     // to update the view models
-                    .setUser(service: authenticationService)
                     .flatMap { user -> AnyPublisher<Void, Error> in
-                        AnswerBuilder()
+                        var builder = AnswerBuilder()
+                        return builder
                             .createAnswer(answer)
-                            .execute()
+                            .execute(with: answerBuilderExecutor)
                     }
                     .receive(on: DispatchQueue.global(qos: .utility))
                     .sink(receiveCompletion: { completion in

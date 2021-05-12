@@ -18,7 +18,7 @@ final class TagListViewModel: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
 
     init() {
-        goalService.$goalTrackers
+        goalService.goalTrackersPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.goalTrackers = $0 }
             .store(in: &subscribers)

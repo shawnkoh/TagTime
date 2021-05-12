@@ -19,8 +19,8 @@ final class GoalPickerViewModel: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
 
     init() {
-        goalService.$goals
-            .combineLatest(goalService.$goalTrackers)
+        goalService.goalsPublisher
+            .combineLatest(goalService.goalTrackersPublisher)
             .map { goals, goalTrackers in
                 goals.filter { goalTrackers[$0.id] == nil }
             }
@@ -54,6 +54,10 @@ struct GoalPicker: View {
 
 struct GoalPicker_Previews: PreviewProvider {
     static var previews: some View {
-        GoalPicker()
+        #if DEBUG
+        Resolver.root = .mock
+        #endif
+        return GoalPicker()
+            .preferredColorScheme(.dark)
     }
 }

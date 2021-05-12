@@ -46,6 +46,7 @@ struct AnswerCreatorConfig {
 
 final class AnswerCreatorViewModel: ObservableObject {
     @Injected private var alertService: AlertService
+    @Injected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     private(set) lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -55,16 +56,18 @@ final class AnswerCreatorViewModel: ObservableObject {
     }()
 
     func updateAnswer(_ answer: Answer, tags: [Tag]) {
-        AnswerBuilder()
+        var builder = AnswerBuilder()
+        builder
             .updateAnswer(answer, tags: tags)
-            .execute()
+            .execute(with: answerBuilderExecutor)
             .errorHandled(by: alertService)
     }
 
     func createAnswer(_ answer: Answer) {
-        AnswerBuilder()
+        var builder = AnswerBuilder()
+        builder
             .createAnswer(answer)
-            .execute()
+            .execute(with: answerBuilderExecutor)
             .errorHandled(by: alertService)
     }
 }

@@ -11,7 +11,7 @@ import FirebaseAuth
 import Combine
 import Resolver
 
-final class FacebookLoginService: ObservableObject {
+final class FacebookLoginService {
     @Injected private var authenticationService: AuthenticationService
     @Injected private var alertService: AlertService
 

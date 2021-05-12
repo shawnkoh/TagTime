@@ -18,8 +18,8 @@ final class ContentViewModel: ObservableObject {
     @Published private(set) var isAuthenticated = false
 
     init() {
-        authenticationService.$user
-            .map { $0.id != AuthenticationService.unauthenticatedUserId }
+        authenticationService.userPublisher
+            .map { $0.isAuthenticated }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.isAuthenticated = $0 }
             .store(in: &subscribers)

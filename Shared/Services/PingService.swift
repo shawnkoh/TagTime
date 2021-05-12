@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import Resolver
 
-public final class PingService: ObservableObject {
+public final class PingService {
     var startPing: Ping
 
     // Average gap between pings, in seconds
@@ -31,7 +31,7 @@ public final class PingService: ObservableObject {
         self.startPing = Self.tagTimeBirth
         self.answerablePings = []
 
-        authenticationService.$user
+        authenticationService.userPublisher
             .sink { self.setup(user: $0) }
             .store(in: &subscribers)
     }

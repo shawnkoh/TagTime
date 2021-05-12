@@ -24,7 +24,7 @@ final class LogbookViewModel: ObservableObject {
     }()
 
     init() {
-        answerService.$answers
+        answerService.answersPublisher
             .map { answers in
                 answers
                     .map { $0.value }
