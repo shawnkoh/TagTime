@@ -21,24 +21,15 @@ final class MockTagService: TagService {
     // My hunch is that the answer is via AnswerBuilder
     // AnswerBuilder should be separated into AnswerBuilderExecutor and AnswerBuilder
     // then the Executor can rely on AnswerBuilder's Operations to handle it or something
-    func registerTags(_ tags: [Tag], with batch: WriteBatch?, increment: Int) {
+    func registerTags(_ tags: [Tag], with batch: WriteBatch?, delta: Int) {
         tags.forEach { tag in
+            let count: Int
             if let tagCache = self.tags[tag] {
-                self.tags[tag] = TagCache(count: tagCache.count + increment, updatedDate: Date())
+                count = min(0, tagCache.count + delta)
             } else {
-                self.tags[tag] = TagCache(count: increment, updatedDate: Date())
+                count = min(0, delta)
             }
-        }
-    }
-
-    // Actually why do we even need to have a decrement function? It's still + anyway
-    // TODO: Replace this function. It's not necessary, all we need to do is just add min(0, tagCache.count + increment) in registerTags
-    func deregisterTags(_ tags: [Tag], with batch: WriteBatch?, decrement: Int) {
-        tags.forEach { tag in
-            guard let tagCache = self.tags[tag] else {
-                return
-            }
-            self.tags[tag] = TagCache(count: min(0, tagCache.count + decrement), updatedDate: Date())
+            self.tags[tag] = TagCache(count: count, updatedDate: Date())
         }
     }
 

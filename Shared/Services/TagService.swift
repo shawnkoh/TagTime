@@ -15,8 +15,7 @@ protocol TagService {
     var tagsPublisher: Published<[Tag: TagCache]>.Publisher { get }
     var activeTagsPublisher: AnyPublisher<[Tag], Never> { get }
 
-    func registerTags(_ tags: [Tag], with batch: WriteBatch?, increment: Int)
-    func deregisterTags(_ tags: [Tag], with batch: WriteBatch?, decrement: Int)
+    func registerTags(_ tags: [Tag], with batch: WriteBatch?, delta: Int)
 
     #if DEBUG
     func resetTagCache()

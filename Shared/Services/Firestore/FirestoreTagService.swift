@@ -127,56 +127,18 @@ final class FirestoreTagService: TagService {
     }
 
     // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-    func registerTags(_ tags: [Tag], with batch: WriteBatch? = nil, increment: Int = 1) {
+    func registerTags(_ tags: [Tag], with batch: WriteBatch? = nil, delta: Int = 1) {
         let willCommit = batch == nil
         let batch = batch ?? Firestore.firestore().batch()
 
         tags.forEach { tag in
             let documentReference = tagCollection.document(tag)
-            let tagCache: TagCache
+            let count: Int
             if let localTagCache = self.tags[tag] {
-                tagCache = TagCache(count: localTagCache.count + increment, updatedDate: Date())
+                count = min(0, localTagCache.count + delta)
             } else {
-                tagCache = TagCache(count: increment, updatedDate: Date())
+                count = min(0, delta)
             }
-            try! batch.setData(from: tagCache, forDocument: documentReference)
-        }
-
-        guard willCommit else {
-            return
-        }
-
-        batch.commit() { error in
-            if let error = error {
-                self.alertService.present(message: error.localizedDescription)
-            }
-        }
-    }
-
-    // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-    func deregisterTags(_ tags: [Tag], with batch: WriteBatch? = nil, decrement: Int = -1) {
-        let willCommit = batch == nil
-        let batch = batch ?? Firestore.firestore().batch()
-
-        // you can't deregister tags like this
-        // because we need to check how many are pointing to it in firestore, not just locally
-        // the problem is, that requires multiple reads to retrieve those a tag that contains
-        // okay so the solution is to maintain a count of the tags
-        // that data can be useful for recommending also i guess
-        // TODO: Actually this call is stupid, because we still check for localTagCache again later.
-        let tagsToRemove = tags.filter { cacheContains(tag: $0) }
-        // TODO: There is no point adding a guard clause here - the foreach will just not do anything.
-        // Maybe only useful to prevent batch.commit() I guess
-        guard tagsToRemove.count > 0 else {
-            return
-        }
-
-        tagsToRemove.forEach { tag in
-            let documentReference = tagCollection.document(tag)
-            guard let localTagCache = self.tags[tag], localTagCache.count > 0 else {
-                return
-            }
-            let count = min(0, localTagCache.count + decrement)
             let tagCache = TagCache(count: count, updatedDate: Date())
             try! batch.setData(from: tagCache, forDocument: documentReference)
         }
@@ -190,13 +152,6 @@ final class FirestoreTagService: TagService {
                 self.alertService.present(message: error.localizedDescription)
             }
         }
-    }
-
-    private func cacheContains(tag: Tag) -> Bool {
-        guard let tagCache = tags[tag] else {
-            return false
-        }
-        return tagCache.count > 0
     }
 }
 

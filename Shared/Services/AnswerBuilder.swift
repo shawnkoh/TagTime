@@ -61,12 +61,7 @@ final class AnswerBuilder {
         }
 
         getTagDeltas(from: operations).forEach { tagDelta in
-            if tagDelta.value > 0 {
-                tagService.registerTags([tagDelta.key], with: batch, increment: tagDelta.value)
-            } else if tagDelta.value < 0 {
-                tagService.deregisterTags([tagDelta.key], with: batch, decrement: tagDelta.value)
-            }
-            // 0 is ignored because it has no change
+            tagService.registerTags([tagDelta.key], with: batch, delta: tagDelta.value)
         }
 
         let writePublisher = Future<Void, Error> { promise in
