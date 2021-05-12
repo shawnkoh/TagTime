@@ -10,6 +10,11 @@
 		860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860144132642B70A00AA5DB6 /* GoalCard.swift */; };
 		8606042B2643E40800944617 /* TagList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8606042A2643E40800944617 /* TagList.swift */; };
 		860F137B264B1052001D15EB /* FirestoreTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F137A264B1052001D15EB /* FirestoreTagService.swift */; };
+		860F137D264B1163001D15EB /* MockAnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F137C264B1163001D15EB /* MockAnswerService.swift */; };
+		860F137F264B1169001D15EB /* MockAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F137E264B1169001D15EB /* MockAuthenticationService.swift */; };
+		860F1381264B116F001D15EB /* MockBeeminderCredentialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */; };
+		860F1383264B1174001D15EB /* MockGoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1382264B1174001D15EB /* MockGoalService.swift */; };
+		860F1385264B1178001D15EB /* MockTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1384264B1178001D15EB /* MockTagService.swift */; };
 		861256E326139CAB00C2B81B /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256E226139CAB00C2B81B /* Tests_iOS.swift */; };
 		861256EE26139CAB00C2B81B /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256ED26139CAB00C2B81B /* Tests_macOS.swift */; };
 		861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C726139CAA00C2B81B /* TagTimeApp.swift */; };
@@ -126,6 +131,11 @@
 		860144132642B70A00AA5DB6 /* GoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCard.swift; sourceTree = "<group>"; };
 		8606042A2643E40800944617 /* TagList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagList.swift; sourceTree = "<group>"; };
 		860F137A264B1052001D15EB /* FirestoreTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreTagService.swift; sourceTree = "<group>"; };
+		860F137C264B1163001D15EB /* MockAnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnswerService.swift; sourceTree = "<group>"; };
+		860F137E264B1169001D15EB /* MockAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthenticationService.swift; sourceTree = "<group>"; };
+		860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBeeminderCredentialService.swift; sourceTree = "<group>"; };
+		860F1382264B1174001D15EB /* MockGoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGoalService.swift; sourceTree = "<group>"; };
+		860F1384264B1178001D15EB /* MockTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTagService.swift; sourceTree = "<group>"; };
 		861256C726139CAA00C2B81B /* TagTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTimeApp.swift; sourceTree = "<group>"; };
 		861256C826139CAA00C2B81B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		861256C926139CAB00C2B81B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -346,6 +356,11 @@
 		86719AEF264AF25A00B6086D /* Mock */ = {
 			isa = PBXGroup;
 			children = (
+				860F137C264B1163001D15EB /* MockAnswerService.swift */,
+				860F137E264B1169001D15EB /* MockAuthenticationService.swift */,
+				860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */,
+				860F1382264B1174001D15EB /* MockGoalService.swift */,
+				860F1384264B1178001D15EB /* MockTagService.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -690,6 +705,7 @@
 			files = (
 				8614ED1C264110D700F543F2 /* BeeminderCredentialService.swift in Sources */,
 				8642E2C426469C8400C38D68 /* NotificationHandler.swift in Sources */,
+				860F1385264B1178001D15EB /* MockTagService.swift in Sources */,
 				8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */,
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
@@ -700,6 +716,7 @@
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,
 				860F137B264B1052001D15EB /* FirestoreTagService.swift in Sources */,
 				860144142642B70A00AA5DB6 /* GoalCard.swift in Sources */,
+				860F137F264B1169001D15EB /* MockAuthenticationService.swift in Sources */,
 				863B354D264AFD69006D549F /* FirestoreAnswerService.swift in Sources */,
 				86E3AB6E262445A000092CE6 /* ListenerRegistration+Extensions.swift in Sources */,
 				8665E29F264142F1003EB532 /* GoalCountdown.swift in Sources */,
@@ -709,6 +726,7 @@
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				86719AF1264AF27600B6086D /* FirestoreAuthenticationService.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
+				860F1381264B116F001D15EB /* MockBeeminderCredentialService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86D7B264264A37CF002FE4BA /* LastFetchedStatus.swift in Sources */,
 				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
@@ -737,6 +755,7 @@
 				86569A612641B111005C49C7 /* GoalDetail.swift in Sources */,
 				86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */,
 				86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */,
+				860F1383264B1174001D15EB /* MockGoalService.swift in Sources */,
 				865391EC2633D4A700F202F7 /* AnswerCreator.swift in Sources */,
 				862F93CB264A63ED005C925C /* AnswerablePingService.swift in Sources */,
 				867B42FC2649905A00DDF1A6 /* Query+Combine.swift in Sources */,
@@ -749,6 +768,7 @@
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,
 				861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				86A59147261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
+				860F137D264B1163001D15EB /* MockAnswerService.swift in Sources */,
 				86A59150261DBCBD00A25D1F /* User.swift in Sources */,
 				86545E1D2642EB7A00897253 /* DoubleTappable.swift in Sources */,
 			);

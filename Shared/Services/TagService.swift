@@ -22,3 +22,16 @@ protocol TagService {
     func resetTagCache()
     #endif
 }
+
+extension TagService {
+    var activeTagsPublisher: AnyPublisher<[Tag], Never> {
+        tagsPublisher
+            .flatMap {
+                $0.publisher
+                    .filter { $0.value.count > 0 }
+                    .map { $0.key }
+                    .collect()
+            }
+            .eraseToAnyPublisher()
+    }
+}

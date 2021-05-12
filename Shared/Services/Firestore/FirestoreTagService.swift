@@ -18,15 +18,6 @@ final class FirestoreTagService: TagService {
     @Published var tags: [Tag: TagCache] = [:]
     var tagsPublisher: Published<[Tag : TagCache]>.Publisher { $tags }
 
-    private(set) lazy var activeTagsPublisher = $tags
-        .flatMap {
-            $0.publisher
-                .filter { $0.value.count > 0 }
-                .map { $0.key }
-                .collect()
-        }
-        .eraseToAnyPublisher()
-
     private var userSubscriber: AnyCancellable = .init({})
 
     private var subscribers = Set<AnyCancellable>()
@@ -172,7 +163,10 @@ final class FirestoreTagService: TagService {
         // the problem is, that requires multiple reads to retrieve those a tag that contains
         // okay so the solution is to maintain a count of the tags
         // that data can be useful for recommending also i guess
+        // TODO: Actually this call is stupid, because we still check for localTagCache again later.
         let tagsToRemove = tags.filter { cacheContains(tag: $0) }
+        // TODO: There is no point adding a guard clause here - the foreach will just not do anything.
+        // Maybe only useful to prevent batch.commit() I guess
         guard tagsToRemove.count > 0 else {
             return
         }
