@@ -15,6 +15,7 @@
 		860F1381264B116F001D15EB /* MockBeeminderCredentialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */; };
 		860F1383264B1174001D15EB /* MockGoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1382264B1174001D15EB /* MockGoalService.swift */; };
 		860F1385264B1178001D15EB /* MockTagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1384264B1178001D15EB /* MockTagService.swift */; };
+		860F1387264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1386264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift */; };
 		861256E326139CAB00C2B81B /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256E226139CAB00C2B81B /* Tests_iOS.swift */; };
 		861256EE26139CAB00C2B81B /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256ED26139CAB00C2B81B /* Tests_macOS.swift */; };
 		861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861256C726139CAA00C2B81B /* TagTimeApp.swift */; };
@@ -136,6 +137,7 @@
 		860F1380264B116F001D15EB /* MockBeeminderCredentialService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBeeminderCredentialService.swift; sourceTree = "<group>"; };
 		860F1382264B1174001D15EB /* MockGoalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGoalService.swift; sourceTree = "<group>"; };
 		860F1384264B1178001D15EB /* MockTagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTagService.swift; sourceTree = "<group>"; };
+		860F1386264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreAnswerBuilderExecutor.swift; sourceTree = "<group>"; };
 		861256C726139CAA00C2B81B /* TagTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTimeApp.swift; sourceTree = "<group>"; };
 		861256C826139CAA00C2B81B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		861256C926139CAB00C2B81B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -344,6 +346,7 @@
 		86719AEE264AF25600B6086D /* Firestore */ = {
 			isa = PBXGroup;
 			children = (
+				860F1386264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift */,
 				863B354C264AFD69006D549F /* FirestoreAnswerService.swift */,
 				86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */,
 				86719AF2264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift */,
@@ -711,6 +714,7 @@
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
 				86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */,
+				860F1387264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift in Sources */,
 				86E3AB6826243AC300092CE6 /* NotificationScheduler.swift in Sources */,
 				861256F226139CAB00C2B81B /* ContentView.swift in Sources */,
 				86ADBB7526173303003CBA6B /* Logbook.swift in Sources */,

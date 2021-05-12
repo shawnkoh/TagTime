@@ -12,6 +12,7 @@ import Resolver
 final class BatchAnswerCreatorViewModel: ObservableObject {
     @Injected private var answerablePingService: AnswerablePingService
     @Injected private var alertService: AlertService
+    @Injected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     func answerAllUnansweredPings(response: String) {
         let tags = response.split(separator: " ").map { Tag($0) }
@@ -19,14 +20,14 @@ final class BatchAnswerCreatorViewModel: ObservableObject {
             return
         }
         DispatchQueue.global(qos: .utility).async { [self] in
-            let builder = AnswerBuilder()
+            var builder = AnswerBuilder()
             // TODO: This might be wrong. AnswerBuilder might not be mutated? not sure.
             // TODO: Find out if builders should be structs
             answerablePingService.unansweredPings
                 .map { Answer(ping: $0, tags: tags) }
                 .forEach { _ = builder.createAnswer($0) }
             builder
-                .execute()
+                .execute(with: answerBuilderExecutor)
                 .errorHandled(by: alertService)
         }
     }

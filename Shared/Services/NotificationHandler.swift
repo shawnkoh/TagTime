@@ -16,6 +16,7 @@ final class NotificationHandler: NSObject {
     @Injected private var authenticationService: AuthenticationService
     @Injected private var answerService: AnswerService
     @Injected private var alertService: AlertService
+    @Injected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     private var subscribers = Set<AnyCancellable>()
 }
@@ -89,9 +90,10 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
             let answer = Answer(ping: ping, tags: tags)
 
             if authenticationService.user.isAuthenticated {
-                AnswerBuilder()
+                var builder = AnswerBuilder()
+                builder
                     .createAnswer(answer)
-                    .execute()
+                    .execute(with: answerBuilderExecutor)
                     .receive(on: DispatchQueue.global(qos: .utility))
                     .sink(receiveCompletion: { completion in
                         switch completion {
@@ -119,9 +121,10 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
                     // Instead, the ViewModels should observe its interested services via @Injected, then receive their updates on the main thread, in order
                     // to update the view models
                     .flatMap { user -> AnyPublisher<Void, Error> in
-                        AnswerBuilder()
+                        var builder = AnswerBuilder()
+                        return builder
                             .createAnswer(answer)
-                            .execute()
+                            .execute(with: answerBuilderExecutor)
                     }
                     .receive(on: DispatchQueue.global(qos: .utility))
                     .sink(receiveCompletion: { completion in
