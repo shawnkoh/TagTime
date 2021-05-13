@@ -8,6 +8,7 @@
 import SwiftUI
 import Resolver
 import Combine
+import AuthenticationServices
 
 final class PreferencesViewModel: ObservableObject {
     @Injected private var settingService: SettingService
@@ -16,7 +17,9 @@ final class PreferencesViewModel: ObservableObject {
     #endif
     @Injected private var authenticationService: AuthenticationService
     @Injected private var alertService: AlertService
+    @Injected private var appleLoginService: AppleLoginService
 
+    @Published private(set) var isLoggedIntoApple = false
     @Published private(set) var isLoggedIntoFacebook = false
     @Published var averagePingInterval: Int = 45
 
@@ -48,8 +51,23 @@ final class PreferencesViewModel: ObservableObject {
     #endif
 
     func logoutFromFacebook() {
-        authenticationService.unlink(from: .facebook)
+        authenticationService
+            .unlink(from: .facebook)
             .errorHandled(by: alertService)
+    }
+
+    func showError(_ error: Error) {
+        alertService.present(message: error.localizedDescription)
+    }
+
+    func linkWithApple(authorization: ASAuthorization) {
+        authenticationService
+            .linkWithApple(authorization: authorization)
+            .errorHandled(by: alertService)
+    }
+
+    func getHashedNonce() -> String {
+        appleLoginService.getHashedNonce()
     }
 }
 
@@ -77,6 +95,23 @@ struct Preferences: View {
                 )
 
                 BeeminderLoginButton()
+
+                if viewModel.isLoggedIntoApple {
+                    EmptyView()
+                } else {
+                    SignInWithAppleButton(onRequest: { request in
+                        request.requestedScopes = [.fullName, .fullName]
+                        request.nonce = viewModel.getHashedNonce()
+                    }, onCompletion: { result in
+                        switch result {
+                        case let .success(authorization):
+                            viewModel.linkWithApple(authorization: authorization)
+
+                        case let .failure(error):
+                            viewModel.showError(error)
+                        }
+                    })
+                }
 
                 #if os(iOS)
                 if viewModel.isLoggedIntoFacebook {

@@ -19,6 +19,9 @@ extension Resolver: ResolverRegistering {
         register { AlertService() }
             .scope(.cached)
 
+        register { AppleLoginService() }
+            .scope(.cached)
+
         register { AnswerablePingService() }
             .scope(.cached)
 

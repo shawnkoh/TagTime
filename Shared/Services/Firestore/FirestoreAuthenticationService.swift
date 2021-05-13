@@ -12,8 +12,10 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import Resolver
 import Combine
+import AuthenticationServices
 
 public final class FirestoreAuthenticationService: AuthenticationService {
+    @Injected private var appleLoginService: AppleLoginService
     @Injected private var alertService: AlertService
 
     @Published fileprivate(set) var user = User(id: User.unauthenticatedUserId, startDate: Date())
@@ -152,6 +154,29 @@ public final class FirestoreAuthenticationService: AuthenticationService {
             alertService.present(message: error.localizedDescription)
         }
     }
+
+    func linkWithApple(authorization: ASAuthorization) -> AnyPublisher<Void, Error> {
+        do {
+            let credential = try getCredential(from: authorization)
+            return link(with: credential)
+        } catch {
+            return Fail(error: error).eraseToAnyPublisher()
+        }
+    }
+
+    private func getCredential(from authorization: ASAuthorization) throws -> OAuthCredential {
+        guard
+            let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+            let nonce = appleLoginService.currentNonce,
+            let appleIDToken = appleIDCredential.identityToken,
+            let idTokenString = String(data: appleIDToken, encoding: .utf8)
+        else {
+            throw AuthError.failedToGetCredential
+        }
+        // Initialize a Firebase credential.
+        return OAuthProvider.credential(withProviderID: AuthProvider.apple.rawValue, idToken: idTokenString, rawNonce: nonce)
+    }
+
 
     private func makeUser(id: String) -> AnyPublisher<User, Error> {
         let user = User(id: id, startDate: Date())

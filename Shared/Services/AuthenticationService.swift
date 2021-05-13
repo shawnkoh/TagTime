@@ -9,12 +9,14 @@ import Foundation
 import Combine
 // TODO: Ideally, this should not import Firebase
 import Firebase
+import AuthenticationServices
 
 enum AuthError: Error {
     case noResult
     case authError(Error, AuthErrorCode)
     case notAuthenticated
     case noSnapshot
+    case failedToGetCredential
 }
 
 extension User {
@@ -47,6 +49,8 @@ protocol AuthenticationService {
     func link(with credential: AuthCredential) -> AnyPublisher<Void, Error>
     func unlink(from provider: AuthProvider) -> AnyPublisher<Void, Error>
     func signOut()
+
+    func linkWithApple(authorization: ASAuthorization) -> AnyPublisher<Void, Error>
 
     #if DEBUG
     func resetUserStartDate()

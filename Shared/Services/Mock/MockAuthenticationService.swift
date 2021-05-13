@@ -9,6 +9,7 @@ import Foundation
 import Combine
 // TODO: Ideally this should not import Firebase
 import Firebase
+import AuthenticationServices
 
 final class MockAuthenticationService: AuthenticationService {
     @Published var authStatus: AuthStatus = .signedOut
@@ -63,5 +64,12 @@ final class MockAuthenticationService: AuthenticationService {
     func resetUserStartDate() {
         let date = Date()
         user = .init(id: user.id, startDate: date, updatedDate: date)
+    }
+
+    func linkWithApple(authorization: ASAuthorization) -> AnyPublisher<Void, Error> {
+        // TODO:
+        Just(())
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
     }
 }

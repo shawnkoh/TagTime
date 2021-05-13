@@ -13,8 +13,8 @@ extension Firebase.User {
     func link(with credential: AuthCredential) -> Future<AuthDataResult, Error> {
         Future { promise in
             self.link(with: credential) { result, error in
-                if let error = error as NSError? {
-                    if let code = AuthErrorCode(rawValue: error.code) {
+                if let error = error  {
+                    if let error = error as NSError?, let code = AuthErrorCode(rawValue: error.code) {
                         promise(.failure(AuthError.authError(error, code)))
                     } else {
                         promise(.failure(error))
@@ -22,6 +22,7 @@ extension Firebase.User {
                 } else if let result = result {
                     promise(.success(result))
                 } else {
+                    print("noResult")
                     promise(.failure(AuthError.noResult))
                 }
             }
