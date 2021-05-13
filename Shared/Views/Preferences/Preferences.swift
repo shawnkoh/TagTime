@@ -51,9 +51,9 @@ final class PreferencesViewModel: ObservableObject {
     }
     #endif
 
-    func logoutFromFacebook() {
+    func logout(from provider: AuthProvider) {
         authenticationService
-            .unlink(from: .facebook)
+            .unlink(from: provider)
             .errorHandled(by: alertService)
     }
 
@@ -98,7 +98,8 @@ struct Preferences: View {
                 BeeminderLoginButton()
 
                 if viewModel.isLoggedIntoApple {
-                    EmptyView()
+                    Text("Logout from Apple")
+                        .onTap { viewModel.logout(from: .apple) }
                 } else {
                     SignInWithAppleButton(onRequest: { request in
                         request.requestedScopes = [.fullName, .fullName]
@@ -117,7 +118,7 @@ struct Preferences: View {
                 #if os(iOS)
                 if viewModel.isLoggedIntoFacebook {
                     Text("Logout from Facebook")
-                        .onTap { viewModel.logoutFromFacebook() }
+                        .onTap { viewModel.logout(from: .facebook) }
                 } else {
                     Text("Login with Facebook")
                         .onTap { viewModel.loginWithFacebook() }
