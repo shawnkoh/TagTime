@@ -8,7 +8,11 @@
 import Foundation
 import UserNotifications
 import Combine
+#if os(iOS)
 import UIKit
+#else
+import AppKit
+#endif
 import Resolver
 
 public final class NotificationScheduler {
@@ -41,14 +45,25 @@ public final class NotificationScheduler {
     }
 
     public init() {
+        #if os(iOS)
         self.category = UNNotificationCategory(
             identifier: CategoryIdentifier.ping,
             actions: [replyAction],
             intentIdentifiers: [],
             hiddenPreviewsBodyPlaceholder: nil,
             categorySummaryFormat: nil,
-            options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
+            options:  [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
         )
+        #else
+        self.category = UNNotificationCategory(
+            identifier: CategoryIdentifier.ping,
+            actions: [replyAction],
+            intentIdentifiers: [],
+            hiddenPreviewsBodyPlaceholder: nil,
+            categorySummaryFormat: nil,
+            options:  [.customDismissAction]
+        )
+        #endif
         userSubscriber = authenticationService.userPublisher
             .sink { self.setup(user: $0) }
     }
@@ -75,7 +90,14 @@ public final class NotificationScheduler {
         answerablePingService.$unansweredPings
             .map { $0.count }
             .receive(on: DispatchQueue.main)
-            .sink { UIApplication.shared.applicationIconBadgeNumber = $0 }
+            .sink {
+                #if os(iOS)
+                UIApplication.shared.applicationIconBadgeNumber = $0
+                #else
+                ()
+                // TODO: Update badge number on Mac
+                #endif
+            }
             .store(in: &subscribers)
 
         pingService.$answerablePings
@@ -115,6 +137,7 @@ public final class NotificationScheduler {
     private func scheduleNotifications(pings: [Date], previousAnswer: Answer?) {
         if let previousAnswer = previousAnswer {
             let previousAction = UNNotificationAction(identifier: ActionIdentifier.previous, title: previousAnswer.tagDescription, options: .destructive)
+            #if os(iOS)
             self.category = UNNotificationCategory(
                 identifier: CategoryIdentifier.ping,
                 actions: [previousAction, replyAction],
@@ -123,7 +146,18 @@ public final class NotificationScheduler {
                 categorySummaryFormat: nil,
                 options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
             )
+            #else
+            self.category = UNNotificationCategory(
+                identifier: CategoryIdentifier.ping,
+                actions: [previousAction, replyAction],
+                intentIdentifiers: [],
+                hiddenPreviewsBodyPlaceholder: nil,
+                categorySummaryFormat: nil,
+                options: [.customDismissAction]
+            )
+            #endif
         } else {
+            #if os (iOS)
             self.category = UNNotificationCategory(
                 identifier: CategoryIdentifier.ping,
                 actions: [replyAction],
@@ -132,6 +166,16 @@ public final class NotificationScheduler {
                 categorySummaryFormat: nil,
                 options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
             )
+            #else
+            self.category = UNNotificationCategory(
+                identifier: CategoryIdentifier.ping,
+                actions: [replyAction],
+                intentIdentifiers: [],
+                hiddenPreviewsBodyPlaceholder: nil,
+                categorySummaryFormat: nil,
+                options: [.customDismissAction]
+            )
+            #endif
         }
 
         center.setNotificationCategories([category])

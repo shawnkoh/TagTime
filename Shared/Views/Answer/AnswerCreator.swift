@@ -86,6 +86,7 @@ struct AnswerCreator: View {
 
             Spacer()
 
+            #if os(iOS)
             CocoaTextField("PING1 PING2", text: $config.response, onCommit: { addAnswer(tags: config.tags) })
                 .isInitialFirstResponder(true)
                 .autocapitalization(.allCharacters)
@@ -93,6 +94,15 @@ struct AnswerCreator: View {
                 .background(Color.hsb(207, 26, 14))
                 .cornerRadius(8)
                 .foregroundColor(.white)
+            #else
+            TextField(
+                "PING1 PING2",
+                text: $config.response,
+                onCommit: {
+                    addAnswer(tags: config.tags)
+                }
+            )
+            #endif
 
             Spacer()
 

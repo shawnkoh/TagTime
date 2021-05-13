@@ -42,6 +42,7 @@ struct BatchAnswerCreator: View {
         VStack(alignment: .leading) {
             Text("What were you doing from")
             Text("")
+            #if os(iOS)
             CocoaTextField(
                 "PING1 PING2",
                 text: $response,
@@ -51,6 +52,16 @@ struct BatchAnswerCreator: View {
                 }
             )
             .isInitialFirstResponder(true)
+            #else
+            TextField(
+                "PING1 PING2",
+                text: $response,
+                onCommit: {
+                    viewModel.answerAllUnansweredPings(response: response)
+                    isPresented = false
+                }
+            )
+            #endif
 
             Spacer()
 
