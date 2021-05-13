@@ -32,6 +32,7 @@ final class PreferencesViewModel: ObservableObject {
                 switch $0 {
                 case let .signedIn(_, providers):
                     self.isLoggedIntoFacebook = providers.contains(.facebook)
+                    self.isLoggedIntoApple = providers.contains(.apple)
                 default:
                     self.isLoggedIntoFacebook = false
                 }
