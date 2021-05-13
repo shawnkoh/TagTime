@@ -22,8 +22,10 @@ extension Resolver: ResolverRegistering {
         register { AnswerablePingService() }
             .scope(.cached)
 
+        #if os(iOS)
         register { FacebookLoginService() }
             .scope(.cached)
+        #endif
 
         register { NotificationHandler() }
             .scope(.cached)

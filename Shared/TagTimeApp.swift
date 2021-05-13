@@ -8,7 +8,6 @@
 import SwiftUI
 import Firebase
 import UserNotifications
-import FBSDKCoreKit
 import Resolver
 import Combine
 
@@ -35,7 +34,11 @@ final class AppViewModel: ObservableObject {
 
 @main
 struct TagTimeApp: App {
+    #if os(iOS)
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    #else
+    @NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    #endif
     @StateObject private var viewModel = AppViewModel()
 
     init() {
@@ -47,18 +50,28 @@ struct TagTimeApp: App {
 
     var body: some Scene {
         WindowGroup {
+            #if os(iOS)
             ContentView()
                 .alert(isPresented: $viewModel.isAlertPresented) {
                     Alert(title: Text(viewModel.alertMessage))
                 }
                 .statusBar(hidden: true)
+            #else
+            ContentView()
+                .alert(isPresented: $viewModel.isAlertPresented) {
+                    Alert(title: Text(viewModel.alertMessage))
+                }
+            #endif
         }
     }
 }
 
-final class AppDelegate: NSObject, UIApplicationDelegate {
+final class AppDelegate: NSObject {
     @Injected private var notificationHandler: NotificationHandler
+}
 
+#if os(iOS)
+extension AppDelegate: UIApplicationDelegate {
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
@@ -84,3 +97,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         )
     }
 }
+#endif
+
+#if os(macOS)
+extension AppDelegate: NSApplicationDelegate {}
+#endif

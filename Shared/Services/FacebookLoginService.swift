@@ -5,6 +5,7 @@
 //  Created by Shawn Koh on 23/4/21.
 //
 
+#if os(iOS)
 import Foundation
 import FBSDKLoginKit
 import FirebaseAuth
@@ -49,3 +50,4 @@ final class FacebookLoginService {
         }
     }
 }
+#endif

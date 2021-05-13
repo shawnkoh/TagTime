@@ -8,7 +8,11 @@
 import Foundation
 import UserNotifications
 import Combine
+#if os(iOS)
 import UIKit
+#else
+import AppKit
+#endif
 import Resolver
 
 public final class NotificationScheduler {
@@ -28,6 +32,11 @@ public final class NotificationScheduler {
     @Injected private var answerService: AnswerService
 
     private(set) var category: UNNotificationCategory
+    #if os(iOS)
+    private let categoryOptions: UNNotificationCategoryOptions = [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
+    #else
+    private let categoryOptions: UNNotificationCategoryOptions = [.customDismissAction]
+    #endif
 
     let center = UNUserNotificationCenter.current()
     let replyAction = UNTextInputNotificationAction(identifier: ActionIdentifier.reply, title: "Reply", options: .destructive)
@@ -47,7 +56,7 @@ public final class NotificationScheduler {
             intentIdentifiers: [],
             hiddenPreviewsBodyPlaceholder: nil,
             categorySummaryFormat: nil,
-            options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
+            options: categoryOptions
         )
         userSubscriber = authenticationService.userPublisher
             .sink { self.setup(user: $0) }
@@ -75,7 +84,14 @@ public final class NotificationScheduler {
         answerablePingService.$unansweredPings
             .map { $0.count }
             .receive(on: DispatchQueue.main)
-            .sink { UIApplication.shared.applicationIconBadgeNumber = $0 }
+            .sink {
+                #if os(iOS)
+                UIApplication.shared.applicationIconBadgeNumber = $0
+                #else
+                ()
+                // TODO: Update badge number on Mac
+                #endif
+            }
             .store(in: &subscribers)
 
         pingService.$answerablePings
@@ -121,7 +137,7 @@ public final class NotificationScheduler {
                 intentIdentifiers: [],
                 hiddenPreviewsBodyPlaceholder: nil,
                 categorySummaryFormat: nil,
-                options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
+                options: categoryOptions
             )
         } else {
             self.category = UNNotificationCategory(
@@ -130,7 +146,7 @@ public final class NotificationScheduler {
                 intentIdentifiers: [],
                 hiddenPreviewsBodyPlaceholder: nil,
                 categorySummaryFormat: nil,
-                options: [.allowAnnouncement, .allowInCarPlay, .customDismissAction]
+                options: categoryOptions
             )
         }
 

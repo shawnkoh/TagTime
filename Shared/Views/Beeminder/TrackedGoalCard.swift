@@ -14,6 +14,7 @@ struct TrackedGoalCard: View {
     let goal: Goal
 
     var body: some View {
+        #if os(iOS)
         GoalCard(goal: goal)
             .onTap { isDetailPresented = true }
             .cardButtonStyle(.baseCard)
@@ -21,6 +22,15 @@ struct TrackedGoalCard: View {
                 GoalDetail(goal: goal, isPresented: $isDetailPresented)
                     .background(Color.modalBackground)
             }
+        #else
+        GoalCard(goal: goal)
+            .onTap { isDetailPresented = true }
+            .cardButtonStyle(.baseCard)
+            .sheet(isPresented: $isDetailPresented) {
+                GoalDetail(goal: goal, isPresented: $isDetailPresented)
+                    .background(Color.modalBackground)
+            }
+        #endif
     }
 }
 

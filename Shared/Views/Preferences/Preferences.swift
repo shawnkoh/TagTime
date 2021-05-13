@@ -11,7 +11,9 @@ import Combine
 
 final class PreferencesViewModel: ObservableObject {
     @Injected private var settingService: SettingService
+    #if os(iOS)
     @Injected private var facebookLoginService: FacebookLoginService
+    #endif
     @Injected private var authenticationService: AuthenticationService
     @Injected private var alertService: AlertService
 
@@ -39,9 +41,11 @@ final class PreferencesViewModel: ObservableObject {
             .store(in: &subscribers)
     }
 
+    #if os(iOS)
     func loginWithFacebook() {
         facebookLoginService.login()
     }
+    #endif
 
     func logoutFromFacebook() {
         authenticationService.unlink(from: .facebook)
@@ -74,6 +78,7 @@ struct Preferences: View {
 
                 BeeminderLoginButton()
 
+                #if os(iOS)
                 if viewModel.isLoggedIntoFacebook {
                     Text("Logout from Facebook")
                         .onTap { viewModel.logoutFromFacebook() }
@@ -81,6 +86,7 @@ struct Preferences: View {
                     Text("Login with Facebook")
                         .onTap { viewModel.loginWithFacebook() }
                 }
+                #endif
 
                 #if DEBUG
                 Text("Open Debug Menu")
