@@ -59,6 +59,7 @@ public final class NotificationScheduler {
             options: categoryOptions
         )
         userSubscriber = authenticationService.userPublisher
+            .removeDuplicatesForServices()
             .sink { self.setup(user: $0) }
     }
 

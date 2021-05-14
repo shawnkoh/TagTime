@@ -26,14 +26,13 @@ extension User {
     }
 }
 
-enum AuthProvider: String {
+enum AuthProvider: String, Codable {
     case facebook = "facebook.com"
     case apple = "apple.com"
 }
 
 enum AuthStatus: Equatable {
-    case anonymous(String)
-    case signedIn(String, [AuthProvider])
+    case signedIn(String)
     case signedOut
     case loading
 }

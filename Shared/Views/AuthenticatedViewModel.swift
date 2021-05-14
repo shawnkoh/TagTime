@@ -18,7 +18,6 @@ final class AuthenticatedViewModel: ObservableObject {
         case preferences
     }
 
-    @Published var isAuthenticated = false
     @Published var isLoggedIntoBeeminder = false
     @Published var pingNotification = AnswerCreatorConfig()
     // TODO: iPad should use the Mac Sidebar navigation instead
@@ -35,11 +34,6 @@ final class AuthenticatedViewModel: ObservableObject {
     @Injected private var beeminderCredentialService: BeeminderCredentialService
 
     init() {
-        authenticationService.userPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.isAuthenticated = $0.isAuthenticated }
-            .store(in: &subscribers)
-
         notificationHandler.$openedPing
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in

@@ -23,43 +23,23 @@ final class PreferencesViewModel: ObservableObject {
     @Published private(set) var isLoggedIntoFacebook = false
     @Published var averagePingInterval: Int = 45
     @Published private(set) var uid = ""
-    @Published private(set) var authStatus: String = ""
 
     private var subscribers = Set<AnyCancellable>()
 
     init() {
-        authenticationService.authStatusPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [self] in
-                switch $0 {
-                case let .signedIn(_, providers):
-                    isLoggedIntoApple = providers.contains(.apple)
-                    isLoggedIntoFacebook = providers.contains(.facebook)
-                default:
-                    isLoggedIntoApple = false
-                    isLoggedIntoFacebook = false
-                }
-                switch $0 {
-                case .anonymous:
-                    authStatus = "anonymous"
-                case .signedIn:
-                    authStatus = "signedIn"
-                case .signedOut:
-                    authStatus = "signedOut"
-                case .loading:
-                    authStatus = "loading"
-                }
-            }
-            .store(in: &subscribers)
-
         settingService.$averagePingInterval
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.averagePingInterval = $0 }
             .store(in: &subscribers)
 
         authenticationService.userPublisher
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { self.uid = $0.id }
+            .sink { [weak self] user in
+                self?.uid = user.id
+                self?.isLoggedIntoApple = user.providers.contains(.apple)
+                self?.isLoggedIntoFacebook = user.providers.contains(.facebook)
+            }
             .store(in: &subscribers)
     }
 
@@ -151,9 +131,6 @@ struct Preferences: View {
                     }
 
                 Text("UID: \(viewModel.uid)")
-                    .cardStyle(.modalCard)
-
-                Text("authStatus: \(viewModel.authStatus)")
                     .cardStyle(.modalCard)
                 #endif
             }

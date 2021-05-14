@@ -41,6 +41,7 @@ final class FirestoreAnswerService: AnswerService {
 
     init() {
         userSubscriber = authenticationService.userPublisher
+            .removeDuplicatesForServices()
             .sink { self.setup(user: $0) }
     }
 

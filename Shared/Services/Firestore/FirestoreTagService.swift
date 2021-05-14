@@ -37,6 +37,7 @@ final class FirestoreTagService: TagService {
 
     init() {
         userSubscriber = authenticationService.userPublisher
+            .removeDuplicatesForServices()
             .sink { self.setup(user: $0) }
     }
 
