@@ -14,6 +14,41 @@ import Resolver
 import Combine
 import AuthenticationServices
 
+// This service is the source of truth for the `Firebase.User` object
+// It was created because Firebase.Auth listeners do not update across devices.
+private final class FirebaseUserService {
+    @Published private var user: Firebase.User?
+    var userPublisher: AnyPublisher<Firebase.User?, Never> {
+        $user.removeDuplicates().eraseToAnyPublisher()
+    }
+
+    private let auth: Auth
+    // Observe idToken instead of addState because addState does not always update
+    private var idTokenHandle: IDTokenDidChangeListenerHandle!
+    private var listeners: [ListenerRegistration] = []
+    private var subscribers = Set<AnyCancellable>()
+
+    init(auth: Auth) {
+        self.auth = auth
+
+        idTokenHandle = auth.addIDTokenDidChangeListener { [weak self] auth, user in
+            self?.user = user
+            guard let user = user else {
+                return
+            }
+
+            self?.listeners.forEach { $0.remove() }
+            self?.listeners = []
+            // TODO: A complication arises with firestore security rules. Need to be careful there to allow us to observe and update the state accordingly.
+            let listener = Firestore.firestore().collection("users").document(user.uid).addSnapshotListener { snapshot, error in
+                // snapshot and error are ignored because it does not matter. We just want to know that user was changed
+                self?.user = auth.currentUser
+            }
+            self?.listeners.append(listener)
+        }
+    }
+}
+
 public final class FirestoreAuthenticationService: AuthenticationService {
     @Injected private var appleLoginService: AppleLoginService
     @Injected private var alertService: AlertService
@@ -31,6 +66,8 @@ public final class FirestoreAuthenticationService: AuthenticationService {
     private var idTokenHandle: IDTokenDidChangeListenerHandle?
     private var subscribers = Set<AnyCancellable>()
 
+    private lazy var firebaseUserService = FirebaseUserService(auth: auth)
+
     private let auth = Auth.auth()
 
     public init() {
@@ -43,10 +80,31 @@ public final class FirestoreAuthenticationService: AuthenticationService {
     // This is useful for NotificationHandler, especially when the app is in the background
     // TODO: Ideally, a View should call this function.
     func attachListeners() {
-        // TODO: We should not rely on this listener to update authStatus
-        // Instead, we should observe Firestore directly to check if there are any updates to the user.
-        // A complication arises with firestore security rules. Need to be careful there to allow us to observe and update the state accordingly.
-        idTokenHandle = auth.addIDTokenDidChangeListener(authListener)
+        firebaseUserService.userPublisher
+            .sink { [weak self] user in
+                guard let user = user else {
+                    self?.authStatus = .signedOut
+                    return
+                }
+
+                guard !user.isAnonymous else {
+                    self?.authStatus = .anonymous(user.uid)
+                    return
+                }
+
+                let providers: [AuthProvider] = user.providerData.compactMap {
+                    switch $0.providerID {
+                    case AuthProvider.apple.rawValue:
+                        return .apple
+                    case AuthProvider.facebook.rawValue:
+                        return .facebook
+                    default:
+                        return nil
+                    }
+                }
+                self?.authStatus = .signedIn(user.uid, providers)
+            }
+            .store(in: &subscribers)
 
         $authStatus
             .filter { $0 != .loading }
@@ -63,15 +121,13 @@ public final class FirestoreAuthenticationService: AuthenticationService {
             }
             .removeDuplicates()
             .flatMap { [self] uid -> AnyPublisher<User, Error> in
-                // so i suspect what is happening is that there is an order of operations going on. AuthStatus was not loaded yet.
-                // we should have an explicit unknown status
                 if let uid = uid {
                     return getOrMakeUser(uid: uid)
                 } else {
+                    // TODO: There must be a better way to do this. maybe if we just rely on Onboarding to decide what to do this will get far simpler.
                     return auth.signInAnonymously()
                         // ignore user because we rely on authListener to update $authStatus
                         // updating $authStatus will then trigger another call to update user
-                        // TODO: There must be a better way to do this. maybe if we just rely on Onboarding to decide what to do this will get far simpler.
                         .map { _ in User(id: User.unauthenticatedUserId) }
                         .eraseToAnyPublisher()
                 }
@@ -91,35 +147,6 @@ public final class FirestoreAuthenticationService: AuthenticationService {
                 self.user = user
             })
             .store(in: &subscribers)
-    }
-
-    private func authListener(_ auth: Auth, _ user: Firebase.User?) -> Void {
-        guard let user = user else {
-            authStatus = .signedOut
-            return
-        }
-
-        guard !user.isAnonymous else {
-            authStatus = .anonymous(user.uid)
-            return
-        }
-
-        let providers: [AuthProvider] = user.providerData.compactMap {
-            switch $0.providerID {
-            case AuthProvider.apple.rawValue:
-                return .apple
-            case AuthProvider.facebook.rawValue:
-                return .facebook
-            default:
-                return nil
-            }
-        }
-        authStatus = .signedIn(user.uid, providers)
-    }
-
-    func signInAnonymously() {
-        auth.signInAnonymously()
-            .errorHandled(by: alertService)
     }
 
     func signIn() -> AnyPublisher<User, Error> {
@@ -208,7 +235,6 @@ public final class FirestoreAuthenticationService: AuthenticationService {
         return OAuthProvider.credential(withProviderID: AuthProvider.apple.rawValue, idToken: idTokenString, rawNonce: nonce)
     }
 
-
     private func makeUser(id: String) -> AnyPublisher<User, Error> {
         guard id != User.unauthenticatedUserId else {
             return Fail(error: AuthError.notAuthenticated).eraseToAnyPublisher()
@@ -218,7 +244,6 @@ public final class FirestoreAuthenticationService: AuthenticationService {
             .map { user }
             .eraseToAnyPublisher()
     }
-
 
     private func getUser(id: String) -> Future<User?, Error> {
         Future { promise in
