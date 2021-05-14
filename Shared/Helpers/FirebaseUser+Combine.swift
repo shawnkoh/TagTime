@@ -22,7 +22,6 @@ extension Firebase.User {
                 } else if let result = result {
                     promise(.success(result))
                 } else {
-                    print("noResult")
                     promise(.failure(AuthError.noResult))
                 }
             }

@@ -21,60 +21,65 @@ public final class FirestoreAuthenticationService: AuthenticationService {
     @Published fileprivate(set) var user = User(id: User.unauthenticatedUserId, startDate: Date())
     var userPublisher: Published<User>.Publisher { $user }
 
-    @Published var authStatus: AuthStatus = .signedOut
+    @Published private(set) var authStatus: AuthStatus = .loading
     var authStatusPublisher: Published<AuthStatus>.Publisher { $authStatus }
 
     public var isAuthenticated: Bool {
         user.id != User.unauthenticatedUserId
     }
 
-    private var handle: AuthStateDidChangeListenerHandle?
+    private var idTokenHandle: IDTokenDidChangeListenerHandle?
     private var subscribers = Set<AnyCancellable>()
 
+    private let auth = Auth.auth()
+
     public init() {
-        handle = Auth.auth().addStateDidChangeListener { [self] auth, user in
-            guard let user = user else {
-                authStatus = .signedOut
-                return
-            }
+        // I believe that attaching listener here makes it a lot faster to start up the app
+        // compared to using View.onAppear
+        attachListeners()
+    }
 
-            guard !user.isAnonymous else {
-                authStatus = .anonymous(user.uid)
-                return
-            }
-
-            let providers: [AuthProvider] = user.providerData.compactMap {
-                switch $0.providerID {
-                case AuthProvider.apple.rawValue:
-                    return .apple
-                case AuthProvider.facebook.rawValue:
-                    return .facebook
-                default:
-                    return nil
-                }
-            }
-            authStatus = .signedIn(user.uid, providers)
-        }
+    // This helps to prevent AuthenticationService from listening unnecessarily.
+    // This is useful for NotificationHandler, especially when the app is in the background
+    // TODO: Ideally, a View should call this function.
+    func attachListeners() {
+        // TODO: We should not rely on this listener to update authStatus
+        // Instead, we should observe Firestore directly to check if there are any updates to the user.
+        // A complication arises with firestore security rules. Need to be careful there to allow us to observe and update the state accordingly.
+        idTokenHandle = auth.addIDTokenDidChangeListener(authListener)
 
         $authStatus
-            .map { authStatus -> String? in
+            .filter { $0 != .loading }
+            .tryMap { authStatus -> String? in
                 switch authStatus {
                 case let .anonymous(uid), let .signedIn(uid, _):
                     return uid
                 case .signedOut:
                     return nil
+                // This is basically an impossible scenario
+                case .loading:
+                    throw AuthError.notAuthenticated
                 }
             }
             .removeDuplicates()
             .flatMap { [self] uid -> AnyPublisher<User, Error> in
+                // so i suspect what is happening is that there is an order of operations going on. AuthStatus was not loaded yet.
+                // we should have an explicit unknown status
                 if let uid = uid {
                     return getOrMakeUser(uid: uid)
                 } else {
-                    return Just(User(id: User.unauthenticatedUserId))
-                        .setFailureType(to: Error.self)
+                    return auth.signInAnonymously()
+                        // ignore user because we rely on authListener to update $authStatus
+                        // updating $authStatus will then trigger another call to update user
+                        // TODO: There must be a better way to do this. maybe if we just rely on Onboarding to decide what to do this will get far simpler.
+                        .map { _ in User(id: User.unauthenticatedUserId) }
                         .eraseToAnyPublisher()
                 }
             }
+            // ignore unauthenticated user when we call signInAnonymously
+            // TODO: This obviously doesn't trigger
+            // instead, rely on authListener to update authStatus
+            .removeDuplicates()
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case let .failure(error):
@@ -88,13 +93,37 @@ public final class FirestoreAuthenticationService: AuthenticationService {
             .store(in: &subscribers)
     }
 
+    private func authListener(_ auth: Auth, _ user: Firebase.User?) -> Void {
+        guard let user = user else {
+            authStatus = .signedOut
+            return
+        }
+
+        guard !user.isAnonymous else {
+            authStatus = .anonymous(user.uid)
+            return
+        }
+
+        let providers: [AuthProvider] = user.providerData.compactMap {
+            switch $0.providerID {
+            case AuthProvider.apple.rawValue:
+                return .apple
+            case AuthProvider.facebook.rawValue:
+                return .facebook
+            default:
+                return nil
+            }
+        }
+        authStatus = .signedIn(user.uid, providers)
+    }
+
     func signInAnonymously() {
-        Auth.auth().signInAnonymously()
+        auth.signInAnonymously()
             .errorHandled(by: alertService)
     }
 
     func signIn() -> AnyPublisher<User, Error> {
-        if let currentUser = Auth.auth().currentUser {
+        if let currentUser = auth.currentUser {
             return getUser(id: currentUser.uid)
                 .flatMap { user -> AnyPublisher<User, Error> in
                     if let user = user {
@@ -105,7 +134,7 @@ public final class FirestoreAuthenticationService: AuthenticationService {
                 }
                 .eraseToAnyPublisher()
         } else {
-            return Auth.auth().signInAnonymously()
+            return auth.signInAnonymously()
                 .flatMap { result -> AnyPublisher<User, Error> in
                     self.makeUser(id: result.user.uid)
                 }
@@ -114,24 +143,26 @@ public final class FirestoreAuthenticationService: AuthenticationService {
     }
 
     func signIn(with credential: AuthCredential) -> AnyPublisher<Void, Error> {
-        Auth.auth().signIn(with: credential)
+        auth.signIn(with: credential)
             .map { _ in }
             .eraseToAnyPublisher()
     }
 
     func link(with credential: AuthCredential) -> AnyPublisher<Void, Error> {
-        guard let currentUser = Auth.auth().currentUser else {
+        guard let currentUser = auth.currentUser else {
             return Fail(error: AuthError.notAuthenticated).eraseToAnyPublisher()
         }
 
         return currentUser.link(with: credential)
             // TODO: flatMap to update User document e.g. to get email address
+            // TODO: Need to record user's email address here because we can only get the user's email address the
+            // very first time he signs in with Apple.
             .map { _ in }
             .eraseToAnyPublisher()
     }
 
     func unlink(from provider: AuthProvider) -> AnyPublisher<Void, Error> {
-        guard let currentUser = Auth.auth().currentUser else {
+        guard let currentUser = auth.currentUser else {
             return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
         return Future { promise in
@@ -148,7 +179,7 @@ public final class FirestoreAuthenticationService: AuthenticationService {
 
     func signOut() {
         do {
-            try Auth.auth().signOut()
+            try auth.signOut()
             user = User(id: User.unauthenticatedUserId, startDate: Date())
         } catch {
             alertService.present(message: error.localizedDescription)
@@ -179,6 +210,9 @@ public final class FirestoreAuthenticationService: AuthenticationService {
 
 
     private func makeUser(id: String) -> AnyPublisher<User, Error> {
+        guard id != User.unauthenticatedUserId else {
+            return Fail(error: AuthError.notAuthenticated).eraseToAnyPublisher()
+        }
         let user = User(id: id, startDate: Date())
         return Firestore.firestore().collection("users").document(user.id).setData(from: user)
             .map { user }
@@ -195,7 +229,7 @@ public final class FirestoreAuthenticationService: AuthenticationService {
                     } else if let snapshot = snapshot, snapshot.exists {
                         promise(.success(try? snapshot.data(as: User.self)))
                     } else {
-                        promise(.failure(AuthError.noSnapshot))
+                        promise(.success(nil))
                     }
                 }
         }

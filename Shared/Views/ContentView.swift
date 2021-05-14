@@ -24,7 +24,7 @@ final class ContentViewModel: ObservableObject {
                 switch authStatus {
                 case .anonymous, .signedIn:
                     self.isAuthenticated = true
-                case .signedOut:
+                case .signedOut, .loading:
                     self.isAuthenticated = false
                 }
             }

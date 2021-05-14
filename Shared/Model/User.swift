@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 
-struct User: Identifiable, Codable {
+struct User: Identifiable, Codable, Equatable {
     let id: String
     let startDate: Date
     let updatedDate: Date

@@ -22,19 +22,32 @@ final class PreferencesViewModel: ObservableObject {
     @Published private(set) var isLoggedIntoApple = false
     @Published private(set) var isLoggedIntoFacebook = false
     @Published var averagePingInterval: Int = 45
+    @Published private(set) var uid = ""
+    @Published private(set) var authStatus: String = ""
 
     private var subscribers = Set<AnyCancellable>()
 
     init() {
         authenticationService.authStatusPublisher
             .receive(on: DispatchQueue.main)
-            .sink {
+            .sink { [self] in
                 switch $0 {
                 case let .signedIn(_, providers):
-                    self.isLoggedIntoFacebook = providers.contains(.facebook)
-                    self.isLoggedIntoApple = providers.contains(.apple)
+                    isLoggedIntoApple = providers.contains(.apple)
+                    isLoggedIntoFacebook = providers.contains(.facebook)
                 default:
-                    self.isLoggedIntoFacebook = false
+                    isLoggedIntoApple = false
+                    isLoggedIntoFacebook = false
+                }
+                switch $0 {
+                case .anonymous:
+                    authStatus = "anonymous"
+                case .signedIn:
+                    authStatus = "signedIn"
+                case .signedOut:
+                    authStatus = "signedOut"
+                case .loading:
+                    authStatus = "loading"
                 }
             }
             .store(in: &subscribers)
@@ -42,6 +55,11 @@ final class PreferencesViewModel: ObservableObject {
         settingService.$averagePingInterval
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.averagePingInterval = $0 }
+            .store(in: &subscribers)
+
+        authenticationService.userPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { self.uid = $0.id }
             .store(in: &subscribers)
     }
 
@@ -131,6 +149,12 @@ struct Preferences: View {
                     .sheet(isPresented: $isDebugPresented) {
                         DebugMenu()
                     }
+
+                Text("UID: \(viewModel.uid)")
+                    .cardStyle(.modalCard)
+
+                Text("authStatus: \(viewModel.authStatus)")
+                    .cardStyle(.modalCard)
                 #endif
             }
             Spacer()

@@ -15,7 +15,6 @@ enum AuthError: Error {
     case noResult
     case authError(Error, AuthErrorCode)
     case notAuthenticated
-    case noSnapshot
     case failedToGetCredential
 }
 
@@ -36,6 +35,7 @@ enum AuthStatus: Equatable {
     case anonymous(String)
     case signedIn(String, [AuthProvider])
     case signedOut
+    case loading
 }
 
 protocol AuthenticationService {
