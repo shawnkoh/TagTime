@@ -38,3 +38,10 @@ extension Auth {
         }
     }
 }
+
+extension Publisher where Output == User {
+    /// For use in the various services. updatedDate and providers are intentionally ignored to prevent the services from reinitialising again
+    func removeDuplicatesForServices() -> Publishers.RemoveDuplicates<Self> {
+        removeDuplicates(by: { $0.id == $1.id && $0.startDate == $1.startDate })
+    }
+}

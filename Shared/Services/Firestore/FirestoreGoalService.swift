@@ -44,6 +44,7 @@ final class FirestoreGoalService: GoalService {
 
     init() {
         authenticationService.userPublisher
+            .removeDuplicatesForServices()
             .sink { self.setup(user: $0) }
             .store(in: &serviceSubscribers)
 

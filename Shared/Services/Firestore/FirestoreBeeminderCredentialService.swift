@@ -29,6 +29,7 @@ final class FirestoreBeeminderCredentialService: BeeminderCredentialService {
 
     init() {
         userSubscriber = authenticationService.userPublisher
+            .removeDuplicatesForServices()
             .sink { self.setup(user: $0) }
     }
 

@@ -18,16 +18,10 @@ final class ContentViewModel: ObservableObject {
     @Published private(set) var isAuthenticated = false
 
     init() {
-        authenticationService.authStatusPublisher
+        authenticationService.userPublisher
+            .removeDuplicatesForServices()
             .receive(on: DispatchQueue.main)
-            .sink { authStatus in
-                switch authStatus {
-                case .anonymous, .signedIn:
-                    self.isAuthenticated = true
-                case .signedOut:
-                    self.isAuthenticated = false
-                }
-            }
+            .sink { [weak self] in self?.isAuthenticated = $0.isAuthenticated }
             .store(in: &subscribers)
     }
 }

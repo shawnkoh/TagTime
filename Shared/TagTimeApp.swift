@@ -10,6 +10,9 @@ import Firebase
 import UserNotifications
 import Resolver
 import Combine
+#if os(iOS)
+import FacebookCore
+#endif
 
 final class AppViewModel: ObservableObject {
     @Injected private var alertService: AlertService
