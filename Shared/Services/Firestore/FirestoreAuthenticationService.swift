@@ -29,6 +29,7 @@ private final class FirebaseUserService {
     private var subscribers = Set<AnyCancellable>()
 
     init(auth: Auth) {
+        self.user = auth.currentUser
         self.auth = auth
 
         idTokenHandle = auth.addIDTokenDidChangeListener { [weak self] auth, user in
@@ -80,6 +81,7 @@ public final class FirestoreAuthenticationService: AuthenticationService {
     // This is useful for NotificationHandler, especially when the app is in the background
     // TODO: Ideally, a View should call this function.
     func attachListeners() {
+        // TODO: Something is wrong here. I am anonymous upon signing up again
         firebaseUserService.userPublisher
             .sink { [weak self] user in
                 guard let user = user else {
@@ -184,6 +186,14 @@ public final class FirestoreAuthenticationService: AuthenticationService {
             // TODO: flatMap to update User document e.g. to get email address
             // TODO: Need to record user's email address here because we can only get the user's email address the
             // very first time he signs in with Apple.
+            .flatMap { result -> AnyPublisher<Void, Error> in
+                let uid = result.user.uid
+                let user = User(id: uid, startDate: self.user.startDate, updatedDate: Date())
+                return Firestore.firestore()
+                    .collection("users")
+                    .document(uid)
+                    .setData(from: user).eraseToAnyPublisher()
+            }
             .map { _ in }
             .eraseToAnyPublisher()
     }
@@ -192,16 +202,17 @@ public final class FirestoreAuthenticationService: AuthenticationService {
         guard let currentUser = auth.currentUser else {
             return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
-        return Future { promise in
-            currentUser.unlink(fromProvider: provider.rawValue) { _, error in
-                if let error = error {
-                    promise(.failure(error))
-                } else {
-                    promise(.success(()))
-                }
+        return currentUser
+            .unlink(from: provider)
+            .flatMap { user -> AnyPublisher<Void, Error> in
+                let uid = user.uid
+                let user = User(id: uid, startDate: self.user.startDate, updatedDate: Date())
+                return Firestore.firestore()
+                    .collection("users")
+                    .document(uid)
+                    .setData(from: user).eraseToAnyPublisher()
             }
-        }
-        .eraseToAnyPublisher()
+            .eraseToAnyPublisher()
     }
 
     func signOut() {
@@ -217,6 +228,7 @@ public final class FirestoreAuthenticationService: AuthenticationService {
         do {
             let credential = try getCredential(from: authorization)
             return link(with: credential)
+            // TODO: Need to send email address specifically for Apple because it's only sent the first time the account was linked
         } catch {
             return Fail(error: error).eraseToAnyPublisher()
         }

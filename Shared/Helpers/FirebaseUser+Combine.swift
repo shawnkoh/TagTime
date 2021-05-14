@@ -27,4 +27,18 @@ extension Firebase.User {
             }
         }
     }
+
+    func unlink(from provider: AuthProvider) -> Future<Firebase.User, Error> {
+        Future { promise in
+            self.unlink(fromProvider: provider.rawValue) { user, error in
+                if let error = error {
+                    promise(.failure(error))
+                } else if let user = user {
+                    promise(.success(user))
+                } else {
+                    promise(.failure(AuthError.noResult))
+                }
+            }
+        }
+    }
 }
