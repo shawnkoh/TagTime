@@ -14,12 +14,10 @@ struct AuthenticatedView: View {
     // Reference:: https://stackoverflow.com/a/62622935/8639572
     @ViewBuilder
     private func page(label: String, image: String, destination: AuthenticatedViewModel.Page) -> some View {
-        switch viewModel.currentPage == destination {
-        case true:
-            Label(label, image: "\(image)-active")
-        case false:
-            Label(label, image: image)
-        }
+        Label(
+            title: { Text(label) },
+            icon: { Image(image).resizable().aspectRatio(contentMode: .fit).padding(2) }
+        )
     }
 
     var body: some View {
@@ -49,7 +47,8 @@ struct AuthenticatedView: View {
                         tag: AuthenticatedViewModel.Page.goalList,
                         selection: $viewModel.currentPage
                     ) {
-                        page(label: "Goals", image: "goal-list", destination: .goalList)
+                        // Intentional (for now while the active image has thicker borders).
+                        page(label: "Goals", image: "goal-list-active", destination: .goalList)
                     }
                     .tag(AuthenticatedViewModel.Page.goalList)
                 }
@@ -72,6 +71,7 @@ struct AuthenticatedView: View {
                 }
                 .tag(AuthenticatedViewModel.Page.preferences)
             }
+            .listStyle(SidebarListStyle())
         }
         .sheet(isPresented: $viewModel.pingNotification.isPresented) {
             AnswerCreator(config: $viewModel.pingNotification)
