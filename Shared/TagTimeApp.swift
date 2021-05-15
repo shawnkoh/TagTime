@@ -53,18 +53,17 @@ struct TagTimeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            #if os(iOS)
             ContentView()
+                .modify {
+                    #if os(iOS)
+                    $0.statusBar(hidden: true)
+                    #else
+                    $0.frame(minWidth: 550, minHeight: 500)
+                    #endif
+                }
                 .alert(isPresented: $viewModel.isAlertPresented) {
                     Alert(title: Text(viewModel.alertMessage))
                 }
-                .statusBar(hidden: true)
-            #else
-            ContentView()
-                .alert(isPresented: $viewModel.isAlertPresented) {
-                    Alert(title: Text(viewModel.alertMessage))
-                }
-            #endif
         }
     }
 }

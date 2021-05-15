@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
-import Firebase
 import Resolver
 import Combine
+import SwiftUIX
 
 final class ContentViewModel: ObservableObject {
     @Injected private var authenticationService: AuthenticationService
@@ -30,15 +30,6 @@ struct ContentView: View {
     @StateObject private var viewModel = ContentViewModel()
 
     var body: some View {
-        #if os(macOS)
-        view
-            .frame(minWidth: 550, minHeight: 500)
-        #else
-        view
-        #endif
-    }
-
-    var view: some View {
         if viewModel.isAuthenticated {
             return AnyView(AuthenticatedView())
         } else {
