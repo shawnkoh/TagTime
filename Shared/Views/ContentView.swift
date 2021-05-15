@@ -30,10 +30,19 @@ struct ContentView: View {
     @StateObject private var viewModel = ContentViewModel()
 
     var body: some View {
+        #if os(macOS)
+        view
+            .frame(minWidth: 550, minHeight: 500)
+        #else
+        view
+        #endif
+    }
+
+    var view: some View {
         if viewModel.isAuthenticated {
-            AuthenticatedView()
+            return AnyView(AuthenticatedView())
         } else {
-            UnauthenticatedView()
+            return AnyView(UnauthenticatedView())
         }
     }
 }
