@@ -46,10 +46,12 @@ struct TagList: View {
 }
 
 struct TagList_Previews: PreviewProvider {
-    static var previews: some View {
-        #if DEBUG
+    static let service: GoalService = {
         Resolver.root = .mock
-        #endif
-        return TagList(goal: Stub.goal)
+        return Resolver.resolve()
+    }()
+
+    static var previews: some View {
+        TagList(goal: service.goals.first!)
     }
 }

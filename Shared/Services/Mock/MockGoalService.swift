@@ -82,6 +82,9 @@ final class MockGoalService: GoalService {
                 baremin: ""
             )
         ]
+
+        goalTrackers[goals.first!.id] = .init(tags: ["facebook", "youtube", "netflix"], updatedDate: Date())
+        goalTrackers[goals[1].id] = .init(tags: ["yoga", "gymming", "running"], updatedDate: Date())
     }
 
     func trackGoal(_ goal: Goal) -> Future<Void, Error> {

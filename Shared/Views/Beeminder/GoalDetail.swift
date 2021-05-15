@@ -69,10 +69,12 @@ struct GoalDetail: View {
 }
 
 struct GoalDetail_Previews: PreviewProvider {
-    static var previews: some View {
-        #if DEBUG
+    static let service: GoalService = {
         Resolver.root = .mock
-        #endif
-        return GoalDetail(goal: Stub.goal, isPresented: .constant(true))
+        return Resolver.resolve()
+    }()
+
+    static var previews: some View {
+        GoalDetail(goal: service.goals.first!, isPresented: .constant(true))
     }
 }
