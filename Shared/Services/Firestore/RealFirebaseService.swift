@@ -14,6 +14,7 @@ final class RealFirebaseService: FirebaseService {
         FirebaseApp.configure()
         let settings = FirestoreSettings()
         settings.isPersistenceEnabled = true
+        settings.cacheSizeBytes = FirestoreCacheSizeUnlimited
         Firestore.firestore().settings = settings
     }
 }
