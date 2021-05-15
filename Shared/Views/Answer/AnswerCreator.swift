@@ -89,11 +89,11 @@ struct AnswerCreator: View {
             #if os(iOS)
             CocoaTextField("PING1 PING2", text: $config.response, onCommit: { addAnswer(tags: config.tags) })
                 .isInitialFirstResponder(true)
-                .autocapitalization(.allCharacters)
                 .multilineTextAlignment(.center)
                 .background(Color.hsb(207, 26, 14))
                 .cornerRadius(8)
                 .foregroundColor(.white)
+                .textCase(.lowercase)
             #else
             TextField(
                 "PING1 PING2",
@@ -102,6 +102,11 @@ struct AnswerCreator: View {
                     addAnswer(tags: config.tags)
                 }
             )
+            .textCase(.lowercase)
+            .multilineTextAlignment(.center)
+            .background(Color.hsb(207, 26, 14))
+            .foregroundColor(.white)
+            .cornerRadius(8)
             #endif
 
             Spacer()
@@ -118,6 +123,7 @@ struct AnswerCreator: View {
     }
 
     private func addAnswer(tags: [Tag]) {
+        defer { config.dismiss() }
         guard tags.count > 0 else {
             return
         }
@@ -127,7 +133,6 @@ struct AnswerCreator: View {
             let answer = Answer(ping: config.pingDate, tags: tags)
             viewModel.createAnswer(answer)
         }
-        config.dismiss()
     }
 }
 

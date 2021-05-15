@@ -61,6 +61,11 @@ struct BatchAnswerCreator: View {
                     isPresented = false
                 }
             )
+            .textCase(.lowercase)
+            .multilineTextAlignment(.center)
+            .background(Color.hsb(207, 26, 14))
+            .foregroundColor(.white)
+            .cornerRadius(8)
             #endif
 
             Spacer()
