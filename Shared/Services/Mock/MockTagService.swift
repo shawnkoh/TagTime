@@ -25,9 +25,9 @@ final class MockTagService: TagService {
         tags.forEach { tag in
             let count: Int
             if let tagCache = self.tags[tag] {
-                count = min(0, tagCache.count + delta)
+                count = max(0, tagCache.count + delta)
             } else {
-                count = min(0, delta)
+                count = max(0, delta)
             }
             self.tags[tag] = TagCache(count: count, updatedDate: Date())
         }

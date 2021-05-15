@@ -136,9 +136,9 @@ final class FirestoreTagService: TagService {
             let documentReference = tagCollection.document(tag)
             let count: Int
             if let localTagCache = self.tags[tag] {
-                count = min(0, localTagCache.count + delta)
+                count = max(0, localTagCache.count + delta)
             } else {
-                count = min(0, delta)
+                count = max(0, delta)
             }
             let tagCache = TagCache(count: count, updatedDate: Date())
             try! batch.setData(from: tagCache, forDocument: documentReference)

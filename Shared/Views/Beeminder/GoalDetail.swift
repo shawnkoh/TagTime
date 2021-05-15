@@ -62,7 +62,7 @@ struct GoalDetail: View {
             }
         }
         .padding()
-        .sheet(isPresented: $isTagPickerPresented) {
+        .popover(isPresented: $isTagPickerPresented, arrowEdge: .trailing) {
             TagPicker(goal: goal)
         }
     }

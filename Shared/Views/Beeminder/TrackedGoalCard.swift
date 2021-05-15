@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Beeminder
+import Resolver
 
 struct TrackedGoalCard: View {
     @State private var isDetailPresented = false
@@ -36,6 +37,7 @@ struct TrackedGoalCard: View {
 
 struct TrackedGoalCard_Previews: PreviewProvider {
     static var previews: some View {
-        TrackedGoalCard(goal: Stub.goal)
+        Resolver.root = .mock
+        return TrackedGoalCard(goal: Stub.goal)
     }
 }
