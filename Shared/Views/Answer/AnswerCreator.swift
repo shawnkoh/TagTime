@@ -108,6 +108,13 @@ struct AnswerCreator: View {
 
             AnswerSuggester(keyword: $config.response)
         }
+        .modify {
+            #if os(macOS)
+            $0.frame(minWidth: 300, minHeight: 400)
+            #else
+            $0
+            #endif
+        }
     }
 
     private func addAnswer(tags: [Tag]) {
