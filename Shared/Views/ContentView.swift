@@ -11,7 +11,7 @@ import Combine
 import SwiftUIX
 
 final class ContentViewModel: ObservableObject {
-    @Injected private var authenticationService: AuthenticationService
+    @LazyInjected private var authenticationService: AuthenticationService
 
     private var subscribers = Set<AnyCancellable>()
 

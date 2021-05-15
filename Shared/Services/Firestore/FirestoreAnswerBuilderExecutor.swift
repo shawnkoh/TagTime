@@ -13,10 +13,10 @@ import FirebaseFirestoreSwift
 import Resolver
 
 final class FirestoreAnswerBuilderExecutor: AnswerBuilderExecutor {
-    @Injected private var tagService: TagService
-    @Injected private var goalService: GoalService
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @LazyInjected private var tagService: TagService
+    @LazyInjected private var goalService: GoalService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
 
     init() {}
 

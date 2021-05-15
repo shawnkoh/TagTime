@@ -15,8 +15,8 @@ import Combine
 import AuthenticationServices
 
 public final class FirestoreAuthenticationService: AuthenticationService {
-    @Injected private var appleLoginService: AppleLoginService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var appleLoginService: AppleLoginService
+    @LazyInjected private var alertService: AlertService
 
     // TODO: I think AuthStatus can be hidden
     // It's mostly a User implementation detail.

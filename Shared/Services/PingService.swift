@@ -24,7 +24,7 @@ public final class PingService {
 
     private var subscribers = Set<AnyCancellable>()
 
-    @Injected private var authenticationService: AuthenticationService
+    @LazyInjected private var authenticationService: AuthenticationService
 
     init(averagePingInterval: Int = defaultAveragePingInterval) {
         self.averagePingInterval = averagePingInterval

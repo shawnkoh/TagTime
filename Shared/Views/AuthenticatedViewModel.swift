@@ -28,10 +28,10 @@ final class AuthenticatedViewModel: ObservableObject {
     #endif
 
     private var subscribers = Set<AnyCancellable>()
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var notificationHandler: NotificationHandler
-    @Injected private var notificationScheduler: NotificationScheduler
-    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var notificationHandler: NotificationHandler
+    @LazyInjected private var notificationScheduler: NotificationScheduler
+    @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
 
     init() {
         notificationHandler.$openedPing

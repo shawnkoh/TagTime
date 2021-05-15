@@ -11,8 +11,8 @@ import Beeminder
 import Resolver
 
 final class MockGoalService: GoalService {
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
 
     @Published var goals: [Goal] = []
     var goalsPublisher: Published<[Goal]>.Publisher { $goals }

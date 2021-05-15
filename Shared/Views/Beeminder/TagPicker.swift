@@ -11,9 +11,9 @@ import Resolver
 import Combine
 
 final class TagPickerViewModel: ObservableObject {
-    @Injected private var tagService: TagService
-    @Injected private var goalService: GoalService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var tagService: TagService
+    @LazyInjected private var goalService: GoalService
+    @LazyInjected private var alertService: AlertService
 
     @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
     @Published private(set) var activeTags: [Tag] = []

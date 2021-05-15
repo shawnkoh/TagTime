@@ -14,9 +14,9 @@ import Combine
 import Beeminder
 
 final class FirestoreGoalService: GoalService {
-    @Injected private var alertService: AlertService
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @LazyInjected private var alertService: AlertService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
 
     @Published private(set) var goals: [Goal] = []
     var goalsPublisher: Published<[Goal]>.Publisher { $goals }

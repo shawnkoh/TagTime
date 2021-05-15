@@ -11,8 +11,8 @@ import Resolver
 import Combine
 
 final class AnswerSuggesterViewModel: ObservableObject {
-    @Injected private var answerService: AnswerService
-    @Injected private var tagService: TagService
+    @LazyInjected private var answerService: AnswerService
+    @LazyInjected private var tagService: TagService
 
     @Published private(set) var filteredTags: [Tag] = []
     @Published private(set) var latestAnswer: String?

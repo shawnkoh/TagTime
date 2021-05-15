@@ -11,9 +11,9 @@ import Resolver
 import Combine
 
 final class GoalDetailViewModel: ObservableObject {
-    @Injected private var goalService: GoalService
-    @Injected private var tagService: TagService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var goalService: GoalService
+    @LazyInjected private var tagService: TagService
+    @LazyInjected private var alertService: AlertService
 
     func untrackGoal(_ goal: Goal) {
         goalService

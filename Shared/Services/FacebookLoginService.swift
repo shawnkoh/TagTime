@@ -13,8 +13,8 @@ import Combine
 import Resolver
 
 final class FacebookLoginService {
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var alertService: AlertService
 
     let loginManager = LoginManager()
 

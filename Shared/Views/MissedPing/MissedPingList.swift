@@ -10,7 +10,7 @@ import Resolver
 import Combine
 
 final class MissedPingListViewModel: ObservableObject {
-    @Injected private var answerablePingService: AnswerablePingService
+    @LazyInjected private var answerablePingService: AnswerablePingService
 
     @Published private(set) var unansweredPings: [Date] = []
 

@@ -11,13 +11,13 @@ import Resolver
 import Firebase
 
 final class DebugViewModel: ObservableObject {
-    @Injected private var answerService: AnswerService
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var tagService: TagService
-    @Injected private var notificationScheduler: NotificationScheduler
-    @Injected private var answerablePingService: AnswerablePingService
-    @Injected private var goalService: GoalService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var answerService: AnswerService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var tagService: TagService
+    @LazyInjected private var notificationScheduler: NotificationScheduler
+    @LazyInjected private var answerablePingService: AnswerablePingService
+    @LazyInjected private var goalService: GoalService
+    @LazyInjected private var alertService: AlertService
 
     func scheduleNotification() {
         let timeInterval = Date(timeIntervalSinceNow: 5).timeIntervalSince1970.rounded()

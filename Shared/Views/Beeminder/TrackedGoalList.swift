@@ -11,7 +11,7 @@ import Beeminder
 import Combine
 
 final class TrackedGoalListViewModel: ObservableObject {
-    @Injected private var goalService: GoalService
+    @LazyInjected private var goalService: GoalService
 
     @Published private(set) var trackedGoals: [Goal] = []
 

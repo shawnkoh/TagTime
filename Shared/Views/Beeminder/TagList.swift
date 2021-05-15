@@ -11,7 +11,7 @@ import Resolver
 import Combine
 
 final class TagListViewModel: ObservableObject {
-    @Injected private var goalService: GoalService
+    @LazyInjected private var goalService: GoalService
 
     @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
 

@@ -25,11 +25,11 @@ public final class NotificationScheduler {
         static let ping = "PING_CATEGORY"
     }
 
-    @Injected private var alertService: AlertService
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var answerablePingService: AnswerablePingService
-    @Injected private var pingService: PingService
-    @Injected private var answerService: AnswerService
+    @LazyInjected private var alertService: AlertService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var answerablePingService: AnswerablePingService
+    @LazyInjected private var pingService: PingService
+    @LazyInjected private var answerService: AnswerService
 
     private(set) var category: UNNotificationCategory
     #if os(iOS)

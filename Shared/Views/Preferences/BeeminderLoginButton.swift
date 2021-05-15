@@ -13,7 +13,7 @@ import Resolver
 import Combine
 
 final class BeeminderLoginButtonViewModel: ObservableObject {
-    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
 
     @Published private(set) var isAuthenticated = false
     private var subscribers = Set<AnyCancellable>()

@@ -12,8 +12,8 @@ import FirebaseFirestoreSwift
 import Resolver
 
 final class FirestoreTagService: TagService {
-    @Injected private var alertService: AlertService
-    @Injected private var authenticationService: AuthenticationService
+    @LazyInjected private var alertService: AlertService
+    @LazyInjected private var authenticationService: AuthenticationService
 
     @Published var tags: [Tag: TagCache] = [:]
     var tagsPublisher: Published<[Tag : TagCache]>.Publisher { $tags }

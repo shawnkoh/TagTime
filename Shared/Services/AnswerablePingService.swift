@@ -10,8 +10,8 @@ import Combine
 import Resolver
 
 final class AnswerablePingService {
-    @Injected private var answerService: AnswerService
-    @Injected private var pingService: PingService
+    @LazyInjected private var answerService: AnswerService
+    @LazyInjected private var pingService: PingService
 
     private var subscribers = Set<AnyCancellable>()
 

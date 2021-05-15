@@ -15,7 +15,8 @@ import FacebookCore
 #endif
 
 final class AppViewModel: ObservableObject {
-    @Injected private var alertService: AlertService
+    @LazyInjected private var firebaseService: FirebaseService
+    @LazyInjected private var alertService: AlertService
 
     @Published var isAlertPresented = false
     @Published private(set) var alertMessage = ""
@@ -23,6 +24,8 @@ final class AppViewModel: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
 
     init() {
+        firebaseService.configure()
+
         alertService.$isPresented
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.isAlertPresented = $0 }
@@ -44,12 +47,7 @@ struct TagTimeApp: App {
     #endif
     @StateObject private var viewModel = AppViewModel()
 
-    init() {
-        FirebaseApp.configure()
-        let settings = FirestoreSettings()
-        settings.isPersistenceEnabled = true
-        Firestore.firestore().settings = settings
-    }
+    init() {}
 
     var body: some Scene {
         WindowGroup {
@@ -69,7 +67,7 @@ struct TagTimeApp: App {
 }
 
 final class AppDelegate: NSObject {
-    @Injected private var notificationHandler: NotificationHandler
+    @LazyInjected private var notificationHandler: NotificationHandler
 }
 
 #if os(iOS)

@@ -45,8 +45,8 @@ struct AnswerCreatorConfig {
 }
 
 final class AnswerCreatorViewModel: ObservableObject {
-    @Injected private var alertService: AlertService
-    @Injected private var answerBuilderExecutor: AnswerBuilderExecutor
+    @LazyInjected private var alertService: AlertService
+    @LazyInjected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     private(set) lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
