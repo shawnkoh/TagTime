@@ -126,7 +126,7 @@ struct Preferences: View {
                 #if DEBUG
                 Text("Open Debug Menu")
                     .onTap { isDebugPresented = true }
-                    .sheet(isPresented: $isDebugPresented) {
+                    .popover(isPresented: $isDebugPresented, arrowEdge: .bottom) {
                         DebugMenu()
                     }
 
