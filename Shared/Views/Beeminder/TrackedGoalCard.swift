@@ -27,17 +27,23 @@ struct TrackedGoalCard: View {
         GoalCard(goal: goal)
             .onTap { isDetailPresented = true }
             .cardButtonStyle(.baseCard)
-            .sheet(isPresented: $isDetailPresented) {
+            // TODO: NavigationLink
+            .popover(isPresented: $isDetailPresented, arrowEdge: .trailing) {
                 GoalDetail(goal: goal, isPresented: $isDetailPresented)
                     .background(Color.modalBackground)
+                    .fixedSize()
             }
         #endif
     }
 }
 
 struct TrackedGoalCard_Previews: PreviewProvider {
-    static var previews: some View {
+    static let goalService: GoalService = {
         Resolver.root = .mock
-        return TrackedGoalCard(goal: Stub.goal)
+        return Resolver.resolve()
+    }()
+
+    static var previews: some View {
+        TrackedGoalCard(goal: goalService.goals.first!)
     }
 }

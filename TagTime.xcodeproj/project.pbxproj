@@ -86,7 +86,6 @@
 		868C527A264CEF8000F6F0D3 /* Ping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B2261736A7000A41FF /* Ping.swift */; };
 		868C527B264CEF8000F6F0D3 /* TagCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83F1263A6356000211A6 /* TagCache.swift */; };
 		868C527C264CEF8000F6F0D3 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B8261736EE000A41FF /* Tag.swift */; };
-		868C527D264CEF8000F6F0D3 /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C2261738C5000A41FF /* Stub.swift */; };
 		868C527E264CEF8000F6F0D3 /* GoalTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C577AD264190F3008AE4BC /* GoalTracker.swift */; };
 		868C527F264CEF8600F6F0D3 /* FirestoreGoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863B354A264AFA43006D549F /* FirestoreGoalService.swift */; };
 		868C5280264CEF8600F6F0D3 /* FirestoreAnswerBuilderExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860F1386264B9C11001D15EB /* FirestoreAnswerBuilderExecutor.swift */; };
@@ -150,7 +149,6 @@
 		868D83F2263A6356000211A6 /* TagCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83F1263A6356000211A6 /* TagCache.swift */; };
 		868E97B3261736A7000A41FF /* Ping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B2261736A7000A41FF /* Ping.swift */; };
 		868E97B9261736EE000A41FF /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B8261736EE000A41FF /* Tag.swift */; };
-		868E97C3261738C5000A41FF /* Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C2261738C5000A41FF /* Stub.swift */; };
 		868E97C926173AAD000A41FF /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97C826173AAD000A41FF /* Answer.swift */; };
 		868E97D026174A56000A41FF /* Color+Figma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97CF26174A56000A41FF /* Color+Figma.swift */; };
 		8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8691A52B263FFD020020AEE6 /* GoalList.swift */; };
@@ -276,7 +274,6 @@
 		868D83F1263A6356000211A6 /* TagCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCache.swift; sourceTree = "<group>"; };
 		868E97B2261736A7000A41FF /* Ping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ping.swift; sourceTree = "<group>"; };
 		868E97B8261736EE000A41FF /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
-		868E97C2261738C5000A41FF /* Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stub.swift; sourceTree = "<group>"; };
 		868E97C826173AAD000A41FF /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
 		868E97CF26174A56000A41FF /* Color+Figma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Figma.swift"; sourceTree = "<group>"; };
 		8691A52B263FFD020020AEE6 /* GoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalList.swift; sourceTree = "<group>"; };
@@ -536,7 +533,6 @@
 				868E97C826173AAD000A41FF /* Answer.swift */,
 				86C577AD264190F3008AE4BC /* GoalTracker.swift */,
 				868E97B2261736A7000A41FF /* Ping.swift */,
-				868E97C2261738C5000A41FF /* Stub.swift */,
 				868E97B8261736EE000A41FF /* Tag.swift */,
 				868D83F1263A6356000211A6 /* TagCache.swift */,
 				86A5914F261DBCBD00A25D1F /* User.swift */,
@@ -884,7 +880,6 @@
 				86E34E142643FB4A00B3AA5E /* CardStyle.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				86338F49264242F800112BBC /* TagPicker.swift in Sources */,
-				868E97C3261738C5000A41FF /* Stub.swift in Sources */,
 				867858D926370F3F009370F6 /* AnswerSuggester.swift in Sources */,
 				8672E70526181B01004081FC /* SettingService.swift in Sources */,
 				863B354B264AFA43006D549F /* FirestoreGoalService.swift in Sources */,
@@ -980,7 +975,6 @@
 				868C52A3264CEFAA00F6F0D3 /* MissedPingList.swift in Sources */,
 				868C5288264CEF8D00F6F0D3 /* AnswerBuilder.swift in Sources */,
 				868C528C264CEF8D00F6F0D3 /* FacebookLoginService.swift in Sources */,
-				868C527D264CEF8000F6F0D3 /* Stub.swift in Sources */,
 				868C5291264CEF8D00F6F0D3 /* NotificationHandler.swift in Sources */,
 				868C52A6264CEFAD00F6F0D3 /* TrackedGoalList.swift in Sources */,
 				868C52B1264CEFB500F6F0D3 /* Preferences.swift in Sources */,

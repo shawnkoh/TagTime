@@ -62,8 +62,17 @@ struct GoalDetail: View {
             }
         }
         .padding()
-        .popover(isPresented: $isTagPickerPresented, arrowEdge: .trailing) {
-            TagPicker(goal: goal)
+        .modify {
+            #if os(iOS)
+            $0.sheet(isPresented: $isTagPickerPresented) {
+                TagPicker(goal: goal)
+            }
+            #else
+            $0.popover(isPresented: $isTagPickerPresented, arrowEdge: .trailing) {
+                TagPicker(goal: goal)
+                    .fixedSize()
+            }
+            #endif
         }
     }
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Beeminder
+import Resolver
 
 struct GoalCountdown: View {
     let goal: Goal
@@ -35,7 +36,12 @@ struct GoalCountdown: View {
 }
 
 struct GoalCountdown_Previews: PreviewProvider {
+    static let goalService: GoalService = {
+        Resolver.root = .mock
+        return Resolver.resolve()
+    }()
+
     static var previews: some View {
-        GoalCountdown(goal: Stub.goal)
+        GoalCountdown(goal: goalService.goals.first!)
     }
 }
