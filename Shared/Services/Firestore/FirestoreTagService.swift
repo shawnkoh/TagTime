@@ -127,32 +127,15 @@ final class FirestoreTagService: TagService {
             .store(in: &subscribers)
     }
 
-    // TODO: Chunk this to avoid firestore limit of 500 writes. Very small probability but defensive coding.
-    func registerTags(_ tags: [Tag], with batch: WriteBatch? = nil, delta: Int = 1) {
-        let willCommit = batch == nil
-        let batch = batch ?? Firestore.firestore().batch()
-
-        tags.forEach { tag in
-            let documentReference = tagCollection.document(tag)
-            let count: Int
-            if let localTagCache = self.tags[tag] {
-                count = max(0, localTagCache.count + delta)
-            } else {
-                count = max(0, delta)
-            }
-            let tagCache = TagCache(count: count, updatedDate: Date())
-            try! batch.setData(from: tagCache, forDocument: documentReference)
+    func registerTag(tag: Tag, batch: WriteBatch, delta: Int) {
+        let count: Int
+        if let localTagCache = self.tags[tag] {
+            count = max(0, localTagCache.count + delta)
+        } else {
+            count = max(0, delta)
         }
-
-        guard willCommit else {
-            return
-        }
-
-        batch.commit() { error in
-            if let error = error {
-                self.alertService.present(message: error.localizedDescription)
-            }
-        }
+        let tagCache = TagCache(count: count, updatedDate: Date())
+        try! batch.setData(from: tagCache, forDocument: tagCollection.document(tag))
     }
 }
 

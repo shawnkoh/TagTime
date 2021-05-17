@@ -21,16 +21,14 @@ final class MockTagService: TagService {
     // My hunch is that the answer is via AnswerBuilder
     // AnswerBuilder should be separated into AnswerBuilderExecutor and AnswerBuilder
     // then the Executor can rely on AnswerBuilder's Operations to handle it or something
-    func registerTags(_ tags: [Tag], with batch: WriteBatch?, delta: Int) {
-        tags.forEach { tag in
-            let count: Int
-            if let tagCache = self.tags[tag] {
-                count = max(0, tagCache.count + delta)
-            } else {
-                count = max(0, delta)
-            }
-            self.tags[tag] = TagCache(count: count, updatedDate: Date())
+    func registerTag(tag: Tag, batch: WriteBatch, delta: Int) {
+        let count: Int
+        if let tagCache = self.tags[tag] {
+            count = max(0, tagCache.count + delta)
+        } else {
+            count = max(0, delta)
         }
+        self.tags[tag] = TagCache(count: count, updatedDate: Date())
     }
 
     func resetTagCache() {

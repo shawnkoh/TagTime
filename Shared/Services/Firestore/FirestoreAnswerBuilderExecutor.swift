@@ -13,6 +13,8 @@ import FirebaseFirestoreSwift
 import Resolver
 
 final class FirestoreAnswerBuilderExecutor: AnswerBuilderExecutor {
+    static let writeLimitPerBatch = 500
+    static let delayPerBatch = 1
     @LazyInjected private var tagService: TagService
     @LazyInjected private var goalService: GoalService
     @LazyInjected private var authenticationService: AuthenticationService
@@ -26,43 +28,79 @@ final class FirestoreAnswerBuilderExecutor: AnswerBuilderExecutor {
             return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
 
-        // TODO: Chunk this if it exceeds 500 writes
-        // can do this by summing the cost of each operation, preferably in a different function
-        let batch = Firestore.firestore().batch()
-        answerBuilder.operations.forEach { operation in
+        let batches = getBatches(from: answerBuilder.operations)
+
+        var count = 0
+        let batchPublishers = batches
+            .map { batch -> Future<Void, Error> in
+                count += 1
+                return Future { promise in
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + .init(count * Self.delayPerBatch)) {
+                        batch.commit() { error in
+                            if let error = error {
+                                promise(.failure(error))
+                            } else {
+                                promise(.success(()))
+                            }
+                        }
+                    }
+                }
+            }
+
+        let mergedPublisher = Publishers
+            .MergeMany(batchPublishers)
+            .collect()
+            .eraseToAnyPublisher()
+
+        guard answerBuilder.willUpdateTrackedGoals && beeminderCredentialService.credential != nil else {
+            return mergedPublisher
+                .map { _ in }
+                .eraseToAnyPublisher()
+        }
+
+        return mergedPublisher
+            .flatMap { _ in self.updateGoals(from: answerBuilder.operations) }
+            .map { _ in }
+            .eraseToAnyPublisher()
+    }
+
+    private func getBatches(from operations: [AnswerBuilder.Operation]) -> [WriteBatch] {
+        let firestore = Firestore.firestore()
+        var batch = firestore.batch()
+        var batches: [WriteBatch] = [batch]
+        var count = 0
+
+        operations.forEach { operation in
+            if count >= Self.writeLimitPerBatch {
+                batch = firestore.batch()
+                batches.append(batch)
+                count = 0
+            }
+
             switch operation {
             case let .create(answer):
+                // 1
                 batch.createAnswer(answer, user: authenticationService.user)
 
             case let .update(answer, tags):
                 let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
+                // 1
                 batch.createAnswer(newAnswer, user: authenticationService.user)
             }
+            count += 1
         }
 
-        getTagDeltas(from: answerBuilder.operations).forEach { tagDelta in
-            tagService.registerTags([tagDelta.key], with: batch, delta: tagDelta.value)
-        }
-
-        let writePublisher = Future<Void, Error> { promise in
-            batch.commit() { error in
-                if let error = error {
-                    promise(.failure(error))
-                } else {
-                    promise(.success(()))
-                }
+        getTagDeltas(from: operations).forEach { tagDelta in
+            if count >= Self.writeLimitPerBatch {
+                batch = firestore.batch()
+                batches.append(batch)
+                count = 0
             }
-        }
-        .eraseToAnyPublisher()
-
-        guard beeminderCredentialService.credential != nil else {
-            return writePublisher
+            tagService.registerTag(tag: tagDelta.key, batch: batch, delta: tagDelta.value)
+            count += 1
         }
 
-        return writePublisher
-            .flatMap { self.updateGoals(from: answerBuilder.operations) }
-            .map { _ in }
-            .eraseToAnyPublisher()
+        return batches
     }
 
     private func getTagDeltas(from operations: [AnswerBuilder.Operation]) -> [Tag: Int] {
