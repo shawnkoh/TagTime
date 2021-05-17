@@ -31,10 +31,12 @@ struct MissedPingCard: View {
 }
 
 struct MissedPingCard_Previews: PreviewProvider {
-    static var previews: some View {
-        #if DEBUG
+    static let pingService: PingService = {
         Resolver.root = .mock
-        #endif
-        return MissedPingCard(ping: Stub.pings.first!)
+        return Resolver.resolve()
+    }()
+
+    static var previews: some View {
+        MissedPingCard(ping: pingService.answerablePings.first!.date)
     }
 }

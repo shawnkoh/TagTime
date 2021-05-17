@@ -10,7 +10,7 @@ import Resolver
 import Combine
 
 final class LogbookViewModel: ObservableObject {
-    @Injected private var answerService: AnswerService
+    @LazyInjected private var answerService: AnswerService
 
     @Published private(set) var answers: [Answer] = []
 

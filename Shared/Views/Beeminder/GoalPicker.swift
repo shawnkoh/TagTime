@@ -11,8 +11,8 @@ import Beeminder
 import Combine
 
 final class GoalPickerViewModel: ObservableObject {
-    @Injected private var goalService: GoalService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var goalService: GoalService
+    @LazyInjected private var alertService: AlertService
 
     @Published private(set) var untrackedGoals: [Goal] = []
 

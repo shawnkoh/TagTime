@@ -11,9 +11,9 @@ import Resolver
 import Combine
 
 final class GoalDetailViewModel: ObservableObject {
-    @Injected private var goalService: GoalService
-    @Injected private var tagService: TagService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var goalService: GoalService
+    @LazyInjected private var tagService: TagService
+    @LazyInjected private var alertService: AlertService
 
     func untrackGoal(_ goal: Goal) {
         goalService
@@ -56,23 +56,36 @@ struct GoalDetail: View {
                     }
                     .cardButtonStyle(.modalCard)
 
+                #if os(iOS)
                 Text("X")
                     .onTap { isPresented = false }
                     .cardButtonStyle(.modalCard)
+                #endif
             }
         }
         .padding()
-        .sheet(isPresented: $isTagPickerPresented) {
-            TagPicker(goal: goal)
+        .modify {
+            #if os(iOS)
+            $0.sheet(isPresented: $isTagPickerPresented) {
+                TagPicker(goal: goal)
+            }
+            #else
+            $0.popover(isPresented: $isTagPickerPresented, arrowEdge: .trailing) {
+                TagPicker(goal: goal)
+                    .fixedSize()
+            }
+            #endif
         }
     }
 }
 
 struct GoalDetail_Previews: PreviewProvider {
-    static var previews: some View {
-        #if DEBUG
+    static let service: GoalService = {
         Resolver.root = .mock
-        #endif
-        return GoalDetail(goal: Stub.goal, isPresented: .constant(true))
+        return Resolver.resolve()
+    }()
+
+    static var previews: some View {
+        GoalDetail(goal: service.goals.first!, isPresented: .constant(true))
     }
 }

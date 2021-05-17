@@ -11,13 +11,13 @@ import Combine
 import AuthenticationServices
 
 final class PreferencesViewModel: ObservableObject {
-    @Injected private var settingService: SettingService
+    @LazyInjected private var settingService: SettingService
     #if os(iOS)
-    @Injected private var facebookLoginService: FacebookLoginService
+    @LazyInjected private var facebookLoginService: FacebookLoginService
     #endif
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var alertService: AlertService
-    @Injected private var appleLoginService: AppleLoginService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var alertService: AlertService
+    @LazyInjected private var appleLoginService: AppleLoginService
 
     @Published private(set) var isLoggedIntoApple = false
     @Published private(set) var isLoggedIntoFacebook = false
@@ -126,7 +126,7 @@ struct Preferences: View {
                 #if DEBUG
                 Text("Open Debug Menu")
                     .onTap { isDebugPresented = true }
-                    .sheet(isPresented: $isDebugPresented) {
+                    .popover(isPresented: $isDebugPresented, arrowEdge: .bottom) {
                         DebugMenu()
                     }
 

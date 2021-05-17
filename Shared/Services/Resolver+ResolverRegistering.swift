@@ -44,6 +44,10 @@ extension Resolver: ResolverRegistering {
 
         // MARK: Firestore
 
+        register { RealFirebaseService() }
+            .implements(FirebaseService.self)
+            .scope(.application)
+
         register { FirestoreAnswerService() }
             .implements(AnswerService.self)
             .scope(.cached)
@@ -71,6 +75,10 @@ extension Resolver: ResolverRegistering {
         // MARK: Mock
 
         #if DEBUG
+        mock.register { MockFirebaseService() }
+            .implements(FirebaseService.self)
+            .scope(.application)
+
         mock.register { MockAnswerService() }
             .implements(AnswerService.self)
             .scope(.cached)

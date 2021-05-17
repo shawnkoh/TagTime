@@ -11,9 +11,9 @@ import Resolver
 import Combine
 
 final class TagPickerViewModel: ObservableObject {
-    @Injected private var tagService: TagService
-    @Injected private var goalService: GoalService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var tagService: TagService
+    @LazyInjected private var goalService: GoalService
+    @LazyInjected private var alertService: AlertService
 
     @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
     @Published private(set) var activeTags: [Tag] = []
@@ -86,6 +86,7 @@ struct TagPicker: View {
                     ForEach(selectableTags, id: \.self) { tag in
                         let isTracked = trackedTagSet.contains(tag)
                         Text(tag)
+                            .fixedSize()
                             .foregroundColor(isTracked ? .black : .white)
                             .onTap {
                                 var newTags = trackedTags
@@ -108,10 +109,12 @@ struct TagPicker: View {
 }
 
 struct TagPicker_Previews: PreviewProvider {
-    static var previews: some View {
-        #if DEBUG
+    static let goalService: GoalService = {
         Resolver.root = .mock
-        #endif
-        return TagPicker(goal: Stub.goal)
+        return Resolver.resolve()
+    }()
+
+    static var previews: some View {
+        TagPicker(goal: goalService.goals.first!)
     }
 }

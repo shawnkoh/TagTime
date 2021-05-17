@@ -13,10 +13,10 @@ import Combine
 final class NotificationHandler: NSObject {
     @Published private(set) var openedPing: Date?
 
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var answerService: AnswerService
-    @Injected private var alertService: AlertService
-    @Injected private var answerBuilderExecutor: AnswerBuilderExecutor
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var answerService: AnswerService
+    @LazyInjected private var alertService: AlertService
+    @LazyInjected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     private var subscribers = Set<AnyCancellable>()
 }

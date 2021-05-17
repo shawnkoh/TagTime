@@ -38,7 +38,12 @@ struct LogbookCard: View {
 }
 
 struct LogbookCard_Previews: PreviewProvider {
+    static let answerService: AnswerService = {
+        Resolver.root = .mock
+        return Resolver.resolve()
+    }()
+
     static var previews: some View {
-        LogbookCard(answer: Stub.answers.first!)
+        LogbookCard(answer: answerService.answers.values.first!)
     }
 }

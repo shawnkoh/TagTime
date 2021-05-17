@@ -45,8 +45,8 @@ struct AnswerCreatorConfig {
 }
 
 final class AnswerCreatorViewModel: ObservableObject {
-    @Injected private var alertService: AlertService
-    @Injected private var answerBuilderExecutor: AnswerBuilderExecutor
+    @LazyInjected private var alertService: AlertService
+    @LazyInjected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     private(set) lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -89,11 +89,11 @@ struct AnswerCreator: View {
             #if os(iOS)
             CocoaTextField("PING1 PING2", text: $config.response, onCommit: { addAnswer(tags: config.tags) })
                 .isInitialFirstResponder(true)
-                .autocapitalization(.allCharacters)
                 .multilineTextAlignment(.center)
                 .background(Color.hsb(207, 26, 14))
                 .cornerRadius(8)
                 .foregroundColor(.white)
+                .textCase(.lowercase)
             #else
             TextField(
                 "PING1 PING2",
@@ -102,15 +102,28 @@ struct AnswerCreator: View {
                     addAnswer(tags: config.tags)
                 }
             )
+            .textCase(.lowercase)
+            .multilineTextAlignment(.center)
+            .background(Color.hsb(207, 26, 14))
+            .foregroundColor(.white)
+            .cornerRadius(8)
             #endif
 
             Spacer()
 
             AnswerSuggester(keyword: $config.response)
         }
+        .modify {
+            #if os(macOS)
+            $0.frame(minWidth: 300, minHeight: 400)
+            #else
+            $0
+            #endif
+        }
     }
 
     private func addAnswer(tags: [Tag]) {
+        defer { config.dismiss() }
         guard tags.count > 0 else {
             return
         }
@@ -120,7 +133,6 @@ struct AnswerCreator: View {
             let answer = Answer(ping: config.pingDate, tags: tags)
             viewModel.createAnswer(answer)
         }
-        config.dismiss()
     }
 }
 

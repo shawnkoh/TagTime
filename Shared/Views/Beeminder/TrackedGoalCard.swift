@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Beeminder
+import Resolver
 
 struct TrackedGoalCard: View {
     @State private var isDetailPresented = false
@@ -26,16 +27,23 @@ struct TrackedGoalCard: View {
         GoalCard(goal: goal)
             .onTap { isDetailPresented = true }
             .cardButtonStyle(.baseCard)
-            .sheet(isPresented: $isDetailPresented) {
+            // TODO: NavigationLink
+            .popover(isPresented: $isDetailPresented, arrowEdge: .trailing) {
                 GoalDetail(goal: goal, isPresented: $isDetailPresented)
                     .background(Color.modalBackground)
+                    .fixedSize()
             }
         #endif
     }
 }
 
 struct TrackedGoalCard_Previews: PreviewProvider {
+    static let goalService: GoalService = {
+        Resolver.root = .mock
+        return Resolver.resolve()
+    }()
+
     static var previews: some View {
-        TrackedGoalCard(goal: Stub.goal)
+        TrackedGoalCard(goal: goalService.goals.first!)
     }
 }

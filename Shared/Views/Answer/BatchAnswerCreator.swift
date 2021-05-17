@@ -10,9 +10,9 @@ import SwiftUIX
 import Resolver
 
 final class BatchAnswerCreatorViewModel: ObservableObject {
-    @Injected private var answerablePingService: AnswerablePingService
-    @Injected private var alertService: AlertService
-    @Injected private var answerBuilderExecutor: AnswerBuilderExecutor
+    @LazyInjected private var answerablePingService: AnswerablePingService
+    @LazyInjected private var alertService: AlertService
+    @LazyInjected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     func answerAllUnansweredPings(response: String) {
         let tags = response.split(separator: " ").map { Tag($0) }
@@ -61,6 +61,11 @@ struct BatchAnswerCreator: View {
                     isPresented = false
                 }
             )
+            .textCase(.lowercase)
+            .multilineTextAlignment(.center)
+            .background(Color.hsb(207, 26, 14))
+            .foregroundColor(.white)
+            .cornerRadius(8)
             #endif
 
             Spacer()

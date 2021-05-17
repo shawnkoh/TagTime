@@ -13,10 +13,10 @@ import FirebaseFirestoreSwift
 import Resolver
 
 final class FirestoreAnswerService: AnswerService {
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var goalService: GoalService
-    @Injected private var tagService: TagService
-    @Injected private var alertService: AlertService
+    @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var goalService: GoalService
+    @LazyInjected private var tagService: TagService
+    @LazyInjected private var alertService: AlertService
 
     @Published private(set) var answers: [String: Answer] = [:]
     var answersPublisher: Published<[String : Answer]>.Publisher { $answers }

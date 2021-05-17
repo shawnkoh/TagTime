@@ -11,7 +11,7 @@ import Combine
 import Resolver
 
 final class MockBeeminderCredentialService: BeeminderCredentialService {
-    @Injected private var authenticationService: AuthenticationService
+    @LazyInjected private var authenticationService: AuthenticationService
 
     @Published var credential: Credential?
     var credentialPublisher: Published<Credential?>.Publisher { $credential }

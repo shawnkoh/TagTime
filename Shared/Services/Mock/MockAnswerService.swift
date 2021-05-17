@@ -10,7 +10,7 @@ import Combine
 import Resolver
 
 final class MockAnswerService: AnswerService {
-    @Injected private var authenticationService: AuthenticationService
+    @LazyInjected private var authenticationService: AuthenticationService
 
     @Published private(set) var answers: [String: Answer] = [:]
     var answersPublisher: Published<[String: Answer]>.Publisher { $answers }

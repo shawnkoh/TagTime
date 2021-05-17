@@ -20,7 +20,6 @@ final class AuthenticatedViewModel: ObservableObject {
 
     @Published var isLoggedIntoBeeminder = false
     @Published var pingNotification = AnswerCreatorConfig()
-    // TODO: iPad should use the Mac Sidebar navigation instead
     #if os(iOS)
     @Published var currentPage: Page = .missedPingList
     #else
@@ -28,10 +27,9 @@ final class AuthenticatedViewModel: ObservableObject {
     #endif
 
     private var subscribers = Set<AnyCancellable>()
-    @Injected private var authenticationService: AuthenticationService
-    @Injected private var notificationHandler: NotificationHandler
-    @Injected private var notificationScheduler: NotificationScheduler
-    @Injected private var beeminderCredentialService: BeeminderCredentialService
+    @LazyInjected private var notificationHandler: NotificationHandler
+    @LazyInjected private var notificationScheduler: NotificationScheduler
+    @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
 
     init() {
         notificationHandler.$openedPing

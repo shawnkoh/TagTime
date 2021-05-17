@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
-import Firebase
 import Resolver
 import Combine
+import SwiftUIX
 
 final class ContentViewModel: ObservableObject {
-    @Injected private var authenticationService: AuthenticationService
+    @LazyInjected private var authenticationService: AuthenticationService
 
     private var subscribers = Set<AnyCancellable>()
 
@@ -31,9 +31,9 @@ struct ContentView: View {
 
     var body: some View {
         if viewModel.isAuthenticated {
-            AuthenticatedView()
+            return AnyView(AuthenticatedView())
         } else {
-            UnauthenticatedView()
+            return AnyView(UnauthenticatedView())
         }
     }
 }
