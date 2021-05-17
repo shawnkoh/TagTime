@@ -36,15 +36,18 @@ final class AuthenticatedViewModel: ObservableObject {
     @LazyInjected private var pingService: PingService
 
     init() {
-        pingService.$answerablePings
-            // TODO: AnswerablePings should be an enum to define loading state instead of relying on this
-            // It still results in an unnecessary call
-            .filter { $0.count > 0 }
-            .sink { pings in
-                if let ping = pings.last {
-                    self.openPingService.openPing(ping.date)
+        pingService.$status
+            .combineLatest(pingService.$answerablePings)
+            .compactMap { status, pings -> [Ping]? in
+                switch status {
+                case .loaded:
+                    return pings
+                case .loading:
+                    return nil
                 }
             }
+            .compactMap { $0.last?.date }
+            .sink { [weak self] in self?.openPingService.openPing($0) }
             .store(in: &subscribers)
 
         openPingService.$openedPing
