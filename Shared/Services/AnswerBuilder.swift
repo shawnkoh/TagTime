@@ -17,6 +17,7 @@ struct AnswerBuilder {
     init() {}
 
     var operations: [Operation] = []
+    var willUpdateTrackedGoals = true
 
     mutating func createAnswer(_ answer: Answer) -> Self {
         operations.append(.create(answer))
@@ -25,6 +26,11 @@ struct AnswerBuilder {
 
     mutating func updateAnswer(_ answer: Answer, tags: [Tag]) -> Self {
         operations.append(.update(answer, tags))
+        return self
+    }
+
+    mutating func updateTrackedGoals(_ will: Bool) -> Self {
+        self.willUpdateTrackedGoals = will
         return self
     }
 

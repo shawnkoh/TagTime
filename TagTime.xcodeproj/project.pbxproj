@@ -599,9 +599,9 @@
 		86ADBB6D261732E7003CBA6B /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				86ADBB802617330B003CBA6B /* Preferences.swift */,
-				862914E42634A1D6006BF198 /* DebugMenu.swift */,
 				869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */,
+				862914E42634A1D6006BF198 /* DebugMenu.swift */,
+				86ADBB802617330B003CBA6B /* Preferences.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";

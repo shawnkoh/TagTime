@@ -88,6 +88,7 @@ final class PreferencesViewModel: ObservableObject {
                 return
             }
             var answerBuilder = AnswerBuilder()
+            _ = answerBuilder.updateTrackedGoals(false)
             logs
                 .components(separatedBy: .newlines)
                 .filter { $0.count > 0 }
@@ -108,9 +109,9 @@ final class PreferencesViewModel: ObservableObject {
                     let answer = Answer(ping: ping, tags: tags)
                     _ = answerBuilder.createAnswer(answer)
                 }
-//            answerBuilder
-//                .execute(with: answerBuilderExecutor)
-//                .errorHandled(by: alertService)
+            answerBuilder
+                .execute(with: answerBuilderExecutor)
+                .errorHandled(by: alertService)
         }
     }
 }

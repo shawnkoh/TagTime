@@ -275,7 +275,7 @@ public final class FirestoreAuthenticationService: AuthenticationService {
 #if DEBUG
 extension FirestoreAuthenticationService {
     func resetUserStartDate() {
-        let newUser = User(id: user.id, startDate: Date())
+        let newUser = User(id: user.id, startDate: Date(), providers: user.providers)
         do {
             try Firestore.firestore().collection("users").document(user.id).setData(from: newUser) { error in
                 if let error = error {
