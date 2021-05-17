@@ -100,5 +100,9 @@ extension AppDelegate: UIApplicationDelegate {
 #endif
 
 #if os(macOS)
-extension AppDelegate: NSApplicationDelegate {}
+extension AppDelegate: NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        UNUserNotificationCenter.current().delegate = notificationHandler
+    }
+}
 #endif

@@ -10,17 +10,18 @@ import Combine
 import Resolver
 
 public final class PingService {
+    enum Status {
+        case loading
+        case loaded
+    }
+
     var startPing: Ping
 
     // Average gap between pings, in seconds
     var averagePingInterval: Int
 
-    @Published private(set) var answerablePings: [Ping] {
-        didSet {
-            // TODO: Find out why I need to call it in didSet
-            updateAnswerablePings()
-        }
-    }
+    @Published private(set) var status: Status = .loading
+    @Published private(set) var answerablePings: [Ping]
 
     private var subscribers = Set<AnyCancellable>()
 
@@ -44,6 +45,8 @@ public final class PingService {
     // TODO: This needs to be based on the users' recent answers instead.
     // in order to support dynamic ping frequency.
     func changeStartDate(to startDate: Date) {
+        status = .loading
+
         let now = Date()
 
         var cursor = Self.tagTimeBirth
@@ -76,6 +79,7 @@ public final class PingService {
         let timeInterval = nextPing.date.timeIntervalSinceNow
 
         updateTimer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [self] date in
+            status = .loaded
             answerablePings.append(nextPing)
             updateAnswerablePings()
         }
