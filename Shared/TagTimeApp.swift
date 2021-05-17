@@ -56,7 +56,7 @@ struct TagTimeApp: App {
                     #if os(iOS)
                     $0.statusBar(hidden: true)
                     #else
-                    $0.frame(minWidth: 550, minHeight: 500)
+                    $0.frame(minWidth: 880, minHeight: 500)
                     #endif
                 }
                 .alert(isPresented: $viewModel.isAlertPresented) {

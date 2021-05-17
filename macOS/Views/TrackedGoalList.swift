@@ -45,6 +45,7 @@ struct TrackedGoalList: View {
                             .background(Color.sheetBackground)
                     }
             }
+            .frame(minWidth: 380)
 
             Text("Select a goal")
         }

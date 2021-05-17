@@ -43,7 +43,7 @@ struct AuthenticatedView: View {
 
                 if viewModel.isLoggedIntoBeeminder {
                     NavigationLink(
-                        destination: TrackedGoalList().padding([.top, .leading, .trailing]),
+                        destination: TrackedGoalList(),
                         tag: AuthenticatedViewModel.Page.goalList,
                         selection: $viewModel.currentPage
                     ) {

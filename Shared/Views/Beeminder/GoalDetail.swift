@@ -56,9 +56,11 @@ struct GoalDetail: View {
                     }
                     .cardButtonStyle(.modalCard)
 
+                #if os(iOS)
                 Text("X")
                     .onTap { isPresented = false }
                     .cardButtonStyle(.modalCard)
+                #endif
             }
         }
         .padding()
