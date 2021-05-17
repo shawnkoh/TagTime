@@ -72,6 +72,13 @@ struct BatchAnswerCreator: View {
 
             AnswerSuggester(keyword: $response)
         }
+        .modify {
+            #if os(macOS)
+            $0.frame(minWidth: 300, minHeight: 400)
+            #else
+            $0
+            #endif
+        }
     }
 }
 
