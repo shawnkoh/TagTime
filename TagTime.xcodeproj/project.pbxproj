@@ -169,6 +169,10 @@
 		86ABFFC4265234B600CAEE80 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC2265234B600CAEE80 /* TrackedGoalList.swift */; };
 		86ABFFC6265234C000CAEE80 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC5265234C000CAEE80 /* TrackedGoalList.swift */; };
 		86ABFFC7265234C000CAEE80 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC5265234C000CAEE80 /* TrackedGoalList.swift */; };
+		86ABFFC92652361F00CAEE80 /* TrackedGoalListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */; };
+		86ABFFCA2652361F00CAEE80 /* TrackedGoalListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */; };
+		86ABFFCB2652362100CAEE80 /* TrackedGoalListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */; };
+		86ABFFCC2652362200CAEE80 /* TrackedGoalListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */; };
 		86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB6E261732FD003CBA6B /* MissedPingList.swift */; };
 		86ADBB7526173303003CBA6B /* Logbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7426173303003CBA6B /* Logbook.swift */; };
 		86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7A26173307003CBA6B /* Statistics.swift */; };
@@ -284,6 +288,7 @@
 		86A5914F261DBCBD00A25D1F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		86ABFFC2265234B600CAEE80 /* TrackedGoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalList.swift; sourceTree = "<group>"; };
 		86ABFFC5265234C000CAEE80 /* TrackedGoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalList.swift; sourceTree = "<group>"; };
+		86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalListViewModel.swift; sourceTree = "<group>"; };
 		86ADBB6E261732FD003CBA6B /* MissedPingList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedPingList.swift; sourceTree = "<group>"; };
 		86ADBB7426173303003CBA6B /* Logbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logbook.swift; sourceTree = "<group>"; };
 		86ADBB7A26173307003CBA6B /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
@@ -527,6 +532,7 @@
 				8606042A2643E40800944617 /* TagList.swift */,
 				86338F48264242F800112BBC /* TagPicker.swift */,
 				86F6504D2647D86C00B070BA /* TrackedGoalCard.swift */,
+				86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */,
 			);
 			path = Beeminder;
 			sourceTree = "<group>";
@@ -872,6 +878,7 @@
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
 				860F1381264B116F001D15EB /* MockBeeminderCredentialService.swift in Sources */,
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
+				86ABFFCB2652362100CAEE80 /* TrackedGoalListViewModel.swift in Sources */,
 				86D7B264264A37CF002FE4BA /* LastFetchedStatus.swift in Sources */,
 				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
@@ -953,6 +960,7 @@
 				868C5278264CEF7B00F6F0D3 /* Auth+Combine.swift in Sources */,
 				868C52A2264CEFAA00F6F0D3 /* MissedPingCard.swift in Sources */,
 				868C528F264CEF8D00F6F0D3 /* TagService.swift in Sources */,
+				86ABFFC92652361F00CAEE80 /* TrackedGoalListViewModel.swift in Sources */,
 				868C52AA264CEFAD00F6F0D3 /* GoalDetail.swift in Sources */,
 				868C527B264CEF8000F6F0D3 /* TagCache.swift in Sources */,
 				868C5294264CEF8D00F6F0D3 /* AlertService.swift in Sources */,
@@ -1010,6 +1018,7 @@
 				86A59149261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
 				86ABFFC4265234B600CAEE80 /* TrackedGoalList.swift in Sources */,
 				866C093A264D396200930BED /* AppleLoginService.swift in Sources */,
+				86ABFFCC2652362200CAEE80 /* TrackedGoalListViewModel.swift in Sources */,
 				861256E326139CAB00C2B81B /* Tests_iOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1025,6 +1034,7 @@
 				868C52BE264D12C700F6F0D3 /* AuthenticatedView.swift in Sources */,
 				86ABFFC7265234C000CAEE80 /* TrackedGoalList.swift in Sources */,
 				866C093B264D396200930BED /* AppleLoginService.swift in Sources */,
+				86ABFFCA2652361F00CAEE80 /* TrackedGoalListViewModel.swift in Sources */,
 				861256EE26139CAB00C2B81B /* Tests_macOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

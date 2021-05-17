@@ -8,26 +8,6 @@
 import SwiftUI
 import Resolver
 import Beeminder
-import Combine
-
-final class TrackedGoalListViewModel: ObservableObject {
-    @LazyInjected private var goalService: GoalService
-
-    @Published private(set) var trackedGoals: [Goal] = []
-
-    private var subscribers = Set<AnyCancellable>()
-
-    init() {
-        goalService.goalsPublisher
-            .combineLatest(goalService.goalTrackersPublisher)
-            .map { goals, goalTrackers in
-                goals.filter { goalTrackers[$0.id] != nil }
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.trackedGoals = $0 }
-            .store(in: &subscribers)
-    }
-}
 
 struct TrackedGoalList: View {
     @StateObject private var viewModel = TrackedGoalListViewModel()
