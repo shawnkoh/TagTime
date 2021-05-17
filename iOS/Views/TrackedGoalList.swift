@@ -53,7 +53,7 @@ struct TrackedGoalList: View {
             Text("TRACK NEW GOAL")
                 .onTap { isGoalPickerPresented = true }
                 .cardButtonStyle(.modalCard)
-                .popover(isPresented: $isGoalPickerPresented, arrowEdge: .top) {
+                .fullScreenCover(isPresented: $isGoalPickerPresented) {
                     GoalPicker()
                         .background(Color.sheetBackground)
                 }
