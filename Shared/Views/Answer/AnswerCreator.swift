@@ -111,7 +111,7 @@ struct AnswerCreator: View {
 
             Spacer()
 
-            AnswerSuggester(keyword: $config.response)
+            AnswerSuggester(input: $config.response)
         }
         .modify {
             #if os(macOS)
