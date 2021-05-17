@@ -51,6 +51,7 @@ final class AuthenticatedViewModel: ObservableObject {
             .store(in: &subscribers)
 
         openPingService.$openedPing
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 #if os(macOS)
