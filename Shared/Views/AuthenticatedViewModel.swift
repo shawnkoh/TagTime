@@ -8,6 +8,9 @@
 import Combine
 import Resolver
 import Foundation
+#if os(macOS)
+import AppKit
+#endif
 
 final class AuthenticatedViewModel: ObservableObject {
     enum Page: Hashable {
@@ -27,14 +30,29 @@ final class AuthenticatedViewModel: ObservableObject {
     #endif
 
     private var subscribers = Set<AnyCancellable>()
-    @LazyInjected private var notificationHandler: NotificationHandler
     @LazyInjected private var notificationScheduler: NotificationScheduler
     @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
+    @LazyInjected private var openPingService: OpenPingService
+    @LazyInjected private var pingService: PingService
 
     init() {
-        notificationHandler.$openedPing
+        pingService.$answerablePings
+            // TODO: AnswerablePings should be an enum to define loading state instead of relying on this
+            // It still results in an unnecessary call
+            .filter { $0.count > 0 }
+            .sink { pings in
+                if let ping = pings.last {
+                    self.openPingService.openPing(ping.date)
+                }
+            }
+            .store(in: &subscribers)
+
+        openPingService.$openedPing
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
+                #if os(macOS)
+                NSApplication.shared.activate(ignoringOtherApps: true)
+                #endif
                 if let pingDate = $0 {
                     self?.pingNotification.create(pingDate: pingDate)
                 } else {

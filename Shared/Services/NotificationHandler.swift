@@ -11,12 +11,11 @@ import Resolver
 import Combine
 
 final class NotificationHandler: NSObject {
-    @Published private(set) var openedPing: Date?
-
     @LazyInjected private var authenticationService: AuthenticationService
     @LazyInjected private var answerService: AnswerService
     @LazyInjected private var alertService: AlertService
     @LazyInjected private var answerBuilderExecutor: AnswerBuilderExecutor
+    @LazyInjected private var openPingService: OpenPingService
 
     private var subscribers = Set<AnyCancellable>()
 }
@@ -36,7 +35,7 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
             return
         }
         let pingDate = Date(timeIntervalSince1970: timeInterval)
-        self.openedPing = pingDate
+        openPingService.openPing(pingDate)
         // TODO: Not sure about this completion handler.
         completionHandler([.badge, .sound])
     }
@@ -74,7 +73,7 @@ extension NotificationHandler: UNUserNotificationCenterDelegate {
                 answerPing(pingDate, with: response.userText, completionHandler: completionHandler)
 
             case UNNotificationDefaultActionIdentifier:
-                self.openedPing = pingDate
+                openPingService.openPing(pingDate)
                 completionHandler()
 
             default:

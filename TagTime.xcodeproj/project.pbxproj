@@ -34,6 +34,8 @@
 		862B089A264CEC5D0031D8E9 /* Fuse in Frameworks */ = {isa = PBXBuildFile; productRef = 862B0899264CEC5D0031D8E9 /* Fuse */; };
 		862B089C264CEC5D0031D8E9 /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 862B089B264CEC5D0031D8E9 /* BetterSafariView */; };
 		862B089E264CEC5D0031D8E9 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 862B089D264CEC5D0031D8E9 /* Resolver */; };
+		862B94DD2652507500CAA091 /* OpenPingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862B94DC2652507500CAA091 /* OpenPingService.swift */; };
+		862B94DE2652507500CAA091 /* OpenPingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862B94DC2652507500CAA091 /* OpenPingService.swift */; };
 		862F93CB264A63ED005C925C /* AnswerablePingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862F93CA264A63ED005C925C /* AnswerablePingService.swift */; };
 		86338F49264242F800112BBC /* TagPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F48264242F800112BBC /* TagPicker.swift */; };
 		86338F4D26429F4C00112BBC /* CardButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F4C26429F4C00112BBC /* CardButtonStyle.swift */; };
@@ -245,6 +247,7 @@
 		861256EF26139CAB00C2B81B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8614ED1B264110D700F543F2 /* BeeminderCredentialService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderCredentialService.swift; sourceTree = "<group>"; };
 		862914E42634A1D6006BF198 /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
+		862B94DC2652507500CAA091 /* OpenPingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenPingService.swift; sourceTree = "<group>"; };
 		862F93CA264A63ED005C925C /* AnswerablePingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerablePingService.swift; sourceTree = "<group>"; };
 		86338F48264242F800112BBC /* TagPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPicker.swift; sourceTree = "<group>"; };
 		86338F4C26429F4C00112BBC /* CardButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardButtonStyle.swift; sourceTree = "<group>"; };
@@ -651,6 +654,7 @@
 				8672E70426181B01004081FC /* SettingService.swift */,
 				868D83ED26396B49000211A6 /* TagService.swift */,
 				864CF2AE264FE4DE005966C1 /* FirebaseService.swift */,
+				862B94DC2652507500CAA091 /* OpenPingService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -920,6 +924,7 @@
 				861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				86A59147261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
 				860F137D264B1163001D15EB /* MockAnswerService.swift in Sources */,
+				862B94DD2652507500CAA091 /* OpenPingService.swift in Sources */,
 				86A59150261DBCBD00A25D1F /* User.swift in Sources */,
 				86545E1D2642EB7A00897253 /* DoubleTappable.swift in Sources */,
 			);
@@ -1002,6 +1007,7 @@
 				861256F126139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				868C52A8264CEFAD00F6F0D3 /* GoalPicker.swift in Sources */,
 				868C5293264CEF8D00F6F0D3 /* MockAuthenticationService.swift in Sources */,
+				862B94DE2652507500CAA091 /* OpenPingService.swift in Sources */,
 				868C529F264CEFA200F6F0D3 /* PageTitle.swift in Sources */,
 				868C5298264CEF8D00F6F0D3 /* AnswerService.swift in Sources */,
 			);

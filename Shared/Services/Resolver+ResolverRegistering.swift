@@ -36,6 +36,9 @@ extension Resolver: ResolverRegistering {
         register { NotificationScheduler() }
             .scope(.cached)
 
+        register { OpenPingService() }
+            .scope(.cached)
+
         register { PingService() }
             .scope(.cached)
 
