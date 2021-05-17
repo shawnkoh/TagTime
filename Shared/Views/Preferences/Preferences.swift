@@ -9,6 +9,7 @@ import SwiftUI
 import Resolver
 import Combine
 import AuthenticationServices
+import UniformTypeIdentifiers
 
 final class PreferencesViewModel: ObservableObject {
     @LazyInjected private var settingService: SettingService
@@ -18,6 +19,7 @@ final class PreferencesViewModel: ObservableObject {
     @LazyInjected private var authenticationService: AuthenticationService
     @LazyInjected private var alertService: AlertService
     @LazyInjected private var appleLoginService: AppleLoginService
+    @LazyInjected private var answerBuilderExecutor: AnswerBuilderExecutor
 
     @Published private(set) var isLoggedIntoApple = false
     @Published private(set) var isLoggedIntoFacebook = false
@@ -25,6 +27,8 @@ final class PreferencesViewModel: ObservableObject {
     @Published private(set) var uid = ""
 
     private var subscribers = Set<AnyCancellable>()
+
+    var allowedContentTypes: [UTType] { [.init(filenameExtension: "log")!] }
 
     init() {
         settingService.$averagePingInterval
@@ -55,23 +59,65 @@ final class PreferencesViewModel: ObservableObject {
             .errorHandled(by: alertService)
     }
 
-    func showError(_ error: Error) {
-        alertService.present(message: error.localizedDescription)
-    }
-
-    func linkWithApple(authorization: ASAuthorization) {
-        authenticationService
-            .linkWithApple(authorization: authorization)
-            .errorHandled(by: alertService)
+    func linkWithApple(result: Result<ASAuthorization, Error>) {
+        switch result {
+        case let .failure(error):
+            alertService.present(message: error.localizedDescription)
+        case let .success(authorization):
+            authenticationService
+                .linkWithApple(authorization: authorization)
+                .errorHandled(by: alertService)
+        }
     }
 
     func getHashedNonce() -> String {
         appleLoginService.getHashedNonce()
     }
+
+    // TODO: This reads the entire file into memory. Should be ok for most use cases but
+    // might crash for Daniel's 13 year data.
+    func importLogs(_ logs: Result<URL, Error>) {
+        switch logs {
+        case let .failure(error):
+            alertService.present(message: error.localizedDescription)
+        case let .success(url):
+            guard
+                let data = try? Data(contentsOf: url),
+                let logs = String(data: data, encoding: .utf8)
+            else {
+                return
+            }
+            var answerBuilder = AnswerBuilder()
+            logs
+                .components(separatedBy: .newlines)
+                .filter { $0.count > 0 }
+                .forEach { entry in
+                    let relevantWords = entry.split(separator: "[")
+                    guard relevantWords.count > 0 else {
+                        return
+                    }
+                    var tags = relevantWords[0]
+                        .split(separator: " ")
+                        .map { $0.lowercased() }
+                    let unixtime = tags.removeFirst()
+                    guard let unixtime = TimeInterval(unixtime) else {
+                        return
+                    }
+                    let ping = Date(timeIntervalSince1970: unixtime)
+
+                    let answer = Answer(ping: ping, tags: tags)
+                    _ = answerBuilder.createAnswer(answer)
+                }
+//            answerBuilder
+//                .execute(with: answerBuilderExecutor)
+//                .errorHandled(by: alertService)
+        }
+    }
 }
 
 struct Preferences: View {
     @StateObject private var viewModel = PreferencesViewModel()
+    @State private var isImporting = false
 
     #if DEBUG
     @State private var isDebugPresented = false
@@ -99,18 +145,13 @@ struct Preferences: View {
                     Text("Logout from Apple")
                         .onTap { viewModel.unlink(from: .apple) }
                 } else {
-                    SignInWithAppleButton(onRequest: { request in
-                        request.requestedScopes = [.fullName, .fullName]
-                        request.nonce = viewModel.getHashedNonce()
-                    }, onCompletion: { result in
-                        switch result {
-                        case let .success(authorization):
-                            viewModel.linkWithApple(authorization: authorization)
-
-                        case let .failure(error):
-                            viewModel.showError(error)
-                        }
-                    })
+                    SignInWithAppleButton(
+                        onRequest: { request in
+                            request.requestedScopes = [.fullName, .fullName]
+                            request.nonce = viewModel.getHashedNonce()
+                        },
+                        onCompletion: viewModel.linkWithApple
+                    )
                 }
 
                 #if os(iOS)
@@ -122,6 +163,14 @@ struct Preferences: View {
                         .onTap { viewModel.loginWithFacebook() }
                 }
                 #endif
+
+                Text("Import logs from TagTimePerl")
+                    .onTap { isImporting = true }
+                    .fileImporter(
+                        isPresented: $isImporting,
+                        allowedContentTypes: viewModel.allowedContentTypes,
+                        onCompletion: viewModel.importLogs
+                    )
 
                 #if DEBUG
                 Text("Open Debug Menu")
