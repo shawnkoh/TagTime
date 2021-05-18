@@ -102,9 +102,11 @@ final class FirestoreAnswerService: AnswerService {
                             return (document.documentID, tagCache)
                         }
 
+                        var answers = self.answers
                         result.forEach { id, answer in
-                            self.answers[id] = answer
+                            answers[id] = answer
                         }
+                        self.answers = answers
 
                         if let lastFetched = result.map({ $0.1.updatedDate }).max() {
                             self.lastFetched = .lastFetched(lastFetched)
@@ -125,9 +127,11 @@ final class FirestoreAnswerService: AnswerService {
                     ()
                 }
             }, receiveValue: { snapshot in
+                var answers = self.answers
                 snapshot.documents.forEach {
-                    self.answers[$0.documentID] = try? $0.data(as: Answer.self)
+                    answers[$0.documentID] = try? $0.data(as: Answer.self)
                 }
+                self.answers = answers
             })
             .store(in: &subscribers)
 

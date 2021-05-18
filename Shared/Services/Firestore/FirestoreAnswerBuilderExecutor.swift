@@ -15,52 +15,29 @@ import Resolver
 final class FirestoreAnswerBuilderExecutor: AnswerBuilderExecutor {
     static let writeLimitPerBatch = 500
     static let delayPerBatch = 1
-    @LazyInjected private var tagService: TagService
-    @LazyInjected private var goalService: GoalService
+
     @LazyInjected private var authenticationService: AuthenticationService
     @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
+    @LazyInjected private var tagService: TagService
+    @LazyInjected private var goalService: GoalService
 
     init() {}
 
-    // TODO: Handle goal updates
     func execute(answerBuilder: AnswerBuilder) -> AnyPublisher<Void, Error> {
         guard answerBuilder.operations.count > 0 else {
             return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
 
         let batches = getBatches(from: answerBuilder.operations)
-
-        var count = 0
-        let batchPublishers = batches
-            .map { batch -> Future<Void, Error> in
-                count += 1
-                return Future { promise in
-                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + .init(count * Self.delayPerBatch)) {
-                        batch.commit() { error in
-                            if let error = error {
-                                promise(.failure(error))
-                            } else {
-                                promise(.success(()))
-                            }
-                        }
-                    }
-                }
-            }
-
-        let mergedPublisher = Publishers
-            .MergeMany(batchPublishers)
-            .collect()
-            .eraseToAnyPublisher()
+        let batchPublishers = getBatchPublishers(from: batches)
+        let mergedPublisher = getMergedPublisher(from: batchPublishers)
 
         guard answerBuilder.willUpdateTrackedGoals && beeminderCredentialService.credential != nil else {
             return mergedPublisher
-                .map { _ in }
-                .eraseToAnyPublisher()
         }
 
         return mergedPublisher
             .flatMap { _ in self.updateGoals(from: answerBuilder.operations) }
-            .map { _ in }
             .eraseToAnyPublisher()
     }
 
@@ -79,12 +56,12 @@ final class FirestoreAnswerBuilderExecutor: AnswerBuilderExecutor {
 
             switch operation {
             case let .create(answer):
-                // 1
+                // cost = 1 write
                 batch.createAnswer(answer, user: authenticationService.user)
 
             case let .update(answer, tags):
                 let newAnswer = Answer(updatedDate: Date(), ping: answer.ping, tags: tags)
-                // 1
+                // cost = 1 write
                 batch.createAnswer(newAnswer, user: authenticationService.user)
             }
             count += 1
@@ -137,6 +114,33 @@ final class FirestoreAnswerBuilderExecutor: AnswerBuilderExecutor {
             }
         }
         return tagDeltas
+    }
+
+    private func getBatchPublishers(from batches: [WriteBatch]) -> [Future<Void, Error>] {
+        var count = 0
+        return batches
+            .map { batch -> Future<Void, Error> in
+                count += 1
+                return Future { promise in
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + .init(count * Self.delayPerBatch)) {
+                        batch.commit() { error in
+                            if let error = error {
+                                promise(.failure(error))
+                            } else {
+                                promise(.success(()))
+                            }
+                        }
+                    }
+                }
+            }
+    }
+
+    private func getMergedPublisher(from publishers: [Future<Void, Error>]) -> AnyPublisher<Void, Error> {
+        Publishers
+            .MergeMany(publishers)
+            .collect()
+            .map { _ in }
+            .eraseToAnyPublisher()
     }
 
     private func updateGoals(from operations: [AnswerBuilder.Operation]) -> AnyPublisher<Void, Error> {

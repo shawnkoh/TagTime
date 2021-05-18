@@ -81,9 +81,11 @@ final class FirestoreTagService: TagService {
                     ()
                 }
             }, receiveValue: { snapshot in
+                var tags = self.tags
                 snapshot.documents.forEach {
-                    self.tags[$0.documentID] = try? $0.data(as: TagCache.self)
+                    tags[$0.documentID] = try? $0.data(as: TagCache.self)
                 }
+                self.tags = tags
             })
             .store(in: &subscribers)
 
@@ -115,9 +117,11 @@ final class FirestoreTagService: TagService {
                             return (document.documentID, tagCache)
                         }
 
+                        var tags = self.tags
                         result.forEach { tag, tagCache in
-                            self.tags[tag] = tagCache
+                            tags[tag] = tagCache
                         }
+                        self.tags = tags
 
                         if let lastFetched = result.map({ $0.1.updatedDate }).max() {
                             self.lastFetched = .lastFetched(lastFetched)
