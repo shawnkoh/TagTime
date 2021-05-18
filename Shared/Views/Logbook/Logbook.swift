@@ -13,6 +13,7 @@ final class LogbookViewModel: ObservableObject {
     @LazyInjected private var answerService: AnswerService
 
     @Published private(set) var answers: [Answer] = []
+    @Published private(set) var hasLoadedAllAnswers = false
 
     private var subscribers = Set<AnyCancellable>()
 
@@ -22,6 +23,27 @@ final class LogbookViewModel: ObservableObject {
         formatter.timeStyle = .short
         return formatter
     }()
+
+    let sectionDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }()
+
+    var answersSortedByDate: [[Answer]] {
+        let dictionary = Dictionary(grouping: answers) { answer -> DateComponents? in
+            Calendar.current.dateComponents([.day, .month, .year], from: answer.ping)
+        }
+        return dictionary.keys
+            .compactMap { $0 }
+            .sorted {
+                Calendar.current.date(from: $0)! > Calendar.current.date(from: $1)!
+            }
+            .compactMap { date in
+                dictionary[date]?.sorted { $0.ping > $1.ping }
+            }
+    }
 
     init() {
         answerService.answersPublisher
@@ -33,6 +55,15 @@ final class LogbookViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.answers = $0 }
             .store(in: &subscribers)
+
+        answerService.hasLoadedAllAnswersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.hasLoadedAllAnswers = $0 }
+            .store(in: &subscribers)
+    }
+
+    func getMoreCachedAnswers() {
+        answerService.getMoreCachedAnswers()
     }
 }
 
@@ -40,40 +71,27 @@ struct Logbook: View {
     @StateObject private var viewModel = LogbookViewModel()
     @State private var showingSheet: Answer? = nil
 
-    private var answers: [Answer] {
-        viewModel.answers
-    }
-
-    private var answersToday: [Answer] {
-        answers
-            .filter { Calendar.current.isDateInToday($0.ping) }
-    }
-
-    private var answersYesterday: [Answer] {
-        answers
-            .filter { Calendar.current.isDateInYesterday($0.ping) }
-    }
-
-    private var answersOther: [Answer] {
-        answers
-            .filter { !Calendar.current.isDateInToday($0.ping) }
-            .filter { !Calendar.current.isDateInYesterday($0.ping) }
-    }
-
-    private func sectionHeader(title: String, subtitle: String) -> some View {
-        VStack(alignment: .leading) {
+    @ViewBuilder
+    private func sectionHeader(title: String, subtitle: String?) -> some View {
+        if let subtitle = subtitle {
+            VStack(alignment: .leading) {
+                Text(title)
+                    .font(.title)
+                    .bold()
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        } else {
             Text(title)
                 .font(.title)
                 .bold()
-            Text(subtitle)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
         }
     }
 
     private func section(answers: [Answer], title: String?) -> some View {
         Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
-            ForEach(answersToday) { answer in
+            ForEach(answers) { answer in
                 HStack {
                     Spacer()
 
@@ -98,28 +116,17 @@ struct Logbook: View {
             LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2) {
                 PageTitle(title: "Logbook", subtitle: "Answered pings")
 
-                // TODO: This doesn't make sense.
-                // It should for loop through an ordered series of dates, and then decide
-                // what to do from there.
-                // Which means we need to have a function that returns an ordered series of answers.
-                // This can be done two ways, either by sorting in memory, or by relying on the database.
-                // Implement the database, then find out which way to do it.
-                // But first, watch the SwiftUI video!
-
-                if answersToday.count > 0 {
-                    Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
-                        ForEach(answersToday) { answer in
+                ForEach(viewModel.answersSortedByDate, id: \.self) { answers in
+                    Section(header: sectionHeader(title: viewModel.sectionDateFormatter.string(from: answers.first!.ping), subtitle: nil)) {
+                        ForEach(answers) { answer in
                             LogbookCard(answer: answer)
                         }
                     }
                 }
 
-                if answersYesterday.count > 0 {
-                    Section(header: sectionHeader(title: "Yesterday", subtitle: "Sat, 27 March")) {
-                        ForEach(answersYesterday) { answer in
-                            LogbookCard(answer: answer)
-                        }
-                    }
+                if !viewModel.hasLoadedAllAnswers {
+                    ProgressView()
+                        .onAppear(perform: viewModel.getMoreCachedAnswers)
                 }
             }
         }

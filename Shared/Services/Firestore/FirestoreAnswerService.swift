@@ -25,6 +25,11 @@ final class FirestoreAnswerService: AnswerService {
 
     @Published private var lastFetched: LastFetchedStatus = .loading
 
+    // Pagination
+    @Published private(set) var hasLoadedAllAnswers = false
+    var hasLoadedAllAnswersPublisher: Published<Bool>.Publisher { $hasLoadedAllAnswers }
+    private var lastCachedAnswer: DocumentSnapshot?
+
     private var userSubscriber: AnyCancellable = .init({})
 
     private var subscribers = Set<AnyCancellable>()
@@ -59,6 +64,10 @@ final class FirestoreAnswerService: AnswerService {
         }
 
         setupFirestoreListeners(user: user)
+    }
+
+    func getMoreCachedAnswers() {
+        getMoreCachedAnswers(user: user)
     }
 
     private func setupFirestoreListeners(user: User) {
@@ -115,9 +124,31 @@ final class FirestoreAnswerService: AnswerService {
             }
             .store(in: &subscribers)
 
-        // TODO: Pagination should be applied to the cache so we don't end up loading everything
+        getMoreCachedAnswers(user: user)
+
+        // Watch for latest answer only here because the user might edit an old answer
         user.answerCollection
             .order(by: "ping", descending: true)
+            .limit(to: 1)
+            .addSnapshotListener { snapshot, error in
+                if let error = error {
+                    self.alertService.present(message: error.localizedDescription)
+                }
+                self.latestAnswer = try? snapshot?.documents.first?.data(as: Answer.self)
+            }
+            .store(in: &listeners)
+    }
+
+    private func getMoreCachedAnswers(user: User) {
+        var query = user.answerCollection
+            .order(by: "ping", descending: true)
+            .limit(to: Self.countPerPage)
+
+        if let lastCachedAnswer = lastCachedAnswer {
+            query = query.start(afterDocument: lastCachedAnswer)
+        }
+
+        query
             .getDocuments(source: .cache)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -132,20 +163,11 @@ final class FirestoreAnswerService: AnswerService {
                     answers[$0.documentID] = try? $0.data(as: Answer.self)
                 }
                 self.answers = answers
+
+                self.lastCachedAnswer = snapshot.documents.last
+                self.hasLoadedAllAnswers = Self.countPerPage > snapshot.documents.count
             })
             .store(in: &subscribers)
-
-        // Watch for latest answer only here because the user might edit an old answer
-        user.answerCollection
-            .order(by: "ping", descending: true)
-            .limit(to: 1)
-            .addSnapshotListener { snapshot, error in
-                if let error = error {
-                    self.alertService.present(message: error.localizedDescription)
-                }
-                self.latestAnswer = try? snapshot?.documents.first?.data(as: Answer.self)
-            }
-            .store(in: &listeners)
     }
 }
 
