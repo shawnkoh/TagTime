@@ -13,6 +13,7 @@ final class LogbookViewModel: ObservableObject {
     @LazyInjected private var answerService: AnswerService
 
     @Published private(set) var answers: [Answer] = []
+    @Published private(set) var hasLoadedAllAnswers = false
 
     private var subscribers = Set<AnyCancellable>()
 
@@ -30,18 +31,6 @@ final class LogbookViewModel: ObservableObject {
         return formatter
     }()
 
-    init() {
-        answerService.answersPublisher
-            .map { answers in
-                answers
-                    .map { $0.value }
-                    .sorted { $0.ping > $1.ping }
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.answers = $0 }
-            .store(in: &subscribers)
-    }
-
     var answersSortedByDate: [[Answer]] {
         let dictionary = Dictionary(grouping: answers) { answer -> DateComponents? in
             Calendar.current.dateComponents([.day, .month, .year], from: answer.ping)
@@ -54,6 +43,27 @@ final class LogbookViewModel: ObservableObject {
             .compactMap { date in
                 dictionary[date]?.sorted { $0.ping > $1.ping }
             }
+    }
+
+    init() {
+        answerService.answersPublisher
+            .map { answers in
+                answers
+                    .map { $0.value }
+                    .sorted { $0.ping > $1.ping }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.answers = $0 }
+            .store(in: &subscribers)
+
+        answerService.hasLoadedAllAnswersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.hasLoadedAllAnswers = $0 }
+            .store(in: &subscribers)
+    }
+
+    func getMoreCachedAnswers() {
+        answerService.getMoreCachedAnswers()
     }
 }
 
@@ -105,12 +115,18 @@ struct Logbook: View {
         ScrollView {
             LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2) {
                 PageTitle(title: "Logbook", subtitle: "Answered pings")
+
                 ForEach(viewModel.answersSortedByDate, id: \.self) { answers in
                     Section(header: sectionHeader(title: viewModel.sectionDateFormatter.string(from: answers.first!.ping), subtitle: nil)) {
                         ForEach(answers) { answer in
                             LogbookCard(answer: answer)
                         }
                     }
+                }
+
+                if !viewModel.hasLoadedAllAnswers {
+                    ProgressView()
+                        .onAppear(perform: viewModel.getMoreCachedAnswers)
                 }
             }
         }

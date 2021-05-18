@@ -19,6 +19,14 @@ final class MockAnswerService: AnswerService {
     @Published private(set) var latestAnswer: Answer?
     var latestAnswerPublisher: Published<Answer?>.Publisher { $latestAnswer }
 
+    @Published private(set) var hasLoadedAllAnswers: Bool = false
+
+    var hasLoadedAllAnswersPublisher: Published<Bool>.Publisher { $hasLoadedAllAnswers }
+
+    func getMoreCachedAnswers() {
+        // TODO:
+    }
+
     private var subscribers = Set<AnyCancellable>()
 
     init() {
