@@ -20,6 +20,7 @@ final class FirestoreGoalService: GoalService {
 
     @Published private(set) var goals: [Goal] = []
     var goalsPublisher: Published<[Goal]>.Publisher { $goals }
+    /// List of active GoalTrackers
     @Published private(set) var goalTrackers: [String: GoalTracker] = [:]
     var goalTrackersPublisher: Published<[String : GoalTracker]>.Publisher { $goalTrackers }
 
@@ -94,9 +95,11 @@ final class FirestoreGoalService: GoalService {
                     ()
                 }
             }, receiveValue: { snapshot in
+                var goalTrackers = self.goalTrackers
                 snapshot.documents.forEach { document in
-                    self.goalTrackers[document.documentID] = try? document.data(as: GoalTracker.self)
+                    goalTrackers[document.documentID] = try? document.data(as: GoalTracker.self)
                 }
+                self.goalTrackers = goalTrackers
             })
             .store(in: &subscribers)
 
@@ -128,9 +131,15 @@ final class FirestoreGoalService: GoalService {
                             return (document.documentID, tagCache)
                         }
 
+                        var goalTrackers = self.goalTrackers
                         result.forEach { goalId, goalTracker in
-                            self.goalTrackers[goalId] = goalTracker
+                            if goalTracker.deletedDate == nil {
+                                goalTrackers[goalId] = goalTracker
+                            } else {
+                                goalTrackers[goalId] = nil
+                            }
                         }
+                        self.goalTrackers = goalTrackers
 
                         if let lastFetched = result.map({ $0.1.updatedDate }).max() {
                             self.lastFetched = .lastFetched(lastFetched)
@@ -162,9 +171,16 @@ final class FirestoreGoalService: GoalService {
     }
 
     func untrackGoal(_ goal: Goal) -> Future<Void, Error> {
-        user.goalTrackerCollection
+        guard let tracker = goalTrackers[goal.id] else {
+            return Future { promise in
+                promise(.success(()))
+            }
+        }
+        let date = Date()
+        let newTracker = GoalTracker(tags: tracker.tags, updatedDate: date, deletedDate: date)
+        return user.goalTrackerCollection
             .document(goal.id)
-            .delete()
+            .setData(from: newTracker)
     }
 
     func trackTags(_ tags: [Tag], for goal: Goal) -> Future<Void, Error> {
