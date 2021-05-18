@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Answer: Identifiable, Codable {
+public struct Answer: Identifiable, Codable, Hashable {
     public let updatedDate: Date
     public let ping: Date
     public var tags: [Tag]
