@@ -172,9 +172,12 @@
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86C6C7402636A19700A24EBA /* Tappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C6C73F2636A19700A24EBA /* Tappable.swift */; };
 		86C9762D2654CF950049CFE4 /* TagTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C9762C2654CF950049CFE4 /* TagTimeTests.swift */; };
-		86C976352654CFB70049CFE4 /* Logbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976342654CFB70049CFE4 /* Logbook.swift */; };
+		86C976352654CFB70049CFE4 /* GroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976342654CFB70049CFE4 /* GroupTests.swift */; };
 		86C976372654D0DE0049CFE4 /* User+Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976362654D0DE0049CFE4 /* User+Firebase.swift */; };
 		86C976382654D0DE0049CFE4 /* User+Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976362654D0DE0049CFE4 /* User+Firebase.swift */; };
+		86C976A12654F3EC0049CFE4 /* Equatable+Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976A02654F3EC0049CFE4 /* Equatable+Group.swift */; };
+		86C976A22654F3EC0049CFE4 /* Equatable+Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976A02654F3EC0049CFE4 /* Equatable+Group.swift */; };
+		86C976A32654F3F40049CFE4 /* Equatable+Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976A02654F3EC0049CFE4 /* Equatable+Group.swift */; };
 		86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F142263D76D9002062E2 /* Auth+Combine.swift */; };
 		86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */; };
 		86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */; };
@@ -299,8 +302,9 @@
 		86C9762A2654CF950049CFE4 /* TagTimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TagTimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		86C9762C2654CF950049CFE4 /* TagTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTimeTests.swift; sourceTree = "<group>"; };
 		86C9762E2654CF950049CFE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		86C976342654CFB70049CFE4 /* Logbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logbook.swift; sourceTree = "<group>"; };
+		86C976342654CFB70049CFE4 /* GroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTests.swift; sourceTree = "<group>"; };
 		86C976362654D0DE0049CFE4 /* User+Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Firebase.swift"; sourceTree = "<group>"; };
+		86C976A02654F3EC0049CFE4 /* Equatable+Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Equatable+Group.swift"; sourceTree = "<group>"; };
 		86D2F142263D76D9002062E2 /* Auth+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+Combine.swift"; sourceTree = "<group>"; };
 		86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseUser+Combine.swift"; sourceTree = "<group>"; };
 		86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentReference+Combine.swift"; sourceTree = "<group>"; };
@@ -526,6 +530,7 @@
 				86D2F142263D76D9002062E2 /* Auth+Combine.swift */,
 				868E97CF26174A56000A41FF /* Color+Figma.swift */,
 				86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */,
+				86C976A02654F3EC0049CFE4 /* Equatable+Group.swift */,
 				86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */,
 				86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */,
 				867B42FB2649905A00DDF1A6 /* Query+Combine.swift */,
@@ -621,7 +626,7 @@
 			children = (
 				86C9762C2654CF950049CFE4 /* TagTimeTests.swift */,
 				86C9762E2654CF950049CFE4 /* Info.plist */,
-				86C976342654CFB70049CFE4 /* Logbook.swift */,
+				86C976342654CFB70049CFE4 /* GroupTests.swift */,
 			);
 			path = TagTimeTests;
 			sourceTree = "<group>";
@@ -934,6 +939,7 @@
 				86BEE8392618D43700645F2F /* MissedPingCard.swift in Sources */,
 				86ABFFCB2652362100CAEE80 /* TrackedGoalListViewModel.swift in Sources */,
 				86D7B264264A37CF002FE4BA /* LastFetchedStatus.swift in Sources */,
+				86C976A12654F3EC0049CFE4 /* Equatable+Group.swift in Sources */,
 				86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */,
 				86C5A702261E2104001451E9 /* PingService.swift in Sources */,
 				86E13CD5264971F800432A5A /* AnswerBuilder.swift in Sources */,
@@ -1018,6 +1024,7 @@
 				868C528F264CEF8D00F6F0D3 /* TagService.swift in Sources */,
 				86ABFFC92652361F00CAEE80 /* TrackedGoalListViewModel.swift in Sources */,
 				868C52AA264CEFAD00F6F0D3 /* GoalDetail.swift in Sources */,
+				86C976A22654F3EC0049CFE4 /* Equatable+Group.swift in Sources */,
 				868C527B264CEF8000F6F0D3 /* TagCache.swift in Sources */,
 				868C5294264CEF8D00F6F0D3 /* AlertService.swift in Sources */,
 				868C5290264CEF8D00F6F0D3 /* LastFetchedStatus.swift in Sources */,
@@ -1085,7 +1092,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				86C9762D2654CF950049CFE4 /* TagTimeTests.swift in Sources */,
-				86C976352654CFB70049CFE4 /* Logbook.swift in Sources */,
+				86C976A32654F3F40049CFE4 /* Equatable+Group.swift in Sources */,
+				86C976352654CFB70049CFE4 /* GroupTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
