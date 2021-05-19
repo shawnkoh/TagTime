@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Firebase
 
 struct User: Identifiable, Codable, Equatable {
     let id: String
@@ -19,11 +18,5 @@ struct User: Identifiable, Codable, Equatable {
         self.startDate = startDate
         self.providers = providers
         self.updatedDate = updatedDate
-    }
-}
-
-extension User {
-    var userDocument: DocumentReference {
-        Firestore.firestore().collection("users").document(id)
     }
 }

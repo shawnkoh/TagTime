@@ -64,8 +64,6 @@
 		8665E2A52641752B003EB532 /* GoalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A42641752B003EB532 /* GoalService.swift */; };
 		866C0938264D393B00930BED /* AppleLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866C0937264D393B00930BED /* AppleLoginService.swift */; };
 		866C0939264D393B00930BED /* AppleLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866C0937264D393B00930BED /* AppleLoginService.swift */; };
-		866C093A264D396200930BED /* AppleLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866C0937264D393B00930BED /* AppleLoginService.swift */; };
-		866C093B264D396200930BED /* AppleLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866C0937264D393B00930BED /* AppleLoginService.swift */; };
 		86719AF1264AF27600B6086D /* FirestoreAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86719AF0264AF27600B6086D /* FirestoreAuthenticationService.swift */; };
 		86719AF3264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86719AF2264AF3F800B6086D /* FirestoreBeeminderCredentialService.swift */; };
 		8672E70526181B01004081FC /* SettingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8672E70426181B01004081FC /* SettingService.swift */; };
@@ -73,8 +71,6 @@
 		867858C9263709D9009370F6 /* BatchAnswerCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858C8263709D9009370F6 /* BatchAnswerCreator.swift */; };
 		867858D926370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		867858DA26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
-		867858DB26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
-		867858DC26370F3F009370F6 /* AnswerSuggester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867858D826370F3F009370F6 /* AnswerSuggester.swift */; };
 		867B42FC2649905A00DDF1A6 /* Query+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867B42FB2649905A00DDF1A6 /* Query+Combine.swift */; };
 		86821D6D2644794A001EF75D /* Beeminder in Frameworks */ = {isa = PBXBuildFile; productRef = 86821D6C2644794A001EF75D /* Beeminder */; };
 		868C5273264CEF7B00F6F0D3 /* FirebaseUser+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */; };
@@ -141,10 +137,7 @@
 		868C52B2264CEFB500F6F0D3 /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862914E42634A1D6006BF198 /* DebugMenu.swift */; };
 		868C52B5264D128400F6F0D3 /* AuthenticatedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868C52B4264D128400F6F0D3 /* AuthenticatedViewModel.swift */; };
 		868C52B6264D128400F6F0D3 /* AuthenticatedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868C52B4264D128400F6F0D3 /* AuthenticatedViewModel.swift */; };
-		868C52B7264D128400F6F0D3 /* AuthenticatedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868C52B4264D128400F6F0D3 /* AuthenticatedViewModel.swift */; };
-		868C52B8264D128400F6F0D3 /* AuthenticatedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868C52B4264D128400F6F0D3 /* AuthenticatedViewModel.swift */; };
 		868C52BC264D12C700F6F0D3 /* AuthenticatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868C52BA264D12C700F6F0D3 /* AuthenticatedView.swift */; };
-		868C52BE264D12C700F6F0D3 /* AuthenticatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868C52BA264D12C700F6F0D3 /* AuthenticatedView.swift */; };
 		868D83EE26396B49000211A6 /* TagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83ED26396B49000211A6 /* TagService.swift */; };
 		868D83F2263A6356000211A6 /* TagCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868D83F1263A6356000211A6 /* TagCache.swift */; };
 		868E97B3261736A7000A41FF /* Ping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868E97B2261736A7000A41FF /* Ping.swift */; };
@@ -158,23 +151,14 @@
 		86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59128261DB71600A25D1F /* FirebaseFirestore */; };
 		86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 86A5912A261DB71600A25D1F /* FirebaseFirestoreSwift-Beta */; };
 		86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A5913D261DBB9600A25D1F /* AuthenticatedView.swift */; };
-		86A59140261DBB9600A25D1F /* AuthenticatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A5913D261DBB9600A25D1F /* AuthenticatedView.swift */; };
 		86A59147261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A59146261DBB9E00A25D1F /* UnauthenticatedView.swift */; };
 		86A59148261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A59146261DBB9E00A25D1F /* UnauthenticatedView.swift */; };
-		86A59149261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A59146261DBB9E00A25D1F /* UnauthenticatedView.swift */; };
-		86A5914A261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A59146261DBB9E00A25D1F /* UnauthenticatedView.swift */; };
 		86A59150261DBCBD00A25D1F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A5914F261DBCBD00A25D1F /* User.swift */; };
 		86A59151261DBCBD00A25D1F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A5914F261DBCBD00A25D1F /* User.swift */; };
-		86A59152261DBCBD00A25D1F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A5914F261DBCBD00A25D1F /* User.swift */; };
-		86A59153261DBCBD00A25D1F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A5914F261DBCBD00A25D1F /* User.swift */; };
 		86ABFFC3265234B600CAEE80 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC2265234B600CAEE80 /* TrackedGoalList.swift */; };
-		86ABFFC4265234B600CAEE80 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC2265234B600CAEE80 /* TrackedGoalList.swift */; };
 		86ABFFC6265234C000CAEE80 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC5265234C000CAEE80 /* TrackedGoalList.swift */; };
-		86ABFFC7265234C000CAEE80 /* TrackedGoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC5265234C000CAEE80 /* TrackedGoalList.swift */; };
 		86ABFFC92652361F00CAEE80 /* TrackedGoalListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */; };
-		86ABFFCA2652361F00CAEE80 /* TrackedGoalListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */; };
 		86ABFFCB2652362100CAEE80 /* TrackedGoalListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */; };
-		86ABFFCC2652362200CAEE80 /* TrackedGoalListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */; };
 		86ADBB6F261732FD003CBA6B /* MissedPingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB6E261732FD003CBA6B /* MissedPingList.swift */; };
 		86ADBB7526173303003CBA6B /* Logbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7426173303003CBA6B /* Logbook.swift */; };
 		86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB7A26173307003CBA6B /* Statistics.swift */; };
@@ -187,6 +171,10 @@
 		86C577AE264190F3008AE4BC /* GoalTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C577AD264190F3008AE4BC /* GoalTracker.swift */; };
 		86C5A702261E2104001451E9 /* PingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C5A701261E2104001451E9 /* PingService.swift */; };
 		86C6C7402636A19700A24EBA /* Tappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C6C73F2636A19700A24EBA /* Tappable.swift */; };
+		86C9762D2654CF950049CFE4 /* TagTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C9762C2654CF950049CFE4 /* TagTimeTests.swift */; };
+		86C976352654CFB70049CFE4 /* Logbook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976342654CFB70049CFE4 /* Logbook.swift */; };
+		86C976372654D0DE0049CFE4 /* User+Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976362654D0DE0049CFE4 /* User+Firebase.swift */; };
+		86C976382654D0DE0049CFE4 /* User+Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C976362654D0DE0049CFE4 /* User+Firebase.swift */; };
 		86D2F143263D76D9002062E2 /* Auth+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F142263D76D9002062E2 /* Auth+Combine.swift */; };
 		86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */; };
 		86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */; };
@@ -213,6 +201,13 @@
 			remoteInfo = "TagTime (iOS)";
 		};
 		861256EA26139CAB00C2B81B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 861256C226139CAA00C2B81B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 861256D526139CAB00C2B81B;
+			remoteInfo = "TagTime (macOS)";
+		};
+		86C9762F2654CF950049CFE4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 861256C226139CAA00C2B81B /* Project object */;
 			proxyType = 1;
@@ -301,6 +296,11 @@
 		86C577AD264190F3008AE4BC /* GoalTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalTracker.swift; sourceTree = "<group>"; };
 		86C5A701261E2104001451E9 /* PingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingService.swift; sourceTree = "<group>"; };
 		86C6C73F2636A19700A24EBA /* Tappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tappable.swift; sourceTree = "<group>"; };
+		86C9762A2654CF950049CFE4 /* TagTimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TagTimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		86C9762C2654CF950049CFE4 /* TagTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTimeTests.swift; sourceTree = "<group>"; };
+		86C9762E2654CF950049CFE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		86C976342654CFB70049CFE4 /* Logbook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logbook.swift; sourceTree = "<group>"; };
+		86C976362654D0DE0049CFE4 /* User+Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Firebase.swift"; sourceTree = "<group>"; };
 		86D2F142263D76D9002062E2 /* Auth+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+Combine.swift"; sourceTree = "<group>"; };
 		86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseUser+Combine.swift"; sourceTree = "<group>"; };
 		86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentReference+Combine.swift"; sourceTree = "<group>"; };
@@ -365,6 +365,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		86C976272654CF950049CFE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -378,6 +385,7 @@
 				861256D726139CAB00C2B81B /* macOS */,
 				861256E126139CAB00C2B81B /* Tests iOS */,
 				861256EC26139CAB00C2B81B /* Tests macOS */,
+				86C9762B2654CF950049CFE4 /* TagTimeTests */,
 				861256CF26139CAB00C2B81B /* Products */,
 				86E864F92644539200B86BFB /* Frameworks */,
 			);
@@ -404,6 +412,7 @@
 				861256D626139CAB00C2B81B /* TagTime.app */,
 				861256DE26139CAB00C2B81B /* Tests iOS.xctest */,
 				861256E926139CAB00C2B81B /* Tests macOS.xctest */,
+				86C9762A2654CF950049CFE4 /* TagTimeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -520,6 +529,7 @@
 				86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */,
 				86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */,
 				867B42FB2649905A00DDF1A6 /* Query+Combine.swift */,
+				86C976362654D0DE0049CFE4 /* User+Firebase.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -604,6 +614,16 @@
 				86ADBB802617330B003CBA6B /* Preferences.swift */,
 			);
 			path = Preferences;
+			sourceTree = "<group>";
+		};
+		86C9762B2654CF950049CFE4 /* TagTimeTests */ = {
+			isa = PBXGroup;
+			children = (
+				86C9762C2654CF950049CFE4 /* TagTimeTests.swift */,
+				86C9762E2654CF950049CFE4 /* Info.plist */,
+				86C976342654CFB70049CFE4 /* Logbook.swift */,
+			);
+			path = TagTimeTests;
 			sourceTree = "<group>";
 		};
 		86E34E152643FC5700B3AA5E /* ViewModifier */ = {
@@ -755,13 +775,31 @@
 			productReference = 861256E926139CAB00C2B81B /* Tests macOS.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		86C976292654CF950049CFE4 /* TagTimeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 86C976332654CF950049CFE4 /* Build configuration list for PBXNativeTarget "TagTimeTests" */;
+			buildPhases = (
+				86C976262654CF950049CFE4 /* Sources */,
+				86C976272654CF950049CFE4 /* Frameworks */,
+				86C976282654CF950049CFE4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				86C976302654CF950049CFE4 /* PBXTargetDependency */,
+			);
+			name = TagTimeTests;
+			productName = TagTimeTests;
+			productReference = 86C9762A2654CF950049CFE4 /* TagTimeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		861256C226139CAA00C2B81B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1240;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1250;
 				TargetAttributes = {
 					861256CD26139CAB00C2B81B = {
@@ -777,6 +815,9 @@
 					861256E826139CAB00C2B81B = {
 						CreatedOnToolsVersion = 12.4;
 						TestTargetID = 861256D526139CAB00C2B81B;
+					};
+					86C976292654CF950049CFE4 = {
+						CreatedOnToolsVersion = 12.5;
 					};
 				};
 			};
@@ -805,6 +846,7 @@
 				861256D526139CAB00C2B81B /* TagTime (macOS) */,
 				861256DD26139CAB00C2B81B /* Tests iOS */,
 				861256E826139CAB00C2B81B /* Tests macOS */,
+				86C976292654CF950049CFE4 /* TagTimeTests */,
 			);
 		};
 /* End PBXProject section */
@@ -844,6 +886,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		86C976282654CF950049CFE4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -858,6 +907,7 @@
 				868E97D026174A56000A41FF /* Color+Figma.swift in Sources */,
 				864CF2B5264FE504005966C1 /* RealFirebaseService.swift in Sources */,
 				864CF2AF264FE4DE005966C1 /* FirebaseService.swift in Sources */,
+				86C976372654D0DE0049CFE4 /* User+Firebase.swift in Sources */,
 				86A5913E261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
 				868E97B9261736EE000A41FF /* Tag.swift in Sources */,
 				86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */,
@@ -941,6 +991,7 @@
 				868C52A4264CEFAD00F6F0D3 /* TagPicker.swift in Sources */,
 				864CF2B6264FE504005966C1 /* RealFirebaseService.swift in Sources */,
 				864CF2B0264FE4DE005966C1 /* FirebaseService.swift in Sources */,
+				86C976382654D0DE0049CFE4 /* User+Firebase.swift in Sources */,
 				868C527F264CEF8600F6F0D3 /* FirestoreGoalService.swift in Sources */,
 				868C528E264CEF8D00F6F0D3 /* BeeminderCredentialService.swift in Sources */,
 				868C5295264CEF8D00F6F0D3 /* AnswerablePingService.swift in Sources */,
@@ -1017,14 +1068,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				868C52B7264D128400F6F0D3 /* AuthenticatedViewModel.swift in Sources */,
-				867858DB26370F3F009370F6 /* AnswerSuggester.swift in Sources */,
-				86A59152261DBCBD00A25D1F /* User.swift in Sources */,
-				86A59140261DBB9600A25D1F /* AuthenticatedView.swift in Sources */,
-				86A59149261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
-				86ABFFC4265234B600CAEE80 /* TrackedGoalList.swift in Sources */,
-				866C093A264D396200930BED /* AppleLoginService.swift in Sources */,
-				86ABFFCC2652362200CAEE80 /* TrackedGoalListViewModel.swift in Sources */,
 				861256E326139CAB00C2B81B /* Tests_iOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1033,15 +1076,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				868C52B8264D128400F6F0D3 /* AuthenticatedViewModel.swift in Sources */,
-				867858DC26370F3F009370F6 /* AnswerSuggester.swift in Sources */,
-				86A59153261DBCBD00A25D1F /* User.swift in Sources */,
-				86A5914A261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
-				868C52BE264D12C700F6F0D3 /* AuthenticatedView.swift in Sources */,
-				86ABFFC7265234C000CAEE80 /* TrackedGoalList.swift in Sources */,
-				866C093B264D396200930BED /* AppleLoginService.swift in Sources */,
-				86ABFFCA2652361F00CAEE80 /* TrackedGoalListViewModel.swift in Sources */,
 				861256EE26139CAB00C2B81B /* Tests_macOS.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		86C976262654CF950049CFE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				86C9762D2654CF950049CFE4 /* TagTimeTests.swift in Sources */,
+				86C976352654CFB70049CFE4 /* Logbook.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1057,6 +1101,11 @@
 			isa = PBXTargetDependency;
 			target = 861256D526139CAB00C2B81B /* TagTime (macOS) */;
 			targetProxy = 861256EA26139CAB00C2B81B /* PBXContainerItemProxy */;
+		};
+		86C976302654CF950049CFE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 861256D526139CAB00C2B81B /* TagTime (macOS) */;
+			targetProxy = 86C9762F2654CF950049CFE4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1362,6 +1411,46 @@
 			};
 			name = Release;
 		};
+		86C976312654CF950049CFE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = GLF5FGPT59;
+				INFOPLIST_FILE = TagTimeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.TagTimeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		86C976322654CF950049CFE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = GLF5FGPT59;
+				INFOPLIST_FILE = TagTimeTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				PRODUCT_BUNDLE_IDENTIFIER = sg.shawnkoh.TagTimeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1406,6 +1495,15 @@
 			buildConfigurations = (
 				8612570226139CAB00C2B81B /* Debug */,
 				8612570326139CAB00C2B81B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		86C976332654CF950049CFE4 /* Build configuration list for PBXNativeTarget "TagTimeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				86C976312654CF950049CFE4 /* Debug */,
+				86C976322654CF950049CFE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
