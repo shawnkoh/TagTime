@@ -127,11 +127,22 @@ struct Logbook: View {
                         case let .single(answer):
                             LogbookCard(answer: answer)
                         case let .multiple(answers):
-                            DisclosureGroup("Grouped answers") {
-                                ForEach(answers, id: \.self) { answer in
-                                    LogbookCard(answer: answer)
+                            DisclosureGroup(
+                                content: {
+                                    ForEach(answers, id: \.self) { answer in
+                                        LogbookCard(answer: answer)
+                                    }
+                                },
+                                label: {
+                                    VStack {
+                                        Text(answers.first!.tagDescription)
+                                        Text(
+                                            "\(viewModel.dateFormatter.string(from: answers.last!.ping)) -> \(viewModel.dateFormatter.string(from: answers.first!.ping))"
+                                        )
+                                    }
+                                    .cardStyle(.baseCard)
                                 }
-                            }
+                            )
                         }
                     }
                 }
