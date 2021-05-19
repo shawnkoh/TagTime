@@ -42,9 +42,15 @@ final class DebugViewModel: ObservableObject {
     }
 
     func clearPersistence() {
-        Firestore.firestore().clearPersistence { error in
+        let firestore = Firestore.firestore()
+        firestore.terminate { error in
             if let error = error {
                 self.alertService.present(message: error.localizedDescription)
+            }
+            firestore.clearPersistence { error in
+                if let error = error {
+                    self.alertService.present(message: error.localizedDescription)
+                }
             }
         }
     }
