@@ -17,13 +17,6 @@ final class LogbookViewModel: ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
 
-    let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter
-    }()
-
     let sectionDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -31,7 +24,7 @@ final class LogbookViewModel: ObservableObject {
         return formatter
     }()
 
-    var answersSortedByDate: [[Answer]] {
+    private var answersSortedByDate: [[Answer]] {
         let dictionary = Dictionary(grouping: answers) { answer -> DateComponents? in
             Calendar.current.dateComponents([.day, .month, .year], from: answer.ping)
         }
@@ -43,6 +36,11 @@ final class LogbookViewModel: ObservableObject {
             .compactMap { date in
                 dictionary[date]?.sorted { $0.ping > $1.ping }
             }
+    }
+
+    var groupedAnswers: [[Group<Answer>]] {
+        answersSortedByDate
+            .map { $0.grouped { $0.tags == $1.tags } }
     }
 
     init() {
@@ -89,37 +87,18 @@ struct Logbook: View {
         }
     }
 
-    private func section(answers: [Answer], title: String?) -> some View {
-        Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
-            ForEach(answers) { answer in
-                HStack {
-                    Spacer()
-
-                    .foregroundColor(.white)
-                    .padding()
-                    Spacer()
-                }
-                .background(Color.baseCard)
-                .cornerRadius(8)
-                VStack {
-                    Text(answer.tagDescription)
-                    Text(viewModel.dateFormatter.string(from: answer.ping))
-                }
-                .onTap { }
-                .cardButtonStyle(.baseCard)
-            }
-        }
-    }
-
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2) {
                 PageTitle(title: "Logbook", subtitle: "Answered pings")
 
-                ForEach(viewModel.answersSortedByDate, id: \.self) { answers in
-                    Section(header: sectionHeader(title: viewModel.sectionDateFormatter.string(from: answers.first!.ping), subtitle: nil)) {
-                        ForEach(answers) { answer in
+                ForEach(viewModel.groupedAnswers, id: \.self) { groups in
+                    ForEach(groups, id: \.self) { group in
+                        switch group {
+                        case let .single(answer):
                             LogbookCard(answer: answer)
+                        case let .multiple(answers):
+                            AnswerGroup(answers: answers)
                         }
                     }
                 }
