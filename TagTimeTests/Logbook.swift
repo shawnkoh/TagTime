@@ -40,22 +40,11 @@ extension Array where Array.Element: Equatable {
     }
 }
 
-private enum Row: Equatable {
-    case single(String)
-    case multiple([String])
-}
-
 class Logbook: XCTestCase {
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testBlah() {
-        XCTAssert(row([]) == [])
+    func test() {
+        let input: [String] = []
+        let output: [Group<String>] = []
+        XCTAssert(input.grouped() == output)
 
         test(input: "A", expected: single("A"))
 
@@ -74,42 +63,16 @@ class Logbook: XCTestCase {
         test(input: "A", "B", "C", "D", expected: single("A"), single("B"), single("C"), single("D"))
     }
 
-    private func test(input: String..., expected: Row...) {
-        let result = row(input)
+    private func test(input: String..., expected: Group<String>...) {
+        let result = input.grouped()
         XCTAssert(result == expected)
     }
 
-    private func single(_ input: String) -> Row {
+    private func single(_ input: String) -> Group<String> {
         .single(input)
     }
 
-    private func multiple(_ input: String...) -> Row {
+    private func multiple(_ input: String...) -> Group<String> {
         .multiple(input)
-    }
-
-    private func row(_ input: [String]) -> [Row] {
-        var result: [Row] = []
-        var cursor = 0
-        while cursor < input.count {
-            let current = input[cursor]
-
-            // find the next index that is not the same
-            var nextIndex = cursor + 1
-            while nextIndex < input.count {
-                if current == input[nextIndex] {
-                    nextIndex += 1
-                } else {
-                    break
-                }
-            }
-
-            if nextIndex == cursor + 1 {
-                result.append(.single(current))
-            } else {
-                result.append(.multiple(Array(input[cursor..<nextIndex])))
-            }
-            cursor = nextIndex
-        }
-        return result
     }
 }
