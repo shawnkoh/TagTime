@@ -36,7 +36,7 @@ struct AnswerGroup: View {
             VStack {
                 Text(answers.first!.tagDescription)
                 Text(
-                    "\(viewModel.dateFormatter.string(from: answers.last!.ping)) -> \(viewModel.dateFormatter.string(from: answers.first!.ping))"
+                    "\(viewModel.dateFormatter.string(from: answers.last!.ping)) → \(viewModel.dateFormatter.string(from: answers.first!.ping))"
                 )
             }
             .onTap { isExpanded = true }
