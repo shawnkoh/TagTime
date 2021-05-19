@@ -17,13 +17,6 @@ final class LogbookViewModel: ObservableObject {
 
     private var subscribers = Set<AnyCancellable>()
 
-    let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter
-    }()
-
     let sectionDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -94,28 +87,6 @@ struct Logbook: View {
         }
     }
 
-    private func section(answers: [Answer], title: String?) -> some View {
-        Section(header: sectionHeader(title: "Today", subtitle: "Sun, 28 March")) {
-            ForEach(answers) { answer in
-                HStack {
-                    Spacer()
-
-                    .foregroundColor(.white)
-                    .padding()
-                    Spacer()
-                }
-                .background(Color.baseCard)
-                .cornerRadius(8)
-                VStack {
-                    Text(answer.tagDescription)
-                    Text(viewModel.dateFormatter.string(from: answer.ping))
-                }
-                .onTap { }
-                .cardButtonStyle(.baseCard)
-            }
-        }
-    }
-
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2) {
@@ -127,22 +98,7 @@ struct Logbook: View {
                         case let .single(answer):
                             LogbookCard(answer: answer)
                         case let .multiple(answers):
-                            DisclosureGroup(
-                                content: {
-                                    ForEach(answers, id: \.self) { answer in
-                                        LogbookCard(answer: answer)
-                                    }
-                                },
-                                label: {
-                                    VStack {
-                                        Text(answers.first!.tagDescription)
-                                        Text(
-                                            "\(viewModel.dateFormatter.string(from: answers.last!.ping)) -> \(viewModel.dateFormatter.string(from: answers.first!.ping))"
-                                        )
-                                    }
-                                    .cardStyle(.baseCard)
-                                }
-                            )
+                            AnswerGroup(answers: answers)
                         }
                     }
                 }
