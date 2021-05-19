@@ -7,13 +7,17 @@
 
 import Foundation
 
-enum Group<Value: Equatable>: Equatable {
+enum Group<Value: Equatable & Hashable>: Equatable, Hashable {
     case single(Value)
     case multiple([Value])
 }
 
-extension Array where Array.Element: Equatable {
+extension Array where Array.Element: Equatable & Hashable {
     func grouped() -> [Group<Array.Element>] {
+        grouped { $0 == $1 }
+    }
+
+    func grouped(by areTheSame: (Array.Element, Array.Element) -> Bool ) -> [Group<Array.Element>] {
         var result: [Group<Array.Element>] = []
         var cursor = 0
         while cursor < self.count {
@@ -22,7 +26,7 @@ extension Array where Array.Element: Equatable {
             // find the next index that is not the same
             var nextIndex = cursor + 1
             while nextIndex < self.count {
-                if current == self[nextIndex] {
+                if areTheSame(current, self[nextIndex]) {
                     nextIndex += 1
                 } else {
                     break

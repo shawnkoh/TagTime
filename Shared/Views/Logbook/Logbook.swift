@@ -31,7 +31,7 @@ final class LogbookViewModel: ObservableObject {
         return formatter
     }()
 
-    var answersSortedByDate: [[Answer]] {
+    private var answersSortedByDate: [[Answer]] {
         let dictionary = Dictionary(grouping: answers) { answer -> DateComponents? in
             Calendar.current.dateComponents([.day, .month, .year], from: answer.ping)
         }
@@ -43,6 +43,11 @@ final class LogbookViewModel: ObservableObject {
             .compactMap { date in
                 dictionary[date]?.sorted { $0.ping > $1.ping }
             }
+    }
+
+    var groupedAnswers: [[Group<Answer>]] {
+        answersSortedByDate
+            .map { $0.grouped { $0.tags == $1.tags } }
     }
 
     init() {
@@ -116,10 +121,17 @@ struct Logbook: View {
             LazyVGrid(columns: [GridItem()], alignment: .leading, spacing: 2) {
                 PageTitle(title: "Logbook", subtitle: "Answered pings")
 
-                ForEach(viewModel.answersSortedByDate, id: \.self) { answers in
-                    Section(header: sectionHeader(title: viewModel.sectionDateFormatter.string(from: answers.first!.ping), subtitle: nil)) {
-                        ForEach(answers) { answer in
+                ForEach(viewModel.groupedAnswers, id: \.self) { groups in
+                    ForEach(groups, id: \.self) { group in
+                        switch group {
+                        case let .single(answer):
                             LogbookCard(answer: answer)
+                        case let .multiple(answers):
+                            DisclosureGroup("Grouped answers") {
+                                ForEach(answers, id: \.self) { answer in
+                                    LogbookCard(answer: answer)
+                                }
+                            }
                         }
                     }
                 }
