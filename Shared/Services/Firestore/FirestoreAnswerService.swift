@@ -83,6 +83,8 @@ final class FirestoreAnswerService: AnswerService {
             }
             .store(in: &subscribers)
 
+        getMoreCachedAnswers(user: user)
+
         $lastFetched
             // Prevents infinite recursion
             .removeDuplicates()
@@ -123,8 +125,6 @@ final class FirestoreAnswerService: AnswerService {
                     }
             }
             .store(in: &subscribers)
-
-        getMoreCachedAnswers(user: user)
 
         // Watch for latest answer only here because the user might edit an old answer
         user.answerCollection
