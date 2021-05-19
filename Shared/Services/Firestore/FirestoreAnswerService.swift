@@ -97,6 +97,9 @@ final class FirestoreAnswerService: AnswerService {
 
                 self.serverListener = user.answerCollection
                     .whereField("updatedDate", isGreaterThan: lastFetched)
+                    // Firestore is like a hash table. If the query is not sorted, there's no guarantee it will
+                    // retrieve the further updated date first.
+                    .order(by: "updatedDate")
                     .addSnapshotListener { snapshot, error in
                         if let error = error {
                             self.alertService.present(message: error.localizedDescription)
