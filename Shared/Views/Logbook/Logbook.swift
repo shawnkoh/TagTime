@@ -93,6 +93,13 @@ struct Logbook: View {
                 PageTitle(title: "Logbook", subtitle: "Answered pings")
 
                 ForEach(viewModel.groupedAnswers, id: \.self) { groups in
+                    switch groups.first! {
+                    case let .single(answer):
+                        sectionHeader(title: viewModel.sectionDateFormatter.string(from: answer.ping), subtitle: nil)
+                    case let .multiple(answers):
+                        sectionHeader(title: viewModel.sectionDateFormatter.string(from: answers.first!.ping), subtitle: nil)
+                    }
+
                     ForEach(groups, id: \.self) { group in
                         switch group {
                         case let .single(answer):
