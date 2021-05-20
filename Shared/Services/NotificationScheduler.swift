@@ -58,6 +58,9 @@ public final class NotificationScheduler {
             categorySummaryFormat: nil,
             options: categoryOptions
         )
+    }
+
+    public func setup() {
         userSubscriber = authenticationService.userPublisher
             .removeDuplicatesForServices()
             .sink { self.setup(user: $0) }
@@ -130,26 +133,21 @@ public final class NotificationScheduler {
     }
 
     private func scheduleNotifications(pings: [Date], previousAnswer: Answer?) {
+        let actions: [UNNotificationAction]
         if let previousAnswer = previousAnswer {
             let previousAction = UNNotificationAction(identifier: ActionIdentifier.previous, title: previousAnswer.tagDescription, options: .destructive)
-            self.category = UNNotificationCategory(
-                identifier: CategoryIdentifier.ping,
-                actions: [previousAction, replyAction],
-                intentIdentifiers: [],
-                hiddenPreviewsBodyPlaceholder: nil,
-                categorySummaryFormat: nil,
-                options: categoryOptions
-            )
+            actions = [previousAction, replyAction]
         } else {
-            self.category = UNNotificationCategory(
-                identifier: CategoryIdentifier.ping,
-                actions: [replyAction],
-                intentIdentifiers: [],
-                hiddenPreviewsBodyPlaceholder: nil,
-                categorySummaryFormat: nil,
-                options: categoryOptions
-            )
+            actions = [replyAction]
         }
+        self.category = UNNotificationCategory(
+            identifier: CategoryIdentifier.ping,
+            actions: actions,
+            intentIdentifiers: [],
+            hiddenPreviewsBodyPlaceholder: nil,
+            categorySummaryFormat: nil,
+            options: categoryOptions
+        )
 
         center.setNotificationCategories([category])
         // TODO: I'm not sure how to deal with these yet

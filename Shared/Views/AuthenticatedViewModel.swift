@@ -75,5 +75,10 @@ final class AuthenticatedViewModel: ObservableObject {
                 }
             }
             .store(in: &subscribers)
+
+        // Force notificationScheduler to be injected because it was @LazyInjected
+        // TODO: Consider moving userSubscriber somewhere else and making NotificationScheduler
+        // a pure API that does not observe.
+        notificationScheduler.setup()
     }
 }
