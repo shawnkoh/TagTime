@@ -28,7 +28,13 @@ final class FirestoreAnswerBuilderExecutor: AnswerBuilderExecutor {
             return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
 
-        let batches = getBatches(from: answerBuilder.operations)
+        let operations: [AnswerBuilder.Operation]
+        if answerBuilder.willOverrideUpdatedDate {
+            operations = overrideUpdatedDate(for: answerBuilder.operations)
+        } else {
+            operations = answerBuilder.operations
+        }
+        let batches = getBatches(from: operations)
         let batchPublishers = getBatchPublishers(from: batches)
         let mergedPublisher = getMergedPublisher(from: batchPublishers)
 
@@ -39,6 +45,21 @@ final class FirestoreAnswerBuilderExecutor: AnswerBuilderExecutor {
         return mergedPublisher
             .flatMap { _ in self.updateGoals(from: answerBuilder.operations) }
             .eraseToAnyPublisher()
+    }
+
+    private func overrideUpdatedDate(for operations: [AnswerBuilder.Operation]) -> [AnswerBuilder.Operation] {
+        // TODO: Test whether it's necessary to remove nano second
+//        // Remove nanosecond
+//        let date = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date()).date!
+        let date = Date()
+        return operations.map { operation in
+            switch operation {
+            case let .create(answer):
+                return .create(Answer(updatedDate: date, ping: answer.ping, tags: answer.tags))
+            case let .update(answer, tags):
+                return .update(Answer(updatedDate: date, ping: answer.ping, tags: answer.tags), tags)
+            }
+        }
     }
 
     private func getBatches(from operations: [AnswerBuilder.Operation]) -> [WriteBatch] {

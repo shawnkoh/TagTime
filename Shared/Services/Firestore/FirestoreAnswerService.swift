@@ -110,10 +110,10 @@ final class FirestoreAnswerService: AnswerService {
                         }
 
                         let result = snapshot.documents.compactMap { document -> (String, Answer)? in
-                            guard let tagCache = try? document.data(as: Answer.self) else {
+                            guard let answer = try? document.data(as: Answer.self) else {
                                 return nil
                             }
-                            return (document.documentID, tagCache)
+                            return (document.documentID, answer)
                         }
 
                         var answers = self.answers

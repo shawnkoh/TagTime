@@ -10,6 +10,8 @@ import Combine
 
 struct AnswerBuilder {
     enum Operation {
+        // TODO: The operations should not accept the Answer model, rather, it should only accept the parameters
+        // Executor should translate it to Answer, this way, we don't need to hack the updatedDate
         case create(Answer)
         case update(Answer, [Tag])
     }
@@ -18,6 +20,7 @@ struct AnswerBuilder {
 
     var operations: [Operation] = []
     var willUpdateTrackedGoals = true
+    var willOverrideUpdatedDate = true
 
     mutating func createAnswer(_ answer: Answer) -> Self {
         operations.append(.create(answer))
@@ -31,6 +34,11 @@ struct AnswerBuilder {
 
     mutating func updateTrackedGoals(_ will: Bool) -> Self {
         self.willUpdateTrackedGoals = will
+        return self
+    }
+
+    mutating func overrideUpdateDate(_ will: Bool) -> Self {
+        self.willOverrideUpdatedDate = will
         return self
     }
 
