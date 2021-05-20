@@ -58,6 +58,9 @@ public final class NotificationScheduler {
             categorySummaryFormat: nil,
             options: categoryOptions
         )
+    }
+
+    public func setup() {
         userSubscriber = authenticationService.userPublisher
             .removeDuplicatesForServices()
             .sink { self.setup(user: $0) }
