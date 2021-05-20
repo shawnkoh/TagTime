@@ -63,6 +63,7 @@ final class FirestoreAnswerService: AnswerService {
             return
         }
 
+        getMoreCachedAnswers(user: user)
         setupFirestoreListeners(user: user)
     }
 
@@ -78,12 +79,45 @@ final class FirestoreAnswerService: AnswerService {
             .map { try? $0.documents.first?.data(as: Answer.self)?.updatedDate }
             .replaceNil(with: user.startDate)
             .replaceError(with: user.startDate)
-            .sink { lastFetched in
-                self.lastFetched = .lastFetched(lastFetched)
-            }
-            .store(in: &subscribers)
+            // remote fetch before activating snapshot listener
+            // because snapshot listener seems to not guarantee that the data is sent as a batch
+            .flatMap { lastFetched -> AnyPublisher<Date, Error> in
+                user.answerCollection
+                    .whereField("updatedDate", isGreaterThan: lastFetched)
+                    .order(by: "updatedDate")
+                    .getDocuments(source: .default)
+                    .flatMap { snapshot -> AnyPublisher<Date, Error> in
+                        let result = snapshot.documents.compactMap { document -> (String, Answer)? in
+                            guard let answer = try? document.data(as: Answer.self) else {
+                                return nil
+                            }
+                            return (document.documentID, answer)
+                        }
+                        var answers = self.answers
+                        result.forEach { documentId, answer in
+                            answers[documentId] = answer
+                        }
+                        self.answers = answers
 
-        getMoreCachedAnswers(user: user)
+                        if let lastFetched = result.map({ $0.1.updatedDate }).max() {
+                            return Just(lastFetched).setFailureType(to: Error.self).eraseToAnyPublisher()
+                        } else {
+                            return Just(lastFetched).setFailureType(to: Error.self).eraseToAnyPublisher()
+                        }
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case let .failure(error):
+                    self.alertService.present(message: error.localizedDescription)
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { lastFetched in
+                self.lastFetched = .lastFetched(lastFetched)
+            })
+            .store(in: &subscribers)
 
         $lastFetched
             // Prevents infinite recursion
