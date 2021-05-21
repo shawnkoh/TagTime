@@ -66,6 +66,35 @@ final class FirestoreTagService: TagService {
             }
             .replaceNil(with: user.startDate)
             .replaceError(with: user.startDate)
+            // remote fetch before activating snapshot listener
+            // because snapshot listener seems to not guarantee that the data is sent as a batch
+            .flatMap { lastFetched -> AnyPublisher<Date, Error> in
+                tagCollection
+                    .whereField("updatedDate", isGreaterThan: lastFetched)
+                    .order(by: "updatedDate")
+                    .getDocuments(source: .default)
+                    .flatMap { snapshot -> AnyPublisher<Date, Error> in
+                        let result = snapshot.documents.compactMap { document -> (String, TagCache)? in
+                            guard let tagCache = try? document.data(as: TagCache.self) else {
+                                return nil
+                            }
+                            return (document.documentID, tagCache)
+                        }
+                        var tags = self.tags
+                        result.forEach { documentId, tagCache in
+                            tags[documentId] = tagCache
+                        }
+                        self.tags = tags
+
+                        if let lastFetched = result.map({ $0.1.updatedDate }).max() {
+                            return Just(lastFetched).setFailureType(to: Error.self).eraseToAnyPublisher()
+                        } else {
+                            return Just(lastFetched).setFailureType(to: Error.self).eraseToAnyPublisher()
+                        }
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .replaceError(with: user.startDate)
             .sink { lastFetched in
                 self.lastFetched = .lastFetched(lastFetched)
             }
