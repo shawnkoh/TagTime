@@ -63,6 +63,7 @@ final class FirestoreAnswerService: AnswerService {
             return
         }
 
+        // Retrieve from cache here to immediately show UI. lastCachedAnswer gets reset later
         getMoreCachedAnswers(user: user)
         setupFirestoreListeners(user: user)
     }
@@ -93,6 +94,8 @@ final class FirestoreAnswerService: AnswerService {
                             }
                             return (document.documentID, answer)
                         }
+                        // Answers are updated here to more quickly update UI
+                        // Does not affect pagination because lastCachedAnswer is reseted and getMoreCachedAnswers() is called again.
                         var answers = self.answers
                         result.forEach { documentId, answer in
                             answers[documentId] = answer
@@ -115,6 +118,11 @@ final class FirestoreAnswerService: AnswerService {
                     ()
                 }
             }, receiveValue: { lastFetched in
+                // Reset lastCachedAnswer
+                self.lastCachedAnswer = nil
+                // Only begin pagination after we have sucessfully loaded to avoid confounding lastCachedAnswer
+                self.getMoreCachedAnswers(user: user)
+                // begin listening to server
                 self.lastFetched = .lastFetched(lastFetched)
             })
             .store(in: &subscribers)
