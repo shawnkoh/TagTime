@@ -82,6 +82,35 @@ final class FirestoreGoalService: GoalService {
             .map { try? $0.documents.first?.data(as: GoalTracker.self)?.updatedDate }
             .replaceError(with: user.startDate)
             .replaceNil(with: user.startDate)
+            // remote fetch before activating snapshot listener
+            // because snapshot listener seems to not guarantee that the data is sent as a batch
+            .flatMap { lastFetched -> AnyPublisher<Date, Error> in
+                user.goalTrackerCollection
+                    .whereField("updatedDate", isGreaterThan: lastFetched)
+                    .order(by: "updatedDate")
+                    .getDocuments(source: .default)
+                    .flatMap { snapshot -> AnyPublisher<Date, Error> in
+                        let result = snapshot.documents.compactMap { document -> (String, GoalTracker)? in
+                            guard let goalTracker = try? document.data(as: GoalTracker.self) else {
+                                return nil
+                            }
+                            return (document.documentID, goalTracker)
+                        }
+                        var goalTrackers = self.goalTrackers
+                        result.forEach { documentId, goalTracker in
+                            goalTrackers[documentId] = goalTracker
+                        }
+                        self.goalTrackers = goalTrackers
+
+                        if let lastFetched = result.map({ $0.1.updatedDate }).max() {
+                            return Just(lastFetched).setFailureType(to: Error.self).eraseToAnyPublisher()
+                        } else {
+                            return Just(lastFetched).setFailureType(to: Error.self).eraseToAnyPublisher()
+                        }
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .replaceError(with: user.startDate)
             .sink { self.lastFetched = .lastFetched($0) }
             .store(in: &subscribers)
 

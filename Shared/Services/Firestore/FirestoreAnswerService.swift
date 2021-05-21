@@ -110,21 +110,15 @@ final class FirestoreAnswerService: AnswerService {
                     }
                     .eraseToAnyPublisher()
             }
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case let .failure(error):
-                    self.alertService.present(message: error.localizedDescription)
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { lastFetched in
+            .replaceError(with: user.startDate)
+            .sink { lastFetched in
                 // Reset lastCachedAnswer
                 self.lastCachedAnswer = nil
                 // Only begin pagination after we have sucessfully loaded to avoid confounding lastCachedAnswer
                 self.getMoreCachedAnswers(user: user)
                 // begin listening to server
                 self.lastFetched = .lastFetched(lastFetched)
-            })
+            }
             .store(in: &subscribers)
 
         $lastFetched
