@@ -25,6 +25,9 @@ extension Resolver: ResolverRegistering {
         register { AnswerablePingService() }
             .scope(.cached)
 
+        register { Router() }
+            .scope(.cached)
+
         #if os(iOS)
         register { FacebookLoginService() }
             .scope(.cached)

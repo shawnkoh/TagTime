@@ -17,6 +17,7 @@ import FacebookCore
 final class AppViewModel: ObservableObject {
     @LazyInjected private var firebaseService: FirebaseService
     @LazyInjected private var alertService: AlertService
+    @LazyInjected private var router: Router
 
     @Published var isAlertPresented = false
     @Published private(set) var alertMessage = ""
@@ -35,6 +36,10 @@ final class AppViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.alertMessage = $0 }
             .store(in: &subscribers)
+    }
+
+    func changePage(to page: Router.Page) {
+        router.currentPage = page
     }
 }
 
@@ -62,6 +67,34 @@ struct TagTimeApp: App {
                 .alert(isPresented: $viewModel.isAlertPresented) {
                     Alert(title: Text(viewModel.alertMessage))
                 }
+        }
+        .commands {
+            CommandGroup(after: .sidebar) {
+                Button("Show Missed Pings") {
+                    viewModel.changePage(to: .missedPingList)
+                }
+                .keyboardShortcut("1", modifiers: .command)
+
+                Button("Show Logbook") {
+                    viewModel.changePage(to: .logbook)
+                }
+                .keyboardShortcut("2", modifiers: .command)
+
+                Button("Show Goals") {
+                    viewModel.changePage(to: .goalList)
+                }
+                .keyboardShortcut("3", modifiers: .command)
+
+                Button("Show Statistics") {
+                    viewModel.changePage(to: .statistics)
+                }
+                .keyboardShortcut("4", modifiers: .command)
+
+                Button("Show Preferences") {
+                    viewModel.changePage(to: .preferences)
+                }
+                .keyboardShortcut("5", modifiers: .command)
+            }
         }
     }
 }

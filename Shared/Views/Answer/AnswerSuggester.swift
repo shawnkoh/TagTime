@@ -57,26 +57,69 @@ final class AnswerSuggesterViewModel: ObservableObject {
 struct AnswerSuggester: View {
     @StateObject var viewModel = AnswerSuggesterViewModel()
     @Binding var input: String
+    @State var selectedIndex: Int?
+
+    var selectedTag: Tag? {
+        guard let selectedIndex = selectedIndex else {
+            return nil
+        }
+        return viewModel.filteredTags[selectedIndex]
+    }
 
     var body: some View {
         if input == "", let latestAnswer = viewModel.latestAnswer {
             Text(latestAnswer)
                 .onTap { replaceKeyword(with: latestAnswer) }
                 .cardButtonStyle(.modalCard)
+                .onKeyboardShortcut(KeyEquivalent.downArrow, perform: moveDown)
+                .onKeyboardShortcut(KeyEquivalent.return, modifiers: [.command], perform: select)
         } else if input != "" {
             VStack {
                 ForEach(viewModel.filteredTags, id: \.self) { tag in
                     Text(tag)
                         .onTap { replaceKeyword(with: tag) }
                         .cardButtonStyle(.modalCard)
+                        .modify {
+                            if selectedTag == tag {
+                                $0.border(Color.blue)
+                            } else {
+                                $0
+                            }
+                        }
                 }
             }
             .onChange(of: input) { input in
+                selectedIndex = nil
                 viewModel.input = input
             }
+            .onKeyboardShortcut(KeyEquivalent.upArrow, perform: moveUp)
+            .onKeyboardShortcut(KeyEquivalent.downArrow, perform: moveDown)
+            .onKeyboardShortcut(KeyEquivalent.return, modifiers: [.command], perform: select)
         } else {
             EmptyView()
         }
+    }
+
+    private func moveUp() {
+        guard let selectedIndex = selectedIndex else {
+             return
+        }
+        self.selectedIndex = max(0, selectedIndex - 1)
+    }
+
+    private func moveDown() {
+        if let selectedIndex = selectedIndex {
+            self.selectedIndex = min(viewModel.filteredTags.count - 1, selectedIndex + 1)
+        } else {
+            selectedIndex = 0
+        }
+    }
+
+    private func select() {
+        guard let selectedTag = selectedTag else {
+            return
+        }
+        replaceKeyword(with: selectedTag)
     }
 
     private func replaceKeyword(with suggestion: String) {
