@@ -149,6 +149,8 @@
 		8691A52C263FFD020020AEE6 /* GoalList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8691A52B263FFD020020AEE6 /* GoalList.swift */; };
 		869291E9263F09B800F6AA3D /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 869291E8263F09B800F6AA3D /* BetterSafariView */; };
 		869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */; };
+		86973280265AB09A00CF9625 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8697327F265AB09A00CF9625 /* Router.swift */; };
+		86973281265AB09A00CF9625 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8697327F265AB09A00CF9625 /* Router.swift */; };
 		86A59127261DB71600A25D1F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59126261DB71600A25D1F /* FirebaseAuth */; };
 		86A59129261DB71600A25D1F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 86A59128261DB71600A25D1F /* FirebaseFirestore */; };
 		86A5912B261DB71600A25D1F /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 86A5912A261DB71600A25D1F /* FirebaseFirestoreSwift-Beta */; };
@@ -287,6 +289,7 @@
 		868E97CF26174A56000A41FF /* Color+Figma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Figma.swift"; sourceTree = "<group>"; };
 		8691A52B263FFD020020AEE6 /* GoalList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalList.swift; sourceTree = "<group>"; };
 		869291EE263FF1D700F6AA3D /* BeeminderLoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeminderLoginButton.swift; sourceTree = "<group>"; };
+		8697327F265AB09A00CF9625 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		86A5913D261DBB9600A25D1F /* AuthenticatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedView.swift; sourceTree = "<group>"; };
 		86A59146261DBB9E00A25D1F /* UnauthenticatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnauthenticatedView.swift; sourceTree = "<group>"; };
 		86A5914F261DBCBD00A25D1F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -684,6 +687,7 @@
 				868D83ED26396B49000211A6 /* TagService.swift */,
 				864CF2AE264FE4DE005966C1 /* FirebaseService.swift */,
 				862B94DC2652507500CAA091 /* OpenPingService.swift */,
+				8697327F265AB09A00CF9625 /* Router.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -981,6 +985,7 @@
 				862914E52634A1D6006BF198 /* DebugMenu.swift in Sources */,
 				868E97C926173AAD000A41FF /* Answer.swift in Sources */,
 				86ABFFC3265234B600CAEE80 /* TrackedGoalList.swift in Sources */,
+				86973280265AB09A00CF9625 /* Router.swift in Sources */,
 				86ADBB7B26173307003CBA6B /* Statistics.swift in Sources */,
 				861256F026139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				86A59147261DBB9E00A25D1F /* UnauthenticatedView.swift in Sources */,
@@ -1067,6 +1072,7 @@
 				868C52A9264CEFAD00F6F0D3 /* GoalCard.swift in Sources */,
 				868C527A264CEF8000F6F0D3 /* Ping.swift in Sources */,
 				86ABFFC6265234C000CAEE80 /* TrackedGoalList.swift in Sources */,
+				86973281265AB09A00CF9625 /* Router.swift in Sources */,
 				868C5275264CEF7B00F6F0D3 /* Color+Figma.swift in Sources */,
 				861256F126139CAB00C2B81B /* TagTimeApp.swift in Sources */,
 				868C52A8264CEFAD00F6F0D3 /* GoalPicker.swift in Sources */,

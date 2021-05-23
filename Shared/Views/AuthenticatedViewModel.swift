@@ -10,29 +10,30 @@ import Resolver
 import Foundation
 
 final class AuthenticatedViewModel: ObservableObject {
-    enum Page: Hashable {
-        case missedPingList
-        case logbook
-        case goalList
-        case statistics
-        case preferences
-    }
-
-    @Published var isLoggedIntoBeeminder = false
-    @Published var pingNotification = AnswerCreatorConfig()
-    #if os(iOS)
-    @Published var currentPage: Page = .missedPingList
-    #else
-    @Published var currentPage: Page? = .missedPingList
-    #endif
-
-    private var subscribers = Set<AnyCancellable>()
     @LazyInjected private var notificationScheduler: NotificationScheduler
     @LazyInjected private var beeminderCredentialService: BeeminderCredentialService
     @LazyInjected private var openPingService: OpenPingService
     @LazyInjected private var pingService: PingService
+    @LazyInjected private var router: Router
+
+    @Published var isLoggedIntoBeeminder = false
+    @Published var pingNotification = AnswerCreatorConfig()
+    #if os(iOS)
+    @Published var currentPage: Router.Page = .missedPingList
+    #else
+    @Published var currentPage: Router.Page? = .missedPingList
+    #endif
+
+    private var subscribers = Set<AnyCancellable>()
 
     init() {
+        // Router exists only to communicate between services.
+        // AuthenticatedViewModel is the one who actually tells the UI to change.
+        router.$currentPage
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.currentPage = $0 }
+            .store(in: &subscribers)
+
         openPingService.$openedPing
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -50,8 +51,8 @@ final class AuthenticatedViewModel: ObservableObject {
             .sink { [weak self] credential in
                 self?.isLoggedIntoBeeminder = credential != nil
 
-                if credential == nil, self?.currentPage == .goalList {
-                    self?.currentPage = .missedPingList
+                if credential == nil, self?.router.currentPage == .goalList {
+                    self?.router.currentPage = .missedPingList
                 }
             }
             .store(in: &subscribers)

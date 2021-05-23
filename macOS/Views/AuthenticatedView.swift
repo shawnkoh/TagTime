@@ -13,7 +13,7 @@ struct AuthenticatedView: View {
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
     @ViewBuilder
-    private func page(label: String, image: String, destination: AuthenticatedViewModel.Page) -> some View {
+    private func page(label: String, image: String, destination: Router.Page) -> some View {
         Label(
             title: { Text(label) },
             icon: { Image(image).resizable().aspectRatio(contentMode: .fit).padding(2) }
@@ -25,51 +25,51 @@ struct AuthenticatedView: View {
             List(selection: $viewModel.currentPage) {
                 NavigationLink(
                     destination: MissedPingList().padding([.top, .leading, .trailing]),
-                    tag: AuthenticatedViewModel.Page.missedPingList,
+                    tag: Router.Page.missedPingList,
                     selection: $viewModel.currentPage
                 ) {
                     page(label: "Missed Pings", image: "missed-ping-list", destination: .missedPingList)
                 }
-                .tag(AuthenticatedViewModel.Page.missedPingList)
+                .tag(Router.Page.missedPingList)
 
                 NavigationLink(
                     destination: Logbook().padding([.top, .leading, .trailing]),
-                    tag: AuthenticatedViewModel.Page.logbook,
+                    tag: Router.Page.logbook,
                     selection: $viewModel.currentPage
                 ) {
                     page(label: "Logbook", image: "logbook", destination: .logbook)
                 }
-                .tag(AuthenticatedViewModel.Page.logbook)
+                .tag(Router.Page.logbook)
 
                 if viewModel.isLoggedIntoBeeminder {
                     NavigationLink(
                         destination: TrackedGoalList(),
-                        tag: AuthenticatedViewModel.Page.goalList,
+                        tag: Router.Page.goalList,
                         selection: $viewModel.currentPage
                     ) {
                         // Intentional (for now while the active image has thicker borders).
                         page(label: "Goals", image: "goal-list-active", destination: .goalList)
                     }
-                    .tag(AuthenticatedViewModel.Page.goalList)
+                    .tag(Router.Page.goalList)
                 }
 
                 NavigationLink(
                     destination: Statistics().padding([.top, .leading, .trailing]),
-                    tag: AuthenticatedViewModel.Page.statistics,
+                    tag: Router.Page.statistics,
                     selection: $viewModel.currentPage
                 ) {
                     page(label: "Statistics", image: "statistics", destination: .statistics)
                 }
-                .tag(AuthenticatedViewModel.Page.statistics)
+                .tag(Router.Page.statistics)
 
                 NavigationLink(
                     destination: Preferences().padding([.top, .leading, .trailing]),
-                    tag: AuthenticatedViewModel.Page.preferences,
+                    tag: Router.Page.preferences,
                     selection: $viewModel.currentPage
                 ) {
                     page(label: "Preferences", image: "preferences", destination: .preferences)
                 }
-                .tag(AuthenticatedViewModel.Page.preferences)
+                .tag(Router.Page.preferences)
             }
             .listStyle(SidebarListStyle())
         }
