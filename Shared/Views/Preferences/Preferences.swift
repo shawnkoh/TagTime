@@ -129,16 +129,16 @@ struct Preferences: View {
             PageTitle(title: "Preferences", subtitle: "Suit yourself")
 
             VStack(alignment: .leading) {
-                Text("Ping Interval (minutes)")
-                    .bold()
-
-                TextField(
-                    "Ping Interval",
-                    value: $viewModel.averagePingInterval,
-                    formatter: NumberFormatter(),
-                    onEditingChanged: { _ in },
-                    onCommit: {}
-                )
+//                Text("Ping Interval (minutes)")
+//                    .bold()
+//
+//                TextField(
+//                    "Ping Interval",
+//                    value: $viewModel.averagePingInterval,
+//                    formatter: NumberFormatter(),
+//                    onEditingChanged: { _ in },
+//                    onCommit: {}
+//                )
 
                 BeeminderLoginButton()
 

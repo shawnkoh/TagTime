@@ -38,7 +38,7 @@ final class AnswerSuggesterViewModel: ObservableObject {
                             return !input.contains(activeTag)
                         }
                         // TODO: Not sure about this sorting and suffix
-                        .sorted { $0.score > $1.score }
+                        .sorted { $0.score < $1.score }
                         .suffix(7)
                         .map { activeTags[$0.index] }
                 }

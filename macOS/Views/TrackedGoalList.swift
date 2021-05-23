@@ -40,9 +40,18 @@ struct TrackedGoalList: View {
                 Text("TRACK NEW GOAL")
                     .onTap { isGoalPickerPresented = true }
                     .cardButtonStyle(.modalCard)
-                    .popover(isPresented: $isGoalPickerPresented, arrowEdge: .top) {
+                    .sheet(isPresented: $isGoalPickerPresented) {
                         GoalPicker()
-                            .background(Color.sheetBackground)
+                            .frame(minWidth: 400, minHeight: 300)
+                            .toolbar {
+                                ToolbarItem {
+                                    Button(action: { self.isGoalPickerPresented = false }) {
+                                        Text("Done")
+                                            .fontWeight(.semibold)
+                                    }
+                                }
+                            }
+                            .background(Color.modalBackground)
                     }
             }
             .frame(minWidth: 380)
