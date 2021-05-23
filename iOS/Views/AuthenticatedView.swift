@@ -14,7 +14,7 @@ struct AuthenticatedView: View {
 
     // Reference:: https://stackoverflow.com/a/62622935/8639572
     @ViewBuilder
-    func page(name: String, destination: AuthenticatedViewModel.Page) -> some View {
+    func page(name: String, destination: Router.Page) -> some View {
         switch viewModel.currentPage == destination {
         case true:
             Image("\(name)-active")
@@ -32,35 +32,35 @@ struct AuthenticatedView: View {
             if viewModel.isLoggedIntoBeeminder {
                 TabView(selection: $viewModel.currentPage) {
                     MissedPingList()
-                        .tag(AuthenticatedViewModel.Page.missedPingList)
+                        .tag(Router.Page.missedPingList)
                         .padding([.top, .leading, .trailing])
                     Logbook()
-                        .tag(AuthenticatedViewModel.Page.logbook)
+                        .tag(Router.Page.logbook)
                         .padding([.top, .leading, .trailing])
                     TrackedGoalList()
-                        .tag(AuthenticatedViewModel.Page.goalList)
+                        .tag(Router.Page.goalList)
                         .padding([.top, .leading, .trailing])
                     Statistics()
-                        .tag(AuthenticatedViewModel.Page.statistics)
+                        .tag(Router.Page.statistics)
                         .padding([.top, .leading, .trailing])
                     Preferences()
-                        .tag(AuthenticatedViewModel.Page.preferences)
+                        .tag(Router.Page.preferences)
                         .padding([.top, .leading, .trailing])
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             } else {
                 TabView(selection: $viewModel.currentPage) {
                     MissedPingList()
-                        .tag(AuthenticatedViewModel.Page.missedPingList)
+                        .tag(Router.Page.missedPingList)
                         .padding([.top, .leading, .trailing])
                     Logbook()
-                        .tag(AuthenticatedViewModel.Page.logbook)
+                        .tag(Router.Page.logbook)
                         .padding([.top, .leading, .trailing])
                     Statistics()
-                        .tag(AuthenticatedViewModel.Page.statistics)
+                        .tag(Router.Page.statistics)
                         .padding([.top, .leading, .trailing])
                     Preferences()
-                        .tag(AuthenticatedViewModel.Page.preferences)
+                        .tag(Router.Page.preferences)
                         .padding([.top, .leading, .trailing])
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
