@@ -2,7 +2,7 @@
 //  TrackedGoalCard.swift
 //  TagTime (iOS)
 //
-//  Created by Shawn Koh on 9/5/21.
+//  Created by Shawn Koh on 24/5/21.
 //
 
 import SwiftUI
@@ -15,7 +15,6 @@ struct TrackedGoalCard: View {
     let goal: Goal
 
     var body: some View {
-        #if os(iOS)
         GoalCard(goal: goal)
             .onTap { isDetailPresented = true }
             .cardButtonStyle(.baseCard)
@@ -23,17 +22,6 @@ struct TrackedGoalCard: View {
                 GoalDetail(goal: goal, isPresented: $isDetailPresented)
                     .background(Color.modalBackground)
             }
-        #else
-        GoalCard(goal: goal)
-            .onTap { isDetailPresented = true }
-            .cardButtonStyle(.baseCard)
-            // TODO: NavigationLink
-            .popover(isPresented: $isDetailPresented, arrowEdge: .trailing) {
-                GoalDetail(goal: goal, isPresented: $isDetailPresented)
-                    .background(Color.modalBackground)
-                    .fixedSize()
-            }
-        #endif
     }
 }
 

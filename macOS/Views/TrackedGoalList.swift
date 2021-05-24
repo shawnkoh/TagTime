@@ -38,8 +38,7 @@ struct TrackedGoalList: View {
                                 tag: goal,
                                 selection: $goal
                             ) {
-                                GoalCard(goal: goal)
-                                    .cardStyle(.baseCard)
+                                TrackedGoalCard(goal: goal)
                             }
                         }
                     }
