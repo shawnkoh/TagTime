@@ -124,7 +124,6 @@
 		868C52A2264CEFAA00F6F0D3 /* MissedPingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BEE8382618D43700645F2F /* MissedPingCard.swift */; };
 		868C52A3264CEFAA00F6F0D3 /* MissedPingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ADBB6E261732FD003CBA6B /* MissedPingList.swift */; };
 		868C52A4264CEFAD00F6F0D3 /* TagPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86338F48264242F800112BBC /* TagPicker.swift */; };
-		868C52A5264CEFAD00F6F0D3 /* TrackedGoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F6504D2647D86C00B070BA /* TrackedGoalCard.swift */; };
 		868C52A7264CEFAD00F6F0D3 /* GoalCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E29E264142F1003EB532 /* GoalCountdown.swift */; };
 		868C52A8264CEFAD00F6F0D3 /* GoalPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8665E2A22641687B003EB532 /* GoalPicker.swift */; };
 		868C52A9264CEFAD00F6F0D3 /* GoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860144132642B70A00AA5DB6 /* GoalCard.swift */; };
@@ -186,6 +185,8 @@
 		86D2F145263D76FF002062E2 /* FirebaseUser+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */; };
 		86D2F147263D7711002062E2 /* DocumentReference+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */; };
 		86D7B264264A37CF002FE4BA /* LastFetchedStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D7B263264A37CF002FE4BA /* LastFetchedStatus.swift */; };
+		86E10E69265B82B100456152 /* TrackedGoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E10E68265B82B100456152 /* TrackedGoalCard.swift */; };
+		86E10E6C265B832700456152 /* TrackedGoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E10E6A265B82B600456152 /* TrackedGoalCard.swift */; };
 		86E13CD5264971F800432A5A /* AnswerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E13CD4264971F800432A5A /* AnswerBuilder.swift */; };
 		86E34E142643FB4A00B3AA5E /* CardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E34E132643FB4A00B3AA5E /* CardStyle.swift */; };
 		86E3AB5A262354F900092CE6 /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E3AB59262354F900092CE6 /* AlertService.swift */; };
@@ -194,7 +195,6 @@
 		86EB953F26455C8200C7A7A2 /* Resolver in Frameworks */ = {isa = PBXBuildFile; productRef = 86EB953E26455C8200C7A7A2 /* Resolver */; };
 		86EB954126455CB400C7A7A2 /* Resolver+ResolverRegistering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EB954026455CB400C7A7A2 /* Resolver+ResolverRegistering.swift */; };
 		86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */; };
-		86F6504E2647D86C00B070BA /* TrackedGoalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F6504D2647D86C00B070BA /* TrackedGoalCard.swift */; };
 		86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD582D2629F52300B32B59 /* AnswerService.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
 /* End PBXBuildFile section */
@@ -315,6 +315,8 @@
 		86D2F144263D76FF002062E2 /* FirebaseUser+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseUser+Combine.swift"; sourceTree = "<group>"; };
 		86D2F146263D7711002062E2 /* DocumentReference+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentReference+Combine.swift"; sourceTree = "<group>"; };
 		86D7B263264A37CF002FE4BA /* LastFetchedStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastFetchedStatus.swift; sourceTree = "<group>"; };
+		86E10E68265B82B100456152 /* TrackedGoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalCard.swift; sourceTree = "<group>"; };
+		86E10E6A265B82B600456152 /* TrackedGoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalCard.swift; sourceTree = "<group>"; };
 		86E13CD4264971F800432A5A /* AnswerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerBuilder.swift; sourceTree = "<group>"; };
 		86E34E132643FB4A00B3AA5E /* CardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStyle.swift; sourceTree = "<group>"; };
 		86E3AB59262354F900092CE6 /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
@@ -322,7 +324,6 @@
 		86E3AB6D262445A000092CE6 /* ListenerRegistration+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListenerRegistration+Extensions.swift"; sourceTree = "<group>"; };
 		86EB954026455CB400C7A7A2 /* Resolver+ResolverRegistering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resolver+ResolverRegistering.swift"; sourceTree = "<group>"; };
 		86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
-		86F6504D2647D86C00B070BA /* TrackedGoalCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedGoalCard.swift; sourceTree = "<group>"; };
 		86FD582D2629F52300B32B59 /* AnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerService.swift; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -516,6 +517,7 @@
 			isa = PBXGroup;
 			children = (
 				86A5913D261DBB9600A25D1F /* AuthenticatedView.swift */,
+				86E10E68265B82B100456152 /* TrackedGoalCard.swift */,
 				86ABFFC2265234B600CAEE80 /* TrackedGoalList.swift */,
 			);
 			path = Views;
@@ -525,6 +527,7 @@
 			isa = PBXGroup;
 			children = (
 				868C52BA264D12C700F6F0D3 /* AuthenticatedView.swift */,
+				86E10E6A265B82B600456152 /* TrackedGoalCard.swift */,
 				86ABFFC5265234C000CAEE80 /* TrackedGoalList.swift */,
 			);
 			path = Views;
@@ -555,7 +558,6 @@
 				8665E2A22641687B003EB532 /* GoalPicker.swift */,
 				8606042A2643E40800944617 /* TagList.swift */,
 				86338F48264242F800112BBC /* TagPicker.swift */,
-				86F6504D2647D86C00B070BA /* TrackedGoalCard.swift */,
 				86ABFFC82652361F00CAEE80 /* TrackedGoalListViewModel.swift */,
 			);
 			path = Beeminder;
@@ -939,7 +941,6 @@
 				869291EF263FF1D700F6AA3D /* BeeminderLoginButton.swift in Sources */,
 				864CF2B2264FE4EE005966C1 /* MockFirebaseService.swift in Sources */,
 				86EB954126455CB400C7A7A2 /* Resolver+ResolverRegistering.swift in Sources */,
-				86F6504E2647D86C00B070BA /* TrackedGoalCard.swift in Sources */,
 				8672E71526182204004081FC /* PageTitle.swift in Sources */,
 				86719AF1264AF27600B6086D /* FirestoreAuthenticationService.swift in Sources */,
 				864203B12632710700668EC1 /* FacebookLoginService.swift in Sources */,
@@ -955,6 +956,7 @@
 				8665E2A52641752B003EB532 /* GoalService.swift in Sources */,
 				8606042B2643E40800944617 /* TagList.swift in Sources */,
 				86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */,
+				86E10E69265B82B100456152 /* TrackedGoalCard.swift in Sources */,
 				86E34E142643FB4A00B3AA5E /* CardStyle.swift in Sources */,
 				86ADBB812617330B003CBA6B /* Preferences.swift in Sources */,
 				8679B7D0265502C800556DAF /* AnswerGroup.swift in Sources */,
@@ -1013,7 +1015,6 @@
 				868C5295264CEF8D00F6F0D3 /* AnswerablePingService.swift in Sources */,
 				868C52AC264CEFAD00F6F0D3 /* GoalList.swift in Sources */,
 				868C529E264CEF9F00F6F0D3 /* CardStyle.swift in Sources */,
-				868C52A5264CEFAD00F6F0D3 /* TrackedGoalCard.swift in Sources */,
 				868C52AE264CEFB000F6F0D3 /* LogbookCard.swift in Sources */,
 				868C52AF264CEFB200F6F0D3 /* Statistics.swift in Sources */,
 				868C52A7264CEFAD00F6F0D3 /* GoalCountdown.swift in Sources */,
@@ -1028,6 +1029,7 @@
 				868C5276264CEF7B00F6F0D3 /* Query+Combine.swift in Sources */,
 				868C5287264CEF8D00F6F0D3 /* MockAnswerBuilderExecutor.swift in Sources */,
 				868C5285264CEF8D00F6F0D3 /* MockTagService.swift in Sources */,
+				86E10E6C265B832700456152 /* TrackedGoalCard.swift in Sources */,
 				868C5283264CEF8600F6F0D3 /* FirestoreTagService.swift in Sources */,
 				868C5278264CEF7B00F6F0D3 /* Auth+Combine.swift in Sources */,
 				868C52A2264CEFAA00F6F0D3 /* MissedPingCard.swift in Sources */,
