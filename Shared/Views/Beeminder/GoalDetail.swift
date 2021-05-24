@@ -65,15 +65,22 @@ struct GoalDetail: View {
         }
         .padding()
         .modify {
-            #if os(iOS)
-            $0.sheet(isPresented: $isTagPickerPresented) {
-                TagPicker(goal: goal)
-            }
+            #if os(macOS)
+                $0
+                    .sheet(isPresented: $isTagPickerPresented) {
+                        TagPicker(goal: goal)
+                            .frame(minWidth: 400, minHeight: 300)
+                            .toolbar {
+                                ToolbarItem {
+                                    Button(action: { self.isTagPickerPresented = false }) {
+                                        Text("Done")
+                                            .fontWeight(.semibold)
+                                    }
+                                }
+                            }
+                    }
             #else
-            $0.popover(isPresented: $isTagPickerPresented, arrowEdge: .trailing) {
-                TagPicker(goal: goal)
-                    .fixedSize()
-            }
+                $0
             #endif
         }
     }
