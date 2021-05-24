@@ -22,7 +22,15 @@ struct TrackedGoalList: View {
                 ScrollViewReader { proxy in
                     // Somehow this doesn't work if we use LazyVStack
                     List {
-                        PageTitle(title: "Tracked Goals", subtitle: "Don't let the bee sting!")
+                        HStack(alignment: .center) {
+                            PageTitle(title: "Tracked Goals", subtitle: "Don't let the bee sting!")
+                            Spacer()
+                            if viewModel.isRefreshing {
+                                ProgressView()
+                            } else {
+                                Button(systemImage: .init(rawValue: "arrow.clockwise")!, action: viewModel.refreshGoals)
+                            }
+                        }
 
                         ForEach(viewModel.trackedGoals) { goal in
                             NavigationLink(
@@ -63,9 +71,7 @@ struct TrackedGoalList: View {
 
 struct TrackedGoalList_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return TrackedGoalList().frame(width: 1000)
     }
 }

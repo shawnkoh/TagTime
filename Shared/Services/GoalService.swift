@@ -19,4 +19,5 @@ protocol GoalService {
     func untrackGoal(_ goal: Goal) -> Future<Void, Error>
     func trackTags(_ tags: [Tag], for goal: Goal) -> Future<Void, Error>
     func updateTrackedGoals(answer: Answer) -> AnyPublisher<Void, Error>
+    func getGoals() -> AnyPublisher<Void, Error>
 }
