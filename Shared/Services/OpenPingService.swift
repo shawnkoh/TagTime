@@ -14,6 +14,7 @@ import Resolver
 
 final class OpenPingService {
     @LazyInjected private var pingService: PingService
+    @LazyInjected private var answerablePingService: AnswerablePingService
 
     @Published private(set) var openedPing: Date?
     #if os(macOS)
@@ -54,15 +55,15 @@ final class OpenPingService {
             .store(in: &subscribers)
 
         pingService.$status
-            .combineLatest(pingService.$answerablePings, $openedPing)
-            .compactMap { status, pings, openedPing -> ([Ping], Date)? in
+            .combineLatest(answerablePingService.$unansweredPings, $openedPing)
+            .compactMap { status, unansweredPings, openedPing -> ([Date], Date)? in
                 guard status == .loaded, let openedPing = openedPing else {
                     return nil
                 }
-                return (pings, openedPing)
+                return (unansweredPings, openedPing)
             }
-            .map { pings, openedPing -> Bool in
-                !pings.map({$0.date}).contains(openedPing)
+            .map { unansweredPings, openedPing -> Bool in
+                !unansweredPings.contains(openedPing)
             }
             .filter { $0 }
             .removeDuplicates()
