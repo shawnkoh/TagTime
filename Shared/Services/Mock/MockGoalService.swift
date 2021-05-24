@@ -39,6 +39,9 @@ final class MockGoalService: GoalService {
                     return
                 }
                 self.getGoals()
+                    .replaceError(with: ())
+                    .sink(receiveValue: {})
+                    .store(in: &self.subscribers)
             }
             .store(in: &subscribers)
     }
@@ -48,7 +51,7 @@ final class MockGoalService: GoalService {
         goalTrackers = [:]
     }
 
-    private func getGoals() {
+    func getGoals() -> AnyPublisher<Void, Error> {
         goals = [
             .init(id: "1",
                   slug: "wasteman",
@@ -85,6 +88,8 @@ final class MockGoalService: GoalService {
 
         goalTrackers[goals.first!.id] = .init(tags: ["facebook", "youtube", "netflix"], updatedDate: Date())
         goalTrackers[goals[1].id] = .init(tags: ["yoga", "gymming", "running"], updatedDate: Date())
+
+        return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
     }
 
     func trackGoal(_ goal: Goal) -> Future<Void, Error> {

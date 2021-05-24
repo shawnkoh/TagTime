@@ -57,6 +57,12 @@ final class FirestoreGoalService: GoalService {
                 }
                 self.beeminderApi = .init(credential: credential)
                 self.getGoals()
+                    .sink(receiveCompletion: { completion in
+                        if case let .failure(error) = completion {
+                            self.alertService.present(message: error.localizedDescription)
+                        }
+                    }, receiveValue: {})
+                    .store(in: &self.subscribers)
             }
             .store(in: &serviceSubscribers)
     }
@@ -190,19 +196,15 @@ final class FirestoreGoalService: GoalService {
             .store(in: &subscribers)
     }
 
-    private func getGoals() {
-        beeminderApi?.getGoals()
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case let .failure(error):
-                    self.alertService.present(message: error.localizedDescription)
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { goals in
-                self.goals = goals
-            })
-            .store(in: &subscribers)
+    func getGoals() -> AnyPublisher<Void, Error> {
+        guard let beeminderApi = beeminderApi else {
+            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+        return beeminderApi.getGoals()
+            .map { [weak self] goals -> Void in
+                self?.goals = goals
+            }
+            .eraseToAnyPublisher()
     }
 
     func trackGoal(_ goal: Goal) -> Future<Void, Error> {
