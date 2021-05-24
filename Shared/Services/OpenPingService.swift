@@ -62,12 +62,11 @@ final class OpenPingService {
                 }
                 return (unansweredPings, openedPing)
             }
-            .map { unansweredPings, openedPing -> Bool in
-                !unansweredPings.contains(openedPing)
-            }
-            .filter { $0 }
-            .removeDuplicates()
-            .sink { [weak self] _ in
+            .removeDuplicates { $0.0 == $1.0 && $0.1 == $1.1 }
+            .sink { [weak self] unansweredPings, openedPing in
+                guard !unansweredPings.contains(openedPing) else {
+                    return
+                }
                 self?.answeredPing()
             }
             .store(in: &subscribers)
