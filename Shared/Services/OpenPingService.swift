@@ -52,13 +52,31 @@ final class OpenPingService {
                 self?.openPing($0)
             }
             .store(in: &subscribers)
+
+        pingService.$status
+            .combineLatest(pingService.$answerablePings, $openedPing)
+            .compactMap { status, pings, openedPing -> ([Ping], Date)? in
+                guard status == .loaded, let openedPing = openedPing else {
+                    return nil
+                }
+                return (pings, openedPing)
+            }
+            .map { pings, openedPing -> Bool in
+                !pings.map({$0.date}).contains(openedPing)
+            }
+            .filter { $0 }
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                self?.answeredPing()
+            }
+            .store(in: &subscribers)
     }
 
     func openPing(_ ping: Date) {
         self.openedPing = ping
     }
 
-    func answeredPing() {
+    private func answeredPing() {
         openedPing = nil
         #if os(macOS)
         if let window = NSApp.windows.first {
