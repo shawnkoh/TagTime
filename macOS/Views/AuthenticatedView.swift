@@ -14,10 +14,15 @@ struct AuthenticatedView: View {
     // Reference:: https://stackoverflow.com/a/62622935/8639572
     @ViewBuilder
     private func page(label: String, image: String, destination: Router.Page) -> some View {
-        Label(
-            title: { Text(label) },
-            icon: { Image(image).resizable().aspectRatio(contentMode: .fit).padding(2) }
-        )
+        HStack {
+            Image(image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(2)
+                .frame(width: 20, height: 20)
+                .fixedSize()
+            Text(label)
+        }
     }
 
     var body: some View {
