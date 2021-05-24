@@ -91,7 +91,10 @@ final class FirestoreGoalService: GoalService {
                     .getDocuments(source: .default)
                     .flatMap { snapshot -> AnyPublisher<Date, Error> in
                         let result = snapshot.documents.compactMap { document -> (String, GoalTracker)? in
-                            guard let goalTracker = try? document.data(as: GoalTracker.self) else {
+                            guard
+                                let goalTracker = try? document.data(as: GoalTracker.self),
+                                goalTracker.deletedDate == nil
+                            else {
                                 return nil
                             }
                             return (document.documentID, goalTracker)
@@ -126,7 +129,13 @@ final class FirestoreGoalService: GoalService {
             }, receiveValue: { snapshot in
                 var goalTrackers = self.goalTrackers
                 snapshot.documents.forEach { document in
-                    goalTrackers[document.documentID] = try? document.data(as: GoalTracker.self)
+                    guard
+                        let goalTracker = try? document.data(as: GoalTracker.self),
+                        goalTracker.deletedDate == nil
+                    else {
+                        return
+                    }
+                    goalTrackers[document.documentID] = goalTracker
                 }
                 self.goalTrackers = goalTrackers
             })
