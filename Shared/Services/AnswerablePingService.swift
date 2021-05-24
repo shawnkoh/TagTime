@@ -26,6 +26,7 @@ final class AnswerablePingService {
         // answerablePings is maintained by PingService
         // answers is maintained by observing Firestore's answers
         // TODO: Consider adding pagination for this
+        // TODO: Consider combining with $status
         pingService.$answerablePings
             // TODO: This needs to be based on AnswerService.perPage or vice versa.
             .map { $0.suffix(Self.answerablePingCount) }
