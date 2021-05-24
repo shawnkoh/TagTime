@@ -47,7 +47,6 @@ struct AnswerCreatorConfig {
 final class AnswerCreatorViewModel: ObservableObject {
     @LazyInjected private var alertService: AlertService
     @LazyInjected private var answerBuilderExecutor: AnswerBuilderExecutor
-    @LazyInjected private var openPingService: OpenPingService
 
     private(set) lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -70,8 +69,6 @@ final class AnswerCreatorViewModel: ObservableObject {
             .createAnswer(answer)
             .execute(with: answerBuilderExecutor)
             .errorHandled(by: alertService)
-
-        openPingService.answeredPing()
     }
 }
 
