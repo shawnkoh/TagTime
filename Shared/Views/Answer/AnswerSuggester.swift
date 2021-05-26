@@ -39,7 +39,7 @@ final class AnswerSuggesterViewModel: ObservableObject {
                         }
                         // TODO: Not sure about this sorting and suffix
                         .sorted { $0.score < $1.score }
-                        .suffix(7)
+                        .suffix(5)
                         .map { activeTags[$0.index] }
                 }
             }

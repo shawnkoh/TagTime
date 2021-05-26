@@ -80,20 +80,27 @@ struct AnswerCreator: View {
         VStack {
             VStack {
                 Text("What are you doing")
+                    .font(.title2)
                 Text("RIGHT NOW?")
+                    .font(.title2)
             }
-            Text(viewModel.dateFormatter.string(from: config.pingDate))
+            .padding(.top)
 
-            Spacer()
+            Text(viewModel.dateFormatter.string(from: config.pingDate))
+                .font(.title2)
+                .padding([.leading, .trailing, .top])
 
             #if os(iOS)
             CocoaTextField("PING1 PING2", text: $config.response, onCommit: { addAnswer(tags: config.tags) })
                 .isInitialFirstResponder(true)
                 .multilineTextAlignment(.center)
-                .background(Color.hsb(207, 26, 14))
                 .cornerRadius(8)
                 .foregroundColor(.white)
                 .textCase(.lowercase)
+                .font(.title3)
+                .textFieldStyle(PlainTextFieldStyle())
+                .cardStyle(Color.hsb(207, 26, 14))
+                .padding()
             #else
             TextField(
                 "PING1 PING2",
@@ -104,18 +111,20 @@ struct AnswerCreator: View {
             )
             .textCase(.lowercase)
             .multilineTextAlignment(.center)
-            .background(Color.hsb(207, 26, 14))
             .foregroundColor(.white)
             .cornerRadius(8)
+            .font(.title3)
+            .padding()
             #endif
 
             Spacer()
 
             AnswerSuggester(input: $config.response)
+                .padding([.leading, .trailing])
         }
         .modify {
             #if os(macOS)
-            $0.frame(minWidth: 300, minHeight: 400)
+            $0.frame(minWidth: 300, minHeight: 450)
             #else
             $0
             #endif
