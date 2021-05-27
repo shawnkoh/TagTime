@@ -197,6 +197,8 @@
 		86EF82B0262696C5001EA3C5 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */; };
 		86FD582E2629F52300B32B59 /* AnswerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FD582D2629F52300B32B59 /* AnswerService.swift */; };
 		86FE6EF42619BEBE00ACBAFF /* LogbookCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */; };
+		86FEF509265FAE180067009F /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FEF508265FAE180067009F /* StatisticsViewModel.swift */; };
+		86FEF50A265FAE180067009F /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FEF508265FAE180067009F /* StatisticsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -326,6 +328,7 @@
 		86EF82AF262696C5001EA3C5 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
 		86FD582D2629F52300B32B59 /* AnswerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerService.swift; sourceTree = "<group>"; };
 		86FE6EF32619BEBE00ACBAFF /* LogbookCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogbookCard.swift; sourceTree = "<group>"; };
+		86FEF508265FAE180067009F /* StatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -616,6 +619,7 @@
 			isa = PBXGroup;
 			children = (
 				86ADBB7A26173307003CBA6B /* Statistics.swift */,
+				86FEF508265FAE180067009F /* StatisticsViewModel.swift */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
@@ -995,6 +999,7 @@
 				862B94DD2652507500CAA091 /* OpenPingService.swift in Sources */,
 				86A59150261DBCBD00A25D1F /* User.swift in Sources */,
 				86545E1D2642EB7A00897253 /* DoubleTappable.swift in Sources */,
+				86FEF509265FAE180067009F /* StatisticsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1082,6 +1087,7 @@
 				862B94DE2652507500CAA091 /* OpenPingService.swift in Sources */,
 				868C529F264CEFA200F6F0D3 /* PageTitle.swift in Sources */,
 				868C5298264CEF8D00F6F0D3 /* AnswerService.swift in Sources */,
+				86FEF50A265FAE180067009F /* StatisticsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
