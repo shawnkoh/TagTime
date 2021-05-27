@@ -82,11 +82,11 @@ struct BatchAnswerCreator: View {
     }
 }
 
+#if DEBUG
 struct BatchAnswerCreator_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return BatchAnswerCreator(isPresented: .constant(true))
     }
 }
+#endif

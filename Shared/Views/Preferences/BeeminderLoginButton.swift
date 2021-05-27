@@ -78,11 +78,11 @@ struct BeeminderLoginButton: View {
     }
 }
 
+#if DEBUG
 struct BeeminderLoginButton_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return BeeminderLoginButton()
     }
 }
+#endif

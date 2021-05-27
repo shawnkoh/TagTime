@@ -25,6 +25,7 @@ struct TrackedGoalCard: View {
     }
 }
 
+#if DEBUG
 struct TrackedGoalCard_Previews: PreviewProvider {
     static let goalService: GoalService = {
         Resolver.root = .mock
@@ -35,3 +36,4 @@ struct TrackedGoalCard_Previews: PreviewProvider {
         TrackedGoalCard(goal: goalService.goals.first!)
     }
 }
+#endif

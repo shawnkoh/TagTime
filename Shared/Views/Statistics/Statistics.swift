@@ -56,11 +56,11 @@ struct Statistics: View {
     }
 }
 
+#if DEBUG
 struct Statistics_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return Statistics()
     }
 }
+#endif

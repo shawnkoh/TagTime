@@ -85,11 +85,11 @@ struct AuthenticatedView: View {
     }
 }
 
+#if DEBUG
 struct AuthenticatedView_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return AuthenticatedView()
     }
 }
+#endif

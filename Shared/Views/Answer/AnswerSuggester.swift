@@ -133,11 +133,11 @@ struct AnswerSuggester: View {
     }
 }
 
+#if DEBUG
 struct AnswerSuggester_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return AnswerSuggester(input: .constant(""))
     }
 }
+#endif

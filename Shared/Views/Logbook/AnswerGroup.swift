@@ -45,6 +45,7 @@ struct AnswerGroup: View {
     }
 }
 
+#if DEBUG
 struct AnswerGroup_Previews: PreviewProvider {
     static let answerService: AnswerService = {
         Resolver.root = .mock
@@ -55,3 +56,4 @@ struct AnswerGroup_Previews: PreviewProvider {
         AnswerGroup(answers: Array(answerService.answers.values))
     }
 }
+#endif

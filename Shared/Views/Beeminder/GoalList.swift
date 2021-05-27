@@ -42,11 +42,11 @@ struct GoalList: View {
     }
 }
 
+#if DEBUG
 struct GoalList_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return GoalList()
     }
 }
+#endif
