@@ -46,6 +46,8 @@ final class OpenPingService {
                 if let window = NSApp.windows.first {
                     window.level = .floating
                     window.collectionBehavior = .canJoinAllSpaces
+                    window.center()
+                    window.makeKeyAndOrderFront(nil)
                 }
                 NSApp.setActivationPolicy(.accessory)
                 NSApp.activate(ignoringOtherApps: true)

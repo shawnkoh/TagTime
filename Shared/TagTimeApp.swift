@@ -99,8 +99,46 @@ struct TagTimeApp: App {
     }
 }
 
+#if os(macOS)
+// Reference:: https://www.anaghsharma.com/blog/macos-menu-bar-app-with-swiftui/
+class StatusBarController {
+    private var statusBar = NSStatusBar()
+    private var statusItem: NSStatusItem
+
+    init() {
+        statusItem = statusBar.statusItem(withLength: 28.0)
+
+        guard let button = statusItem.button else {
+            return
+        }
+        button.image = #imageLiteral(resourceName: "status-bar")
+        button.action = #selector(togglePopup)
+        button.target = self
+        button.image?.isTemplate = true
+    }
+
+    @objc private func togglePopup() {
+        if NSApp.isActive {
+            NSApp.hide(nil)
+        } else {
+            if let window = NSApp.windows.first {
+                window.collectionBehavior = .canJoinAllSpaces
+                window.center()
+                window.makeKeyAndOrderFront(nil)
+            }
+            NSApp.setActivationPolicy(.accessory)
+            NSApp.activate(ignoringOtherApps: true)
+        }
+    }
+}
+#endif
+
 final class AppDelegate: NSObject {
     @LazyInjected private var notificationHandler: NotificationHandler
+
+    #if os(macOS)
+    var statusBar: StatusBarController?
+    #endif
 }
 
 #if os(iOS)
@@ -136,6 +174,7 @@ extension AppDelegate: UIApplicationDelegate {
 extension AppDelegate: NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         UNUserNotificationCenter.current().delegate = notificationHandler
+        statusBar = .init()
     }
 }
 #endif
