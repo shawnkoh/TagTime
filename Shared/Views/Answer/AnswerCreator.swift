@@ -145,11 +145,11 @@ struct AnswerCreator: View {
     }
 }
 
+#if DEBUG
 struct AnswerCreator_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return AnswerCreator(config: .constant(AnswerCreatorConfig()))
     }
 }
+#endif

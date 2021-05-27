@@ -190,11 +190,11 @@ struct Preferences: View {
     }
 }
 
+#if DEBUG
 struct Preferences_Previews: PreviewProvider {
     static var previews: some View {
-        #if DEBUG
         Resolver.root = .mock
-        #endif
         return Preferences()
     }
 }
+#endif
