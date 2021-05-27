@@ -35,6 +35,7 @@ struct GoalCountdown: View {
     }
 }
 
+#if DEBUG
 struct GoalCountdown_Previews: PreviewProvider {
     static let goalService: GoalService = {
         Resolver.root = .mock
@@ -45,3 +46,4 @@ struct GoalCountdown_Previews: PreviewProvider {
         GoalCountdown(goal: goalService.goals.first!)
     }
 }
+#endif

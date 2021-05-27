@@ -37,6 +37,7 @@ struct LogbookCard: View {
     }
 }
 
+#if DEBUG
 struct LogbookCard_Previews: PreviewProvider {
     static let answerService: AnswerService = {
         Resolver.root = .mock
@@ -47,3 +48,4 @@ struct LogbookCard_Previews: PreviewProvider {
         LogbookCard(answer: answerService.answers.values.first!)
     }
 }
+#endif

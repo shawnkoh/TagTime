@@ -24,6 +24,7 @@ struct GoalCard: View {
     }
 }
 
+#if DEBUG
 struct GoalCard_Previews: PreviewProvider {
     static let goalService: GoalService = {
         Resolver.root = .mock
@@ -34,3 +35,4 @@ struct GoalCard_Previews: PreviewProvider {
         GoalCard(goal: goalService.goals.first!)
     }
 }
+#endif

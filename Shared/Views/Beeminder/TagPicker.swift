@@ -108,6 +108,7 @@ struct TagPicker: View {
     }
 }
 
+#if DEBUG
 struct TagPicker_Previews: PreviewProvider {
     static let goalService: GoalService = {
         Resolver.root = .mock
@@ -118,3 +119,4 @@ struct TagPicker_Previews: PreviewProvider {
         TagPicker(goal: goalService.goals.first!)
     }
 }
+#endif
