@@ -34,12 +34,12 @@ final class MockAnswerService: AnswerService {
             .removeDuplicatesForServices()
             .sink { [self] user in
                 answers = [:]
-                latestAnswer = nil
                 pingService.answerablePings.suffix(10).forEach { ping in
                     let tag = ["wasteman", "netflix", "yoga", "exercise"].randomElement()!
                     let answer = Answer(ping: ping.date, tags: [tag])
                     answers[answer.id] = answer
                 }
+                latestAnswer = answers.values.first!
             }
             .store(in: &subscribers)
     }
