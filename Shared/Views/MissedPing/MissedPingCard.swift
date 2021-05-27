@@ -30,6 +30,7 @@ struct MissedPingCard: View {
     }
 }
 
+#if DEBUG
 struct MissedPingCard_Previews: PreviewProvider {
     static let pingService: PingService = {
         Resolver.root = .mock
@@ -40,3 +41,4 @@ struct MissedPingCard_Previews: PreviewProvider {
         MissedPingCard(ping: pingService.answerablePings.first!.date)
     }
 }
+#endif

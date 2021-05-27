@@ -86,6 +86,7 @@ struct GoalDetail: View {
     }
 }
 
+#if DEBUG
 struct GoalDetail_Previews: PreviewProvider {
     static let service: GoalService = {
         Resolver.root = .mock
@@ -96,3 +97,4 @@ struct GoalDetail_Previews: PreviewProvider {
         GoalDetail(goal: service.goals.first!, isPresented: .constant(true))
     }
 }
+#endif

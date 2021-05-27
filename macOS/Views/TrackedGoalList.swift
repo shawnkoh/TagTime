@@ -68,9 +68,11 @@ struct TrackedGoalList: View {
     }
 }
 
+#if DEBUG
 struct TrackedGoalList_Previews: PreviewProvider {
     static var previews: some View {
         Resolver.root = .mock
         return TrackedGoalList().frame(width: 1000)
     }
 }
+#endif

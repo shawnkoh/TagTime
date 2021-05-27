@@ -45,6 +45,7 @@ struct TagList: View {
     }
 }
 
+#if DEBUG
 struct TagList_Previews: PreviewProvider {
     static let service: GoalService = {
         Resolver.root = .mock
@@ -55,3 +56,4 @@ struct TagList_Previews: PreviewProvider {
         TagList(goal: service.goals.first!)
     }
 }
+#endif
