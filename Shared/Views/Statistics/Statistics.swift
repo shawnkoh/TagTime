@@ -8,13 +8,6 @@
 import SwiftUI
 import Resolver
 
-fileprivate extension Date {
-    var day: StatisticsViewModel.Day {
-        let components = Calendar.current.dateComponents([.day, .month, .year], from: self)
-        return .init(day: components.day!, month: components.month!, year: components.year!)
-    }
-}
-
 struct Statistics: View {
     @StateObject private var viewModel = StatisticsViewModel()
 
@@ -32,26 +25,24 @@ struct Statistics: View {
 
             DatePicker("Date", selection: $viewModel.date, in: viewModel.startDate...Date(), displayedComponents: .date)
 
-            if
-                let tags = viewModel.tagCountByDate[viewModel.date.day],
-                let total = viewModel.totalByDay[viewModel.date.day]
-            {
+            if let dayView = viewModel.dayView {
                 List {
                     Section {
-                        ForEach(Array(tags.keys), id: \.self) { tag in
-                            if let time = tags[tag] {
-                                HStack {
-                                    Text("\(time.asPercentOf(total))%")
+                        ForEach(dayView.rows, id: \.self) { row in
+                            HStack {
+                                Text("\(row.percentage)%")
+                                    .frame(width: 33, alignment: .leading)
 
-                                    Text(tag)
+                                Text(row.tag)
+                                    .frame(width: 180, alignment: .leading)
 
-                                    ProgressView(
-                                        value: Double(time.minutes),
-                                        total: Double(total)
-                                    )
+                                ProgressView(
+                                    value: Double(row.time.minutes),
+                                    total: Double(dayView.totalMinutes)
+                                )
 
-                                    Text("\(time.formatted.hours) hr \(time.formatted.minutes) min")
-                                }
+                                Text("\(row.time.formatted.hours) hr \(row.time.formatted.minutes) min")
+                                    .frame(width: 90, alignment: .trailing)
                             }
                         }
                     }

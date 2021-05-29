@@ -9,17 +9,23 @@ import Foundation
 import Resolver
 import Combine
 
+fileprivate extension Date {
+    var day: StatisticsViewModel.Day {
+        let components = Calendar.current.dateComponents([.day, .month, .year], from: self)
+        return .init(day: components.day!, month: components.month!, year: components.year!)
+    }
+}
+
 fileprivate extension Answer {
     var day: StatisticsViewModel.Day {
-        let components = Calendar.current.dateComponents([.day, .month, .year], from: ping)
-        return .init(day: components.day!, month: components.month!, year: components.year!)
+        ping.day
     }
 }
 
 final class StatisticsViewModel: ObservableObject {
     enum Mode: String, CaseIterable, Hashable {
-        case daily = "Daily"
-        case weekly = "Weekly"
+        case daily = "Day"
+        case weekly = "Week"
     }
 
     struct Day: Hashable {
@@ -28,7 +34,7 @@ final class StatisticsViewModel: ObservableObject {
         let year: Int
     }
 
-    struct Time {
+    struct Time: Hashable {
         let minutes: Int
 
         var formatted: (hours: Int, minutes: Int) {
@@ -44,12 +50,41 @@ final class StatisticsViewModel: ObservableObject {
         }
     }
 
+    struct DayView {
+        let totalMinutes: Int
+        let rows: [Row]
+    }
+
+    struct Row: Hashable {
+        let tag: Tag
+        let time: Time
+        let percentage: Int
+    }
+
     @LazyInjected private var answerService: AnswerService
     @LazyInjected private var authenticationService: AuthenticationService
 
     @Published var mode: Mode = .daily
     @Published var date = Date()
     @Published var answers: [Answer] = []
+
+    var dayView: DayView? {
+        guard
+            let tags = tagCountByDate[date.day],
+            let totalMinutes = totalByDay[date.day]
+        else {
+            return nil
+        }
+
+        let rows = tags
+            .sorted { $0.key < $1.key }
+            .sorted { $0.value.minutes > $1.value.minutes }
+            .map { tag, time in
+                Row(tag: tag, time: time, percentage: time.asPercentOf(totalMinutes))
+            }
+
+        return DayView(totalMinutes: totalMinutes, rows: rows)
+    }
 
     var startDate: Date {
         authenticationService.user.startDate
