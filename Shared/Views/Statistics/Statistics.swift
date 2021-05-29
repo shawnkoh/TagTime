@@ -50,7 +50,7 @@ struct Statistics: View {
                                         total: Double(total)
                                     )
 
-                                    Text("\(time.formatted.hours)h \(time.formatted.minutes)m")
+                                    Text("\(time.formatted.hours) hr \(time.formatted.minutes) min")
                                 }
                             }
                         }
