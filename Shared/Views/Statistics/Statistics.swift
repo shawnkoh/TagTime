@@ -42,8 +42,10 @@ struct Statistics: View {
                             if let time = tags[tag] {
                                 HStack {
                                     Text("\(time.asPercentOf(total))%")
+                                        .frame(width: 33, alignment: .leading)
 
                                     Text(tag)
+                                        .frame(width: 180, alignment: .leading)
 
                                     ProgressView(
                                         value: Double(time.minutes),
@@ -51,6 +53,7 @@ struct Statistics: View {
                                     )
 
                                     Text("\(time.formatted.hours) hr \(time.formatted.minutes) min")
+                                        .frame(width: 90, alignment: .trailing)
                                 }
                             }
                         }
