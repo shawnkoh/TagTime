@@ -28,6 +28,22 @@ final class StatisticsViewModel: ObservableObject {
         let year: Int
     }
 
+    struct Time {
+        let minutes: Int
+
+        var formatted: (hours: Int, minutes: Int) {
+            (minutes / 60, (minutes % 60))
+        }
+
+        init(minutes: Int) {
+            self.minutes = minutes
+        }
+
+        func asPercentOf(_ total: Int) -> Int {
+            Int((Double(minutes) / Double(total) * 100).rounded())
+        }
+    }
+
     @LazyInjected private var answerService: AnswerService
     @LazyInjected private var authenticationService: AuthenticationService
 
@@ -64,8 +80,8 @@ final class StatisticsViewModel: ObservableObject {
         return result
     }
 
-    var tagCountByDate: [Day: [Tag: Int]] {
-        var result: [Day: [Tag: Int]] = [:]
+    var tagCountByDate: [Day: [Tag: Time]] {
+        var result: [Day: [Tag: Time]] = [:]
         answersSortedByDate.forEach { answers in
             guard answers.count > 0 else {
                 return
@@ -83,7 +99,13 @@ final class StatisticsViewModel: ObservableObject {
                     }
                 }
             }
-            result[day] = dictionary
+
+            var subresult: [Tag: Time] = [:]
+            dictionary.forEach { tag, minutes in
+                subresult[tag] = Time(minutes: minutes)
+            }
+
+            result[day] = subresult
         }
         return result
     }

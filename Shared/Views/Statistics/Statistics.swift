@@ -40,12 +40,18 @@ struct Statistics: View {
                     Section {
                         ForEach(Array(tags.keys), id: \.self) { tag in
                             if let time = tags[tag] {
-                                ProgressView(
-                                    value: Double(time),
-                                    total: Double(total),
-                                    label: { Text(tag) },
-                                    currentValueLabel: { Text("\(time)") }
-                                )
+                                HStack {
+                                    Text("\(time.asPercentOf(total))%")
+
+                                    Text(tag)
+
+                                    ProgressView(
+                                        value: Double(time.minutes),
+                                        total: Double(total)
+                                    )
+
+                                    Text("\(time.formatted.hours)h \(time.formatted.minutes)m")
+                                }
                             }
                         }
                     }
