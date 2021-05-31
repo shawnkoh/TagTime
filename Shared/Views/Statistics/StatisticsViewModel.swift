@@ -48,11 +48,22 @@ final class StatisticsViewModel: ObservableObject {
         func asPercentOf(_ total: Int) -> Int {
             Int((Double(minutes) / Double(total) * 100).rounded())
         }
+
+        static func + (left: Self, right: Self) -> Self {
+            Time(minutes: left.minutes + right.minutes)
+        }
     }
 
     struct DayView {
         let totalMinutes: Int
+        let goals: [Goal]
         let rows: [Row]
+    }
+
+    struct Goal: Hashable {
+        let slug: String
+        let time: Time
+        let percentage: Int
     }
 
     struct Row: Hashable {
@@ -63,6 +74,7 @@ final class StatisticsViewModel: ObservableObject {
 
     @LazyInjected private var answerService: AnswerService
     @LazyInjected private var authenticationService: AuthenticationService
+    @LazyInjected private var goalService: GoalService
 
     @Published var mode: Mode = .daily
     @Published var date = Date()
@@ -76,6 +88,27 @@ final class StatisticsViewModel: ObservableObject {
             return nil
         }
 
+        let goals = goalService.goalTrackers.compactMap { goalId, goalTracker -> Goal? in
+            let time = tags
+                .keys
+                .filter { goalTracker.tags.contains($0) }
+                .compactMap { tags[$0] }
+                .reduce(into: Time(minutes: 0)) { a, b in
+                    a = a + b
+                }
+
+            guard
+                time.minutes > 0,
+                let slug = goalService.goals.first(where: { $0.id == goalId })?.slug
+            else {
+                return nil
+            }
+
+            return Goal(slug: slug, time: time, percentage: time.asPercentOf(totalMinutes))
+        }
+        .sorted { $0.slug < $1.slug }
+        .sorted { $0.time.minutes > $1.time.minutes }
+
         let rows = tags
             .sorted { $0.key < $1.key }
             .sorted { $0.value.minutes > $1.value.minutes }
@@ -83,7 +116,7 @@ final class StatisticsViewModel: ObservableObject {
                 Row(tag: tag, time: time, percentage: time.asPercentOf(totalMinutes))
             }
 
-        return DayView(totalMinutes: totalMinutes, rows: rows)
+        return DayView(totalMinutes: totalMinutes, goals: goals, rows: rows)
     }
 
     var startDate: Date {
