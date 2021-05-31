@@ -15,19 +15,42 @@ struct Statistics: View {
         VStack(alignment: .leading) {
             PageTitle(title: "Statistics", subtitle: "Quantified Self")
 
-            Picker("", selection: $viewModel.mode) {
-                ForEach(StatisticsViewModel.Mode.allCases, id: \.self) {
-                    Text($0.rawValue)
-                        .tag($0.rawValue)
-                }
-            }
-            .pickerStyle(SegmentedPickerStyle())
+            HStack {
+                DatePicker("Date", selection: $viewModel.date, in: viewModel.startDate...Date(), displayedComponents: .date)
 
-            DatePicker("Date", selection: $viewModel.date, in: viewModel.startDate...Date(), displayedComponents: .date)
+                Picker("", selection: $viewModel.mode) {
+                    ForEach(StatisticsViewModel.Mode.allCases, id: \.self) {
+                        Text($0.rawValue)
+                            .tag($0.rawValue)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+            }
 
             if let dayView = viewModel.dayView {
                 List {
-                    Section {
+                    Section(header: "Goals") {
+                        ForEach(dayView.goals, id: \.self) { goal in
+                            HStack {
+                                Text("\(goal.percentage)%")
+                                    .frame(width: 33, alignment: .leading)
+
+                                Text(goal.slug)
+                                    .frame(width: 180, alignment: .leading)
+
+                                ProgressView(
+                                    value: Double(goal.time.minutes),
+                                    total: Double(dayView.totalMinutes)
+                                )
+
+                                Text("\(goal.time.formatted.hours) hr \(goal.time.formatted.minutes) min")
+                                    .frame(width: 90, alignment: .trailing)
+                            }
+                            .tag(goal)
+                        }
+                    }
+
+                    Section(header: "Tags") {
                         ForEach(dayView.rows, id: \.self) { row in
                             HStack {
                                 Text("\(row.percentage)%")
@@ -44,10 +67,11 @@ struct Statistics: View {
                                 Text("\(row.time.formatted.hours) hr \(row.time.formatted.minutes) min")
                                     .frame(width: 90, alignment: .trailing)
                             }
+                            .tag(row)
                         }
                     }
                 }
-                .listStyle(PlainListStyle())
+//                .listStyle(PlainListStyle())
             }
         }
     }
