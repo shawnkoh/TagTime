@@ -71,7 +71,6 @@ struct Statistics: View {
                         }
                     }
                 }
-//                .listStyle(PlainListStyle())
             }
         }
     }

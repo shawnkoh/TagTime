@@ -78,7 +78,6 @@ final class StatisticsViewModel: ObservableObject {
 
     @Published var mode: Mode = .daily
     @Published var date = Date()
-    @Published var answers: [Answer] = []
 
     var dayView: DayView? {
         guard
@@ -124,7 +123,7 @@ final class StatisticsViewModel: ObservableObject {
     }
 
     private var answersSortedByDate: [[Answer]] {
-        let dictionary = Dictionary(grouping: answers) { answer -> DateComponents? in
+        let dictionary = Dictionary(grouping: answerService.answers.values) { answer -> DateComponents? in
             Calendar.current.dateComponents([.day, .month, .year], from: answer.ping)
         }
         return dictionary.keys
@@ -181,9 +180,11 @@ final class StatisticsViewModel: ObservableObject {
     private var subscribers = Set<AnyCancellable>()
 
     init() {
+        // Tell View to refresh
         answerService.answersPublisher
+            .combineLatest(goalService.goalsPublisher, goalService.goalTrackersPublisher)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.answers = $0.map { $0.value } }
+            .sink { [weak self] _ in self?.objectWillChange.send() }
             .store(in: &subscribers)
     }
 }
