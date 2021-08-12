@@ -1551,8 +1551,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krisk/fuse-swift";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
 			};
 		};
 		869291E7263F09B800F6AA3D /* XCRemoteSwiftPackageReference "BetterSafariView" */ = {

@@ -50,9 +50,9 @@
         "package": "Fuse",
         "repositoryURL": "https://github.com/krisk/fuse-swift",
         "state": {
-          "branch": "master",
+          "branch": null,
           "revision": "26ba868691b2d8b7bf2b1322951eb591be70ccca",
-          "version": null
+          "version": "1.4.0"
         }
       },
       {
