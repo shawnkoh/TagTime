@@ -120,4 +120,6 @@ final class MockGoalService: GoalService {
         }
         .eraseToAnyPublisher()
     }
+
+    func updateHyperSketch() {}
 }

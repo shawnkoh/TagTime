@@ -54,6 +54,10 @@ final class DebugViewModel: ObservableObject {
             }
         }
     }
+
+    func updateHyperSketch() {
+        goalService.updateHyperSketch()
+    }
 }
 
 struct DebugMenu: View {
@@ -80,6 +84,9 @@ struct DebugMenu: View {
 
             Text("Clear Persistence")
                 .onDoubleTap("Tap again to perform") { viewModel.clearPersistence() }
+
+            Text("Update HyperSketch")
+                .onDoubleTap("Tap again to perform") { viewModel.updateHyperSketch() }
 
             Spacer()
         }

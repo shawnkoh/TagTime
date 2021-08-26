@@ -20,4 +20,6 @@ protocol GoalService {
     func trackTags(_ tags: [Tag], for goal: Goal) -> Future<Void, Error>
     func updateTrackedGoals(answer: Answer) -> AnyPublisher<Void, Error>
     func getGoals() -> AnyPublisher<Void, Error>
+
+    func updateHyperSketch()
 }

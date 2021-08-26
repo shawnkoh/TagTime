@@ -255,6 +255,57 @@ final class FirestoreGoalService: GoalService {
             .eraseToAnyPublisher()
     }
 
+    func updateHyperSketch() {
+        guard let beeminderApi = beeminderApi else {
+            return
+        }
+
+        user.answerCollection
+            .whereField("tags", arrayContains: "stickstack")
+            .getDocuments(source: .server)
+            .sink { completion in
+                print(completion)
+            } receiveValue: { [weak self] snapshot in
+                guard let self = self else {
+                    return
+                }
+                let goal = self.goals.first { goal in
+                    guard let tracker = self.goalTrackers[goal.id] else {
+                        return false
+                    }
+                    let commonTags = Set(tracker.tags).intersection(["stickstack"])
+                    return commonTags.count > 0
+                }
+                guard let goal = goal else {
+                    return
+                }
+                var count: Double = 0
+                let publishers = snapshot.documents
+                    .compactMap { try? $0.data(as: Answer.self) }
+                    .map { answer -> AnyPublisher<Void, Error> in
+                        // TODO: This should be based on dynamic ping
+                        let value = 45.0 / 60.0
+                        let comment = "pings: \(answer.tagDescription)"
+                        print("updating", answer)
+                        count += 1
+    //                    return beeminderApi
+    //                        .createDatapoint(slug: goal.slug, value: value, timestamp: nil, daystamp: nil, comment: comment, requestid: answer.id)
+    //                        .map { _ in }
+    //                        .eraseToAnyPublisher()
+                        return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+                    }
+
+                print("count", count)
+
+//                Publishers.MergeMany(publishers)
+//                    .collect()
+//                    .map { _ in }
+//                    .eraseToAnyPublisher()
+//                    .errorHandled(by: self.alertService)
+            }
+            .store(in: &subscribers)
+    }
+
     private func getTrackedGoalsToUpdate(answer: Answer) -> [Goal] {
         // any goal that contains answer.tags is a goal that needs to be tracked
         // but the goal must also be tracked
